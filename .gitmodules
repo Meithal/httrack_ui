@@ -4,3 +4,6 @@
 [submodule "portable"]
 	path = portable
 	url = https://github.com/Meithal/portable.git
+[submodule "httrack"]
+	path = httrack
+	url = https://github.com/Meithal/httrack.git
