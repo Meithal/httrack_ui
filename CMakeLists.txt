@@ -1,13 +1,13 @@
 cmake_minimum_required(VERSION 3.12)
 
-# if(APPLE AND NOT CMAKE_OSX_SYSROOT)
-#     execute_process(
-#         COMMAND xcrun --sdk macosx --show-sdk-path
-#         OUTPUT_VARIABLE _sdk_path
-#         OUTPUT_STRIP_TRAILING_WHITESPACE
-#     )
-#     set(CMAKE_OSX_SYSROOT "${_sdk_path}" CACHE PATH "macOS SDK" FORCE)
-# endif()
+if(APPLE AND NOT CMAKE_OSX_SYSROOT)
+    execute_process(
+        COMMAND xcrun --sdk macosx --show-sdk-path
+        OUTPUT_VARIABLE _sdk_path
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    set(CMAKE_OSX_SYSROOT "${_sdk_path}" CACHE PATH "macOS SDK" FORCE)
+endif()
 
 ### set the lowest xcode 26 handles
 set(MAX_SDK "10.8")
@@ -46,7 +46,7 @@ set(HTTRACK_HEADERS
 	minizip/crypt.h minizip/ioapi.h minizip/mztools.h minizip/unzip.h minizip/zip.h
 )
 
-set(SRC_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/../src)
+set(SRC_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/httrack/src)
 
 list(TRANSFORM HTTRACK_SOURCES PREPEND "${SRC_ROOT}/")
 list(TRANSFORM HTTRACK_HEADERS PREPEND "${SRC_ROOT}/")
@@ -61,7 +61,13 @@ target_include_directories(httr_lib PUBLIC
 )
 
 
-set(LIBRESSL_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../portable")
+set(LIBRESSL_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/httrack/portable")
+
+if(NOT EXISTS "${LIBRESSL_ROOT_DIR}/ssl/VERSION")
+  execute_process(
+	COMMAND "./autogen.sh" WORKING_DIRECTORY "${LIBRESSL_ROOT_DIR}"
+  )
+endif()
 add_subdirectory("${LIBRESSL_ROOT_DIR}" "${CMAKE_CURRENT_BINARY_DIR}/libssl")
 
 # list(APPEND CMAKE_MODULE_PATH "${LIBRESSL_ROOT_DIR}")
