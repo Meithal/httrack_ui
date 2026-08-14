@@ -45,7 +45,7 @@ Taches
 - [ ] Lorsque le cache est corrompu, on a des erreurs bizarres, et sigbus
 - [ ] ... Quitter l'application proprement avec des handlers de sortie
 - [ ] Avoir un feedback des pages copiées
-- [x] ... Chercher le listing des pages dans httrack plutot que lister l'arborescence
+- [/] ... Chercher le listing des pages dans httrack plutot que lister l'arborescence
 - [ ] ... Afficher une barre d'avancement de telechargement
 - [ ] Tester Crackman.TTF si Crackman.ttf n'est pas trouvé
 - [ ] Avoir un bouton pour cacher sidebar <https://developer.apple.com/videos/play/wwdc2020/10104/?time=835> <https://stackoverflow.com/questions/54870957/nssplitviewcontroller-nssplitviewitem-support-in-xibs>
@@ -58,12 +58,12 @@ Taches
 - [ ] Avoir une icone a coté de chaque nom de site (favicon)
 - [ ] ... Mettre une option pour desactiver cette option
 - [ ] Avoir un apercu de chaque item
-- [ ] ... image pour image
-- [ ] ...... ouvrir l'image dans apercu
+- [x] ... image pour image
+- [x] ...... ouvrir l'image dans apercu
 - [ ] ... video pour video
 - [ ] ...... pouvoir lancer la video
 - [ ] ...... ouvrir la video dans un programme externe (quicktime, vlc...)
-- [ ] ... Vebview pour page
+- [x] ... Vebview pour page
 - [ ] Avoir un listing de liens externes référencés par les diverses pages
 - [ ] Commencer a télécharger le favicon du site pour y associer une icone
 - [x] En proposer une vue arborescente comme dans un arbre FTP
@@ -111,7 +111,7 @@ monitor app, en vue tableau.
 des fleches, en mode Figma, afficher le contenu des pages avec webkit.
 - [ ] Faire que le panel de stats soit lié au bouton de la toolbar (qui reste actif
 tant que le panel est ouvert), ce bouton doit permettre de "toggle" le panel.
-- [ ] Quand dans l'outline on clique sur un fichier html,
+- [x] Quand dans l'outline on clique sur un fichier html,
 afficher la page (dans un panel, ou dans la vue principale?)
 - [x] Quand dans l'outline on clique sur une image,
 afficher l'image (dans un panel, ou dans la vue principale?)
@@ -122,6 +122,7 @@ afficher son contenu (dans un panel, ou dans la vue principale?)
 - [ ] Utiliser NsWorkBench pour ouvrir safari ou questionner les navigateurs disponibles <https://developer.apple.com/documentation/appkit/nsworkspace>
 - [ ] NSSharing service qui compresse le site web et l'envoye par mail & autre.
 - [ ] Utiliser le pasteboard pour automatiquement commencer une copie, aussi un service et pouvoir drag@drop
+- [x] Ouvrir le dossier du site directement en cloquant dessus
 
 Plus tard
 ---

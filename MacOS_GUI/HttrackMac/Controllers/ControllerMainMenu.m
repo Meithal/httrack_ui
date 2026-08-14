@@ -249,16 +249,6 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
 }
 @end
 
-@interface VerticalTextCell: NSTextFieldCell
-@end
-
-@implementation VerticalTextCell
-- (NSRect)drawingRectForBounds:(NSRect)rect
-{
-    NSFont * font = self.font;
-    return NSRectFromCGRect(CGRectMake(rect.origin.x, rect.origin.y + font.xHeight / 2, rect.size.width, rect.size.height)); // centre verticalement le texte
-}
-@end
 
 @implementation ProjectsDataSource
 -(void)awakeFromNib {
@@ -289,8 +279,11 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
             return item.name;
         else if(([tableColumn.identifier isEqual:@"Avancement"]))
             return nil;
-        else if([tableColumn.identifier isEqual:@"Icone"])
-            return nil;
+        else if([tableColumn.identifier isEqual:@"Icone"]) {
+            NSImage * im = [NSImage imageNamed:NSImageNameFolder];
+            
+            return im;
+        }
         else raise(42);
     } else if (item.class == MyDowloadableFile.class) {
         MyDowloadableFile * item_cast = (MyDowloadableFile*)item;
@@ -336,10 +329,15 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
     NSUInteger idx =((NSIndexSet*)notification.userInfo[@"NSTableViewCurrentRowSelectionUserInfoKey"]).firstIndex;
     
     MyDowloadableFile* orow = [((ProjectsOutlineView*)notification.object) itemAtRow:idx ];
-    if([orow respondsToSelector:@selector(hd_path)]) {
+    if([orow respondsToSelector:@selector(hd_path)]) { // fichier
         [((ProjectsOutlineView*)notification.object).mainController.contenuPreview mainChangePreview:[NSString stringWithFormat:@"%@/%@", orow.hd_path, orow.name]];
+    } else { // repertoire
+        NSURL * url = [NSURL URLWithString:@"Mirrored Websites/" relativeToURL:[NSFileManager.defaultManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask].firstObject];
+        
+        [[NSWorkspace sharedWorkspace] openURL:[url URLByAppendingPathComponent:orow.name]];
     }
 }
+
 @end
 
 #pragma mark ProjectsOutlineView

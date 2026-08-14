@@ -11,6 +11,7 @@
 
 #import "htscore.h"
 
+
 NS_ASSUME_NONNULL_BEGIN
 
 
@@ -128,6 +129,10 @@ static int __cdecl my_linkdetected(t_hts_callbackarg * carg,
 
 #pragma mark fonction coeur de metier
 
+/**
+ Construit une arborescence de site a partir des fichiers existants dans le system
+A eviter car ca contient des meta fichiers de httrack.
+ */
 void parseDirectoriesRecurse(MyDirectoryElements * dir, NSURL * adress);
 void parseDirectoriesRecurse(MyDirectoryElements * dir, NSURL * adress)
 {
@@ -147,6 +152,14 @@ void parseDirectoriesRecurse(MyDirectoryElements * dir, NSURL * adress)
         }
     }
 }
+
+/**
+ Construit une arborescence de site a partir des fichiers indiqués par httrack.
+ */
+void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
+    // TODO: implementer a partir de hts_buildtopindex()
+}
+
 
 #pragma mark CoreLogic
 @implementation CoreLogic
@@ -199,7 +212,11 @@ void parseDirectoriesRecurse(MyDirectoryElements * dir, NSURL * adress)
 -(void)initHttrack {
     _httrack_opt = hts_create_opt();
     _httrack_opt->debug = LOG_ERROR;
+    _httrack_opt->makeindex = 1;
+    //_httrack_opt->kindex = 1; -- construit un index de mots trouvés, inutile pour nous
     //_httrack_opt->log = stderr;
+    _httrack_opt->log = stdout;
+    _httrack_opt->errlog = stderr;
     
     // On recupere le HOME sur mac
     NSArray<NSURL *> * urls = [NSFileManager.defaultManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask];
@@ -216,6 +233,15 @@ void parseDirectoriesRecurse(MyDirectoryElements * dir, NSURL * adress)
     htswrap_add(_httrack_opt, "save-file2", my_filesave2);
     htswrap_add(_httrack_opt, "end", my_end);
     htswrap_add(_httrack_opt, "link-detected", my_linkdetected);
+    
+    hts_init(); // ensure that openSSLctx is initialized
+    //cache_back cache;
+    //cache_init(&cache, _httrack_opt);
+
+    for(int i = 0; i < _httrack_opt->lien_tot; i++) {
+        printf("%s\n", _httrack_opt->liens[i]->sav);
+    }
+    
 }
 
 -(MyDirectoryElements *) websites
@@ -228,10 +254,10 @@ void parseDirectoriesRecurse(MyDirectoryElements * dir, NSURL * adress)
     return _websites;
 }
 
+#pragma mark Lance Telechargement
 -(void)dowloadSite:(NSString*) url onError:(void (^)(NSString *, NSErrorDomain, NSInteger code)) onError
 {
     NSBlockOperation * operation = [NSBlockOperation blockOperationWithBlock:^{
-        hts_init(); // ensure that openSSLctx is initialized
         int status = httpmirror([url UTF8String], _httrack_opt);
         
         if(_httrack_opt->state.exit_xh != 0) {

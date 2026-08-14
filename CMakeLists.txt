@@ -21,7 +21,7 @@ project(Httrack C OBJC)
 set(HTTRACK_SOURCES 
 	htscore.c htsparse.c htsback.c htscache.c 
 	htscatchurl.c htsfilters.c htsftp.c htshash.c coucal/coucal.c
-	htshelp.c htslib.c htscoremain.c 
+	htshelp.c htslib.c htscoremain.c htscache.c
 	htsname.c htsrobots.c htstools.c htswizard.c 
 	htsalias.c htsthread.c htsindex.c htsbauth.c 
 	htsmd5.c htszlib.c htswrap.c htsconcat.c 
@@ -53,7 +53,7 @@ list(TRANSFORM HTTRACK_HEADERS PREPEND "${SRC_ROOT}/")
 
 add_library(httr_lib STATIC ${HTTRACK_SOURCES})
 target_sources(httr_lib PRIVATE ${HTTRACK_HEADERS})
-target_compile_definitions(httr_lib PRIVATE DEBUG=1 HDEBUG=1)
+target_compile_definitions(httr_lib PRIVATE DEBUG=1 HDEBUG=1 BDEBUG=1 )
 
 target_include_directories(httr_lib PUBLIC 
 	"${SRC_ROOT}/coucal"
@@ -68,6 +68,7 @@ if(NOT EXISTS "${LIBRESSL_ROOT_DIR}/ssl/VERSION")
 	COMMAND "./autogen.sh" WORKING_DIRECTORY "${LIBRESSL_ROOT_DIR}"
   )
 endif()
+set(LIBRESSL_TESTS OFF CACHE BOOL "Build LibreSSL tests" FORCE)
 add_subdirectory("${LIBRESSL_ROOT_DIR}" "${CMAKE_CURRENT_BINARY_DIR}/libssl")
 
 # list(APPEND CMAKE_MODULE_PATH "${LIBRESSL_ROOT_DIR}")
@@ -126,7 +127,8 @@ if(APPLE)
 
 	target_link_libraries(HttrackMac PRIVATE httr_lib "-framework AppKit -framework WebKit")
 	target_include_directories(HttrackMac PRIVATE "${SRC_ROOT}")
-
+    target_compile_definitions(HttrackMac PRIVATE HTS_INTERNAL_BYTECODE)
+    
 	set_source_files_properties(
 		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/Base.lproj/MainMenu.xib
 		  PROPERTIES
