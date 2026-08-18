@@ -130,7 +130,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void)coreLogicDownloadDidAdvance:(nonnull CoreLogic *)sender path:(nonnull NSString *)path domain:(nonnull NSString *)domain ratio:(float)ratio { 
-    [[self projectsOutlineView] reloadData];
+    [[self projectsOutlineView] reloadData]; // FIXME: cause all the outline to  be refreshed
 }
 
 @end

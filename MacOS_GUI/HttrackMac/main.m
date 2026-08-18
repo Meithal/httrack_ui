@@ -4,8 +4,15 @@
 
 #import <AppKit/NSApplication.h>
 
+// detecteur de sigpipe qui evite de faire crasher l'application
+// arrive quand le hote n'existe pas du tout
+void sig_rec(int code) {
+    return;
+}
+
 int main(int argc, const char * argv[]) {
     
+    signal(SIGPIPE, sig_rec);
     
     @autoreleasepool {
         // Setup code that might create autoreleased objects goes here.
