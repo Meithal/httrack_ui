@@ -30,6 +30,7 @@
 }
 
 - (void)applicationWillTerminate:(NSNotification *)aNotification {
+    [_logic gracefulTerminate];
     [_logic release];
 }
 

@@ -53,7 +53,7 @@ list(TRANSFORM HTTRACK_HEADERS PREPEND "${SRC_ROOT}/")
 
 add_library(httr_lib STATIC ${HTTRACK_SOURCES})
 target_sources(httr_lib PRIVATE ${HTTRACK_HEADERS})
-target_compile_definitions(httr_lib PRIVATE DEBUG=1 HDEBUG=1 BDEBUG=1 )
+target_compile_definitions(httr_lib PRIVATE DEBUG=1 HDEBUG=1 BDEBUG=1 DEBUGCA=1)
 
 target_include_directories(httr_lib PUBLIC 
 	"${SRC_ROOT}/coucal"

@@ -243,10 +243,13 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
     _httrack_opt = hts_create_opt();
     _httrack_opt->debug = LOG_ERROR;
     _httrack_opt->makeindex = 1;  // devrait construire un index de pages, mais ne semble pas
+    _httrack_opt->makestat = 1;
+    _httrack_opt->maketrack = 1;
     // fonctionner
     _httrack_opt->delete_old = 0;  // dans une arbo flat, supprimer anciens fichiers correspond
     _httrack_opt->log = stdout;
     _httrack_opt->errlog = stderr;
+    
     
     // On recupere le HOME sur mac
     NSArray<NSURL *> * urls = [NSFileManager.defaultManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask];
@@ -363,6 +366,9 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
 -(void)setState:(enum CoreLogicState)state {
     _state = state;
 }
+-(void)gracefulTerminate {
+    [self stopMirror];
+}
 
 @end
 
@@ -376,5 +382,7 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
 }
 
 @end
+
+
 
 NS_ASSUME_NONNULL_END

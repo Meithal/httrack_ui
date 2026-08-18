@@ -11,6 +11,7 @@ Ongoing
 - Ecrire une documentation
 - Garder le programme suffisamment intuitif pour n'avoir besoin ni de l'un ni de l'autre
 - Ameliorer le temps de demarrage
+- Lorsque le cache est corrompu, on a des erreurs bizarres, et sigbus
 
 Bugs
 ---
@@ -37,13 +38,12 @@ Taches
 - [x] ... Griser le bouton pendant que le telechargement est en cours
 - [x] ... Mettre un bouton de pause lors du telechargement
 - [x] ... Avoir un feedback qu'une copie est en cours
-- [ ] ... Quand la fenetre associée est fermée, arrêter le thread de copie (?)
+- [x] ... Quand la fenetre associée est fermée, arrêter le thread de copie (?)
 - [ ] ...... Avoir un systeme de background worker qui continue la copie meme quand le programme est arrêté et qui s'y reconnecte quand le programme est redémarré ?
 - [x] Afficher hts_stat_struct update
 - [ ] ... Afficher les warnings, les infos et les erreurs
 - [ ] Autocompletion avec sites deja existants <https://developer.apple.com/library/archive/samplecode/SearchField/Introduction/Intro.html#//apple_ref/doc/uid/DTS10004112-Intro-DontLinkElementID_2>
-- [ ] Lorsque le cache est corrompu, on a des erreurs bizarres, et sigbus
-- [ ] ... Quitter l'application proprement avec des handlers de sortie
+- [x] ... Quitter l'application proprement avec des handlers de sortie
 - [ ] Avoir un feedback des pages copiées
 - [/] ... Chercher le listing des pages dans httrack plutot que lister l'arborescence
 - [ ] ... Afficher une barre d'avancement de telechargement

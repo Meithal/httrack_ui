@@ -45,6 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)stopMirror;
 -(enum CoreLogicState) state;
 -(void)setState:(enum CoreLogicState)state;
+-(void)gracefulTerminate;
 @end
 
 @protocol CoreLogicDelegate<NSObject>
