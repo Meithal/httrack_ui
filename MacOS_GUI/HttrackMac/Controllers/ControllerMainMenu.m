@@ -139,16 +139,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)mainChangePreview:(NSString*)chemin {
     
-    //NSBeginCriticalAlertSheet(@"hello", @"ok?", @"nvm", @"what", [NSApp mainWindow], nil, nil, nil, NULL, @"Un truc s'est mal passé");
-    NSAlert * na = [[NSAlert alloc] init];
-    //NSDottedFrameRect(NSMakeRect(10, 10, 400, 300));
-    //NSDrawButton(<#NSRect rect#>, <#NSRect clipRect#>)
     
     if(0) { /// a garder en tete pour comment envoyer des notifications plus tard
-        NSUserNotification* note = [[NSUserNotification alloc] init];
-        note.title = @"Salut";
-        [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification: note];
-        
+        //NSBeginCriticalAlertSheet(@"hello", @"ok?", @"nvm", @"what", [NSApp mainWindow], nil, nil, nil, NULL, @"Un truc s'est mal passé");
+        NSAlert * na = [[NSAlert alloc] init];
+        //NSDottedFrameRect(NSMakeRect(10, 10, 400, 300));
+        //NSDrawButton(<#NSRect rect#>, <#NSRect clipRect#>)
+
         NSString* s = @("foo");
         [NSColor underPageBackgroundColor];
         

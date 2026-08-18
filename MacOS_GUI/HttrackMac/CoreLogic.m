@@ -212,7 +212,10 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
 -(void)initHttrack {
     _httrack_opt = hts_create_opt();
     _httrack_opt->debug = LOG_ERROR;
-    _httrack_opt->makeindex = 1;
+    _httrack_opt->makeindex = 1;  // devrait construire un index de pages, mais ne semble pas
+    // fonctionner
+    _httrack_opt->delete_old = 0;  // dans une arbo flat, supprimer anciens fichiers correspond
+    // a supprimer sites précédents
     //_httrack_opt->kindex = 1; -- construit un index de mots trouvés, inutile pour nous
     //_httrack_opt->log = stderr;
     _httrack_opt->log = stdout;
@@ -260,12 +263,22 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
     NSBlockOperation * operation = [NSBlockOperation blockOperationWithBlock:^{
         int status = httpmirror([url UTF8String], _httrack_opt);
         
+        _httrack_opt->state._hts_in_mirror = 0;
+        
+        hts_buildtopindex(_httrack_opt, StringBuff(_httrack_opt->path_html), StringBuff(_httrack_opt->path_bin));
+        
         if(_httrack_opt->state.exit_xh != 0) {
             NSString * description = NSLocalizedString(@"Couldn't connect", @"When httpmirror return a faulty value");
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                 onError(description, MacHttrackErrors, NSURLErrorBadURL);
             }];
         }
+        
+        /// send a notification that the download is finished
+        NSUserNotification* note = [[NSUserNotification alloc] init];
+        note.title = @"Téléchargement de %@ terminé.";
+        [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification: note];
+
 
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             [_delegate coreLogicDownloadDidStop:self];
