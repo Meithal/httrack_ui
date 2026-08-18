@@ -13,6 +13,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@interface NSString (NSStringEndsWith)
+-(BOOL)endsWithString:(NSString*)string;
+@end
+
 @class HtmrEventDispatcher;
 @class CoreLogicDelegate;
 

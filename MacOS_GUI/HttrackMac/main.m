@@ -7,12 +7,20 @@
 // detecteur de sigpipe qui evite de faire crasher l'application
 // arrive quand le hote n'existe pas du tout
 void sig_rec(int code) {
+    switch (code) {
+        case SIGPIPE:
+            fprintf(stderr, "httrmac: ecriture sur socket fermé, enqueter... (%d)\n", code);
+            break;
+            
+        default:
+            break;
+    }
     return;
 }
 
 int main(int argc, const char * argv[]) {
-    
-    signal(SIGPIPE, sig_rec);
+    void (*s)(int);
+    s = signal(SIGPIPE, sig_rec), assert(s!=SIG_ERR);
     
     @autoreleasepool {
         // Setup code that might create autoreleased objects goes here.

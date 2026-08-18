@@ -17,6 +17,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 NSErrorDomain const MacHttrackErrors = @"com.github.meithal";
 
+/// methodes enrichissant les types de base
+@implementation NSString (NSStringEndsWith)
+-(BOOL)endsWithString:(NSString*)string {
+    return [[self substringFromIndex:(self.length - string.length)] isEqualToString:string];
+}
+@end
+
 #pragma mark fonctions bridge httrack
 static int __cdecl my_loop(t_hts_callbackarg * carg, httrackp * opt, lien_back * back, int back_max, int back_index, int lien_n, int lien_tot, int stat_time, hts_stat_struct * stats) {
     // appelé à chaque boucle de HTTrack, permet d'arreter un telechargement
@@ -70,6 +77,11 @@ static void __cdecl my_filesave(t_hts_callbackarg * carg,
                                httrackp * opt, const char *file) {
     // Appellé après avoir sauvegardé un fichier
     
+    if(CALLBACKARG_PREV_FUN(carg, filesave) != NULL) {
+        CALLBACKARG_PREV_FUN(carg, filesave)(CALLBACKARG_PREV_CARG(carg), opt, file);
+    }
+
+    
     printf("TOTO my_filesave %s\n", file);
     
     return;
@@ -83,7 +95,14 @@ static void __cdecl my_filesave2(
      int not_updated) {
     // Appellé avant de sauvegarder un fichier
     
+    if(CALLBACKARG_PREV_FUN(carg, filesave2) != NULL) {
+        CALLBACKARG_PREV_FUN(carg, filesave2)(CALLBACKARG_PREV_CARG(carg), opt, adr, file, sav, is_new, is_modified, not_updated);
+    }
+    
     printf("TOTO2 my_filesave2 adr: %s file: %s sac: %s is new %d is modified %d not updated %d\n", adr, file, sav, is_new, is_modified, not_updated);
+    
+    if(strlen(adr) == 0)
+        return;
     
     for(int i=0; i < opt->lien_tot; i++) {
         printf("lien %d: %s\n", i, opt->liens[i]->sav);
@@ -96,12 +115,18 @@ static void __cdecl my_filesave2(
         CoreLogic* logic = [((AppDelegate*)[NSApp delegate]) getLogic];
 
         httrackp * opt = [logic httrack_opt];
+        
         for(int i=0; i<logic.websites.directories.count; i++) {
             if([logic.websites.directories[i].name isEqualToString:@(adr)]) {
-                [ModelsApp addFile:@(file) toArborescence:logic.websites.directories[i] sittingAt:[NSString stringWithCString:adr encoding:NSUnicodeStringEncoding]];
-                break;
+                [ModelsApp addFile:@(file) toArborescence:logic.websites.directories[i] sittingAt:[NSString stringWithCString:sav encoding:NSUnicodeStringEncoding]];
+                goto found;
             }
         }
+        // not found
+        [ModelsApp addDirectory:@(adr) toArborescene:logic.websites];
+        [ModelsApp addFile:@(strrchr(sav, '/') + 1) toArborescence:logic.websites.directories[logic.websites.directories.count - 1] sittingAt:[ [NSURL URLWithString:@(sav)] URLByDeletingLastPathComponent].absoluteString.stringByRemovingPercentEncoding ];
+        
+        found:
         
         [[logic delegate] coreLogicPageAdded:logic];
     }];
@@ -124,7 +149,12 @@ static int __cdecl my_end(
 static int __cdecl my_linkdetected(t_hts_callbackarg * carg,
                                            httrackp * opt, char *link) {
     printf("TOTOLINK my_linkdetected %s\n", link);
-  return 1;
+    if (CALLBACKARG_PREV_FUN(carg, linkdetected) != NULL) {
+      /* status is ok on our side, return other callabck's status */
+      return CALLBACKARG_PREV_FUN(carg, linkdetected)(CALLBACKARG_PREV_CARG(carg), opt, link);
+    }
+
+    return 1;
 }
 
 #pragma mark fonction coeur de metier
@@ -215,9 +245,6 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
     _httrack_opt->makeindex = 1;  // devrait construire un index de pages, mais ne semble pas
     // fonctionner
     _httrack_opt->delete_old = 0;  // dans une arbo flat, supprimer anciens fichiers correspond
-    // a supprimer sites précédents
-    //_httrack_opt->kindex = 1; -- construit un index de mots trouvés, inutile pour nous
-    //_httrack_opt->log = stderr;
     _httrack_opt->log = stdout;
     _httrack_opt->errlog = stderr;
     
