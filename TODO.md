@@ -30,8 +30,9 @@ https:// avant lance le téléchargement, cliquer sur arreter
 dit "URL" invalide et affiche https://livre-c.gitlab.io dans le listing
 - [x] Reessayer de lancer un téléchargement dit url nvalide en boucle
 ensuite...
-- [/] Taper livre-c.gitlab.io ne télécharge rien au lieu de
+- [ ] Taper livre-c.gitlab.io ne télécharge rien au lieu de
 https://livre-c.gitlab.io
+- [ ] Sur grabag.free.fr on peut pas dérouler un dossier tant qu'un téléchargement est en cours
 
 Taches
 ---
@@ -57,7 +58,7 @@ Taches
 - [ ] Avoir un feedback des pages copiées
 - [ ] ... Chercher le listing des pages dans httrack plutot que lister l'arborescence
 - [ ] ... Afficher une barre d'avancement de telechargement
-- [/] ... afficher immediatement un site dans l'arbo quand on
+- [x] ... afficher immediatement un site dans l'arbo quand on
 commence un téléchargement
 - [ ] Tester Crackman.TTF si Crackman.ttf n'est pas trouvé
 - [ ] Avoir un bouton pour cacher sidebar <https://developer.apple.com/videos/play/wwdc2020/10104/?time=835> <https://stackoverflow.com/questions/54870957/nssplitviewcontroller-nssplitviewitem-support-in-xibs> On Utilisera un NSDrawer pour < big sur, et un NSSplitViewController pour apres

@@ -12,7 +12,7 @@ endif()
 
 project(Httrack C OBJC)
 
-set(HTTRACK_WANT_VERBOSE 1)
+set(HTTRACK_WANT_VERBOSE 0)
 
 set(HTTRACK_SOURCES 
 	htscore.c htsparse.c htsback.c htscache.c 

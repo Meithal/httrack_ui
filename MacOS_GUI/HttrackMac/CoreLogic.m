@@ -29,7 +29,11 @@ static int __cdecl my_loop(t_hts_callbackarg * carg, httrackp * opt, lien_back *
     // appelé à chaque boucle de HTTrack, permet d'arreter un telechargement
     // si besoin
     
-        
+    if(back == NULL)
+        return 1; /// on appelle cette fonction tres tot
+    if(strlen(back->url_sav) < opt->path_log.length_)
+        return 1; /// on ne met pas a jour les fichiers qui ne seront pas sauvegardés sur le disque
+    
     //printf("loop lien :%s \n");
     [[NSOperationQueue mainQueue] addOperationWithBlock:^{
         if(![[NSApp delegate] respondsToSelector:@selector(getLogic)]){
@@ -69,8 +73,11 @@ static int __cdecl my_loop(t_hts_callbackarg * carg, httrackp * opt, lien_back *
         }
         
         if(back && back->r.totalsize > 0) {
-            float ratio = (float)back->r.size / back->r.totalsize;
-            [[logic websites] updateAdvancement:@(back->url_fil) site:@(back->url_adr) ratio:ratio];
+            float ratio = (float)back->r.size / back->r.totalsize; /// division par 0 verifiee plus haut
+            NSArray<NSString*>* components = [[NSString stringWithUTF8String:(char*)back->url_sav+opt->path_log.length_] pathComponents];
+
+            MyDowloadableFile* f = [ModelsApp addPathComponents:components toArborescence:[logic websites] atCompletePath:@(back->url_sav)];
+            [[logic websites] updateAdvancement:f ratio:ratio];
             [[logic delegate] coreLogicDownloadDidAdvance:logic path:@(back->url_fil) domain:@(back->url_adr) ratio:ratio];
         }
     }];
@@ -110,6 +117,7 @@ static void __cdecl my_filesave(t_hts_callbackarg * carg,
         [[logic delegate] coreLogicPageAdded:logic];
     }];
 
+    [[NSOperationQueue mainQueue] waitUntilAllOperationsAreFinished];
     
     if(CALLBACKARG_PREV_FUN(carg, filesave) != NULL) {
         CALLBACKARG_PREV_FUN(carg, filesave)(CALLBACKARG_PREV_CARG(carg), opt, file);
@@ -175,7 +183,7 @@ void parseDirectoriesRecurse(MyDirectoryElements * dir, NSURL * adress)
             if(isDir) {
                 parseDirectoriesRecurse([ModelsApp addDirectory:file toArborescene:dir], [adress URLByAppendingPathComponent:file]);
             } else {
-                [ModelsApp addFile:file toArborescence:dir sittingAtCompletePath:[adress path]];
+                [ModelsApp addFile:file toArborescence:dir sittingAtCompletePath:[[adress path] stringByAppendingPathComponent:file]];
             }
         }
     }

@@ -15,7 +15,20 @@ atPath:(nonnull NSString *)path {
     MyDowloadableFile * me =[[MyDowloadableFile alloc] init];
     me.name = name;
     me.hd_path = path;
+    me->_downloadAdvancement = -1;
     return [me autorelease];
+}
+
+-(float)avancement {
+    // si progression en direct
+    if(_downloadAdvancement != -1)
+        return _downloadAdvancement ;
+    
+    // si deja existant
+    if ([[NSFileManager defaultManager] fileExistsAtPath:self.hd_path])
+        _downloadAdvancement = 1;
+    
+    return _downloadAdvancement;
 }
 @end
 
@@ -28,6 +41,10 @@ atPath:(nonnull NSString *)path {
         (int)(self.directories.count + self.files.count)
     ];
 }
+- (NSString *) description {
+    return [self debugDescription];
+}
+
 +(instancetype) createFromString:(NSString *) name {
     MyDirectoryElements * me =[[MyDirectoryElements alloc] init];
     me.name = name;
@@ -36,17 +53,18 @@ atPath:(nonnull NSString *)path {
     return [me autorelease];
 }
 
-
-- (BOOL)updateAdvancement:(nonnull NSString *)path site:(NSString*)site ratio:(float)ratio {
-    //NSLog(@"me: %@ path: %@ site: %@ ratio: %.2f\n", _name, path, site, ratio);
-    for(int i=0; i<self.directories.count; i++) {
-        if([self.directories[i].name isEqualToString:site]) {
-            for(int j=0;j<self.directories[i].files.count; j++)
-                if([self.directories[i].files[j].name isEqualToString:path])
-                    self.directories[i].files[j].downloadAdvancement = @(ratio);            
-            break;
-        }
+-(float)avancement {
+    int completedFiles = 0;
+    for (int i = 0, ct = (int)self.files.count; i <ct; i++) {
+        if(self.files[i].avancement >= 1)
+            completedFiles ++;
     }
+    return self.files.count;
+}
+
+- (BOOL)updateAdvancement:(nonnull MyDowloadableFile*)file ratio:(float)ratio {
+    //NSLog(@"me: %@ path: %@ site: %@ ratio: %.2f\n", _name, path, site, ratio);
+    file->_downloadAdvancement = ratio;
 }
 
 @end
@@ -73,7 +91,7 @@ atPath:(nonnull NSString *)path {
     return n;
 }
 
-+(MyDirectoryElements*)addPathComponents:(NSArray<NSString*>*)comps toArborescence:(MyDirectoryElements *)arbo atCompletePath:(NSString*)complete_path
++(MyDowloadableFile*)addPathComponents:(NSArray<NSString*>*)comps toArborescence:(MyDirectoryElements *)arbo atCompletePath:(NSString*)complete_path
 {
     MyDirectoryElements * orig = arbo;
     for(int i = 0; i < comps.count - 1; i++) {
@@ -88,16 +106,18 @@ atPath:(nonnull NSString *)path {
         arbo = [ModelsApp addDirectory:s toArborescene:arbo];
         directory_found:;
     }
+    MyDowloadableFile* f;
     for(int i = 0; i < arbo.files.count ; i++) {
         if([arbo.files[i].name isEqualToString:comps[comps.count - 1]]) {
+            f = arbo.files[i];
             goto file_found;
         }
     }
-    [ModelsApp addFile:comps[comps.count - 1] toArborescence:arbo sittingAtCompletePath:complete_path];
+    f = [ModelsApp addFile:comps[comps.count - 1] toArborescence:arbo sittingAtCompletePath:complete_path];
     /// file not found, we must create it
     file_found:;
     
-    return orig;
+    return f;
 }
 
 @end

@@ -98,7 +98,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark logique des boutons pause et play, y compris venant de httrack
 -(BOOL)coreLogicDownloadWillStart:(CoreLogicDelegate *)sender {
-    NSLog(@"Download did start");
+    //NSLog(@"Download did start");
     
     [_downloadButton setEnabled:NO];
     [_playpausestopControl setSelectedSegment:HTR_CONTROL_PLAY];
@@ -114,7 +114,6 @@ NS_ASSUME_NONNULL_BEGIN
     [_playpausestopControl setEnabled:NO forSegment:HTR_CONTROL_PAUSE];
     [_playpausestopControl setEnabled:NO forSegment:HTR_CONTROL_STOP];
     [_playpausestopControl setEnabled:NO forSegment:HTR_CONTROL_PLAY];
-
 }
 
 -(void)coreLogicDownloadDidPause:(CoreLogic*)sender {
@@ -280,7 +279,6 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
 }
 @end
 
-
 @implementation ProjectsDataSource
 -(void)awakeFromNib {
     _logic = _delegate.getLogic;
@@ -309,7 +307,7 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
         if([tableColumn.identifier isEqual:@"PageName"])
             return item.name;
         else if(([tableColumn.identifier isEqual:@"Avancement"]))
-            return nil;
+            return @(item.avancement);
         else if([tableColumn.identifier isEqual:@"Icone"]) {
             NSImage * im = [NSImage imageNamed:NSImageNameFolder];
             
@@ -321,10 +319,10 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
         if([tableColumn.identifier isEqual:@"PageName"])
             return item_cast.name;
         else if([tableColumn.identifier isEqual:@"Avancement"])
-            return item_cast.downloadAdvancement;
+            return @(item_cast.avancement);
         else if([tableColumn.identifier isEqual:@"Icone"]) {
-            NSImage * im = [[NSImage alloc] initByReferencingFile:[NSString stringWithFormat:@"%@/%@", item_cast.hd_path, item_cast.name]];
-            
+            NSImage * im = [[NSImage alloc] initByReferencingFile:item_cast.hd_path];
+            NSLevelIndicatorCell*c;
             [im autorelease];
             return im;
         }
@@ -361,12 +359,16 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
     
     MyDowloadableFile* orow = [((ProjectsOutlineView*)notification.object) itemAtRow:idx ];
     if([orow respondsToSelector:@selector(hd_path)]) { // fichier
-        [((ProjectsOutlineView*)notification.object).mainController.contenuPreview mainChangePreview:[NSString stringWithFormat:@"%@/%@", orow.hd_path, orow.name]];
+        [((ProjectsOutlineView*)notification.object).mainController.contenuPreview mainChangePreview:orow.hd_path];
     } else { // repertoire
         NSURL * url = [NSURL URLWithString:@"Mirrored Websites/" relativeToURL:[NSFileManager.defaultManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask].firstObject];
         
         [[NSWorkspace sharedWorkspace] openURL:[url URLByAppendingPathComponent:orow.name]];
     }
+}
+
+- (NSString *)outlineView:(NSOutlineView *)outlineView toolTipForCell:(NSCell *)cell rect:(NSRectPointer)rect tableColumn:(nullable NSTableColumn *)tableColumn item:(id)item mouseLocation:(NSPoint)mouseLocation {
+    return @"todo";
 }
 
 @end
