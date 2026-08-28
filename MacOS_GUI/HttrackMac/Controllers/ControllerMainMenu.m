@@ -129,8 +129,9 @@ NS_ASSUME_NONNULL_BEGIN
     [[self projectsOutlineView] reloadData];
 }
 
-- (void)coreLogicDownloadDidAdvance:(nonnull CoreLogic *)sender path:(nonnull NSString *)path domain:(nonnull NSString *)domain ratio:(float)ratio { 
-    [[self projectsOutlineView] reloadData]; // FIXME: cause all the outline to  be refreshed
+- (void)coreLogicDownloadDidAdvance:(nonnull CoreLogic *)sender path:(nonnull NSString *)path domain:(nonnull NSString *)domain ratio:(float)ratio {
+    
+    [[self projectsOutlineView] reloadData];
 }
 
 @end
@@ -138,7 +139,6 @@ NS_ASSUME_NONNULL_BEGIN
 @implementation MonContenuPreview
 
 -(void)mainChangePreview:(NSString*)chemin {
-    
     
     if(0) { /// a garder en tete pour comment envoyer des notifications plus tard
         //NSBeginCriticalAlertSheet(@"hello", @"ok?", @"nvm", @"what", [NSApp mainWindow], nil, nil, nil, NULL, @"Un truc s'est mal passé");

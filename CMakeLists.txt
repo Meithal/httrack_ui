@@ -12,6 +12,8 @@ endif()
 
 project(Httrack C OBJC)
 
+set(HTTRACK_WANT_VERBOSE 1)
+
 set(HTTRACK_SOURCES 
 	htscore.c htsparse.c htsback.c htscache.c 
 	htscatchurl.c htsfilters.c htsftp.c htshash.c coucal/coucal.c
@@ -85,17 +87,22 @@ target_link_libraries(httr_lib PUBLIC
 )
 
 target_compile_definitions(httr_lib PUBLIC
-	# HTTRACK_SKIP_GNU_BUILDTOOLS=1
-	HTS_DO_NOT_REDEFINE_in_addr_t=1
-	HAVE_STRNLEN=1
-    DEBUG_ROBOTS=1
-    DEBUG=3
-    HDEBUG=2
-    BDEBUG=1
-    HTS_DEBUG_CLOSESOCK=1
-    DEBUGCA=1
-	#HTS_USEOPENSSL=0 // with find_package LibreSSL::SSL, SSL_library_init isnt available, so this can be used instead to download only http sites (not https)
+    # HTTRACK_SKIP_GNU_BUILDTOOLS=1
+    HTS_DO_NOT_REDEFINE_in_addr_t=1
+    HAVE_STRNLEN=1
 )
+
+if(HTTRACK_WANT_VERBOSE)
+    target_compile_definitions(httr_lib PUBLIC
+        # HTTRACK_SKIP_GNU_BUILDTOOLS=1
+        DEBUG_ROBOTS=1
+        DEBUG=3
+        HDEBUG=2
+        BDEBUG=1
+        HTS_DEBUG_CLOSESOCK=1
+        DEBUGCA=1
+    )
+endif()
 
 add_executable(httr
 	"${SRC_ROOT}/httrack.c"
@@ -134,7 +141,7 @@ if(APPLE)
 
 	target_link_libraries(HttrackMac PRIVATE httr_lib "-framework AppKit -framework WebKit")
 	target_include_directories(HttrackMac PRIVATE "${SRC_ROOT}")
-    target_compile_definitions(HttrackMac PRIVATE HTS_INTERNAL_BYTECODE)
+    target_compile_definitions(HttrackMac PRIVATE HTS_INTERNAL_BYTECODE HTTRACK_WANT_VERBOSE=${HTTRACK_WANT_VERBOSE})
     
 	set_source_files_properties(
 		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/Base.lproj/MainMenu.xib

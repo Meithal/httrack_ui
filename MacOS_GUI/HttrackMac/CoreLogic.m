@@ -40,7 +40,7 @@ static int __cdecl my_loop(t_hts_callbackarg * carg, httrackp * opt, lien_back *
 
         httrackp * opt = [logic httrack_opt];
         
-        if(!opt) /// quand on a annulé puis repris un téléchargement ¯\_(ツ)_/¯
+        if(!opt)
             return;
 
         if(opt->state.stop && [logic state] == CORELOGIC_STATE_STOPPED)
@@ -94,6 +94,23 @@ static void __cdecl my_filesave(t_hts_callbackarg * carg,
     if(0)
     printf("TOTO my_filesave %s\n", file);
     
+    NSArray<NSString*>* components = [[NSString stringWithUTF8String:(char*)file+opt->path_log.length_] pathComponents];
+    NSString *sfile = [NSString stringWithUTF8String:file];
+    
+    if(components.count < 2)
+        return; /// on veut pas sauvegarder les fichiers d'intendance qui se trouvent a la racine
+    
+    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+        CoreLogic* logic = [((AppDelegate*)[NSApp delegate]) getLogic];
+
+        httrackp * opt = [logic httrack_opt];
+        
+        [ModelsApp addPathComponents:components toArborescence:logic.websites atCompletePath:sfile];
+
+        [[logic delegate] coreLogicPageAdded:logic];
+    }];
+
+    
     if(CALLBACKARG_PREV_FUN(carg, filesave) != NULL) {
         CALLBACKARG_PREV_FUN(carg, filesave)(CALLBACKARG_PREV_CARG(carg), opt, file);
     }
@@ -103,43 +120,11 @@ static void __cdecl my_filesave2(
      t_hts_callbackarg * carg,
      httrackp * opt, const char *adr,
      const char *file, const char *sav,
-     int is_new, int is_modified,
-     int not_updated) {
+     int is_new, int is_modified, int not_updated) {
     // Appellé avant de sauvegarder un fichier
     
-    if(0)
-    printf("TOTO my_filesave2 adr: %s file: %s sac: %s is new %d is modified %d not updated %d\n", adr, file, sav, is_new, is_modified, not_updated);
+    printf("TOTO my_filesave2 adr: %s file: %s sav: %s is new %d is modified %d not updated %d\n", adr, file, sav, is_new, is_modified, not_updated);
     
-    if(strlen(adr) == 0)
-        return;
-    
-    for(int i=0; i < opt->lien_tot; i++) {
-        if(0) printf("lien %d: %s\n", i, opt->liens[i]->sav);
-    }
-    NSString *sadr = @(adr), *sfile = @(file), *ssav = @(sav), *scsav = @(strrchr(sav, '/') + 1);
-    
-//    if(file[0] == '\0') // empty file
-//        return;
-    
-    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-        CoreLogic* logic = [((AppDelegate*)[NSApp delegate]) getLogic];
-
-        httrackp * opt = [logic httrack_opt];
-        
-        for(int i=0; i<logic.websites.directories.count; i++) {
-            if([logic.websites.directories[i].name isEqualToString:@(adr)]) {
-                [ModelsApp addFile:@(file) toArborescence:logic.websites.directories[i] sittingAt:[NSString stringWithCString:sav encoding:NSUnicodeStringEncoding]];
-                goto found;
-            }
-        }
-        // not found
-        [ModelsApp addDirectory:@(adr) toArborescene:logic.websites];
-        [ModelsApp addFile:@(strrchr(sav, '/') + 1) toArborescence:logic.websites.directories[logic.websites.directories.count - 1] sittingAt:[ [NSURL URLWithString:@(sav)] URLByDeletingLastPathComponent].absoluteString.stringByRemovingPercentEncoding ];
-        
-        found:
-        
-        [[logic delegate] coreLogicPageAdded:logic];
-    }];
     
     if(CALLBACKARG_PREV_FUN(carg, filesave2) != NULL) {
         CALLBACKARG_PREV_FUN(carg, filesave2)(CALLBACKARG_PREV_CARG(carg), opt, adr, file, sav, is_new, is_modified, not_updated);
@@ -190,7 +175,7 @@ void parseDirectoriesRecurse(MyDirectoryElements * dir, NSURL * adress)
             if(isDir) {
                 parseDirectoriesRecurse([ModelsApp addDirectory:file toArborescene:dir], [adress URLByAppendingPathComponent:file]);
             } else {
-                [ModelsApp addFile:file toArborescence:dir sittingAt:[adress path]];
+                [ModelsApp addFile:file toArborescence:dir sittingAtCompletePath:[adress path]];
             }
         }
     }
@@ -252,7 +237,6 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
     [self setLogLevel:CORELOGIC_LOG_NONE];
     
     _httrack_opt = hts_create_opt();
-    _httrack_opt->debug = LOG_ERROR;
     _httrack_opt->makeindex = 1;  // devrait construire un index de pages, mais ne semble pas
     _httrack_opt->makestat = 1;
     _httrack_opt->maketrack = 1;
@@ -261,11 +245,13 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
     _httrack_opt->log = stdout;
     _httrack_opt->errlog = stderr;
     _httrack_opt->flush = 1;
+    _httrack_opt->debug = LOG_ERROR;
+#if HTTRACK_WANT_VERBOSE
     _httrack_opt->debug = LOG_TRACE;
     _httrack_opt->verbosedisplay = 1;
     _httrack_opt->parsedebug = 1;
-    _httrack_opt->urlhack = 0;
-    
+    //_httrack_opt->urlhack = 0;
+#endif
     
     // On recupere le HOME sur mac
     NSArray<NSURL *> * urls = [NSFileManager.defaultManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask];

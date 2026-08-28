@@ -20,6 +20,14 @@ atPath:(nonnull NSString *)path {
 @end
 
 @implementation MyDirectoryElements
+- (NSString *) debugDescription {
+    return [
+        NSString stringWithFormat:@"%@, %@ (%d elements)",
+        [super debugDescription],
+        [self name],
+        (int)(self.directories.count + self.files.count)
+    ];
+}
 +(instancetype) createFromString:(NSString *) name {
     MyDirectoryElements * me =[[MyDirectoryElements alloc] init];
     me.name = name;
@@ -30,10 +38,10 @@ atPath:(nonnull NSString *)path {
 
 
 - (BOOL)updateAdvancement:(nonnull NSString *)path site:(NSString*)site ratio:(float)ratio {
-    NSLog(@"me: %@ path: %@ site: %@ ratio: %.2f\n", _name, path, site, ratio);
+    //NSLog(@"me: %@ path: %@ site: %@ ratio: %.2f\n", _name, path, site, ratio);
     for(int i=0; i<self.directories.count; i++) {
         if([self.directories[i].name isEqualToString:site]) {
-            for(int j=0;j<self.directories[i].directories.count; j++)
+            for(int j=0;j<self.directories[i].files.count; j++)
                 if([self.directories[i].files[j].name isEqualToString:path])
                     self.directories[i].files[j].downloadAdvancement = @(ratio);            
             break;
@@ -51,10 +59,11 @@ atPath:(nonnull NSString *)path {
     return dir;
 }
 
-+ (nonnull id)addFile:(nonnull NSString *)file toArborescence:(nonnull MyDirectoryElements *)arbo sittingAt:(NSString*) path {
-    [arbo.files addObject:[MyDowloadableFile createFromString:file atPath:path]];
++ (nonnull MyDowloadableFile*)addFile:(nonnull NSString *)file toArborescence:(nonnull MyDirectoryElements *)arbo sittingAtCompletePath:(NSString*) path {
+    MyDowloadableFile*f =[MyDowloadableFile createFromString:file atPath:path];
+    [arbo.files addObject:f];
     
-    return self;
+    return f;
 }
 
 + (nonnull MyDirectoryElements *)addDirectory:(nonnull NSString *)dirname toArborescene:(nonnull MyDirectoryElements *)arbo {
@@ -62,6 +71,33 @@ atPath:(nonnull NSString *)path {
     n.depth = arbo.depth + 1;
     [arbo.directories addObject:n];
     return n;
+}
+
++(MyDirectoryElements*)addPathComponents:(NSArray<NSString*>*)comps toArborescence:(MyDirectoryElements *)arbo atCompletePath:(NSString*)complete_path
+{
+    MyDirectoryElements * orig = arbo;
+    for(int i = 0; i < comps.count - 1; i++) {
+        NSString*s = comps[i];
+        for(int i =0; i < arbo.directories.count; i++) {
+            if([arbo.directories[i].name isEqualToString:s]) {
+                arbo = arbo.directories[i];
+                goto directory_found;
+            }
+        }
+        /// directory not found, we must create it
+        arbo = [ModelsApp addDirectory:s toArborescene:arbo];
+        directory_found:;
+    }
+    for(int i = 0; i < arbo.files.count ; i++) {
+        if([arbo.files[i].name isEqualToString:comps[comps.count - 1]]) {
+            goto file_found;
+        }
+    }
+    [ModelsApp addFile:comps[comps.count - 1] toArborescence:arbo sittingAtCompletePath:complete_path];
+    /// file not found, we must create it
+    file_found:;
+    
+    return orig;
 }
 
 @end

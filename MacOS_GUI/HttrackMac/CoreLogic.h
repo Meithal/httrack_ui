@@ -30,6 +30,8 @@ NS_ASSUME_NONNULL_BEGIN
 }
 -(MyDirectoryElements *) websites;
 -(void)dowloadSite:(NSString*) url onError:(void (^)(NSString *, NSErrorDomain, NSInteger)) onError;
+
+-(NSArray<NSString*>*)sitesOnHardDrive;
 -(void)indexOfDownloadedSites:(MyDirectoryElements *) arbo;
 
 -(void)setDelegate:(nullable id)newDelegate;

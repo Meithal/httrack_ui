@@ -25,7 +25,7 @@ Bugs
 - [ ] le robots.txt de perdu.com n'est pas téléchargé
 - [x] Mettre un téléchargement en pause on ne peut pas appuyer sur play
 si on a arreté un téléchargement avant.
-- [ ] Télécharger "livre-c.gitlab.io" dit url invalide, rajouter
+- [x] Télécharger "livre-c.gitlab.io" dit url invalide, rajouter
 https:// avant lance le téléchargement, cliquer sur arreter
 dit "URL" invalide et affiche https://livre-c.gitlab.io dans le listing
 - [x] Reessayer de lancer un téléchargement dit url nvalide en boucle
