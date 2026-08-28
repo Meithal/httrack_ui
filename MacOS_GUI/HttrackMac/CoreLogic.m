@@ -28,6 +28,7 @@ NSErrorDomain const MacHttrackErrors = @"com.github.meithal";
 static int __cdecl my_loop(t_hts_callbackarg * carg, httrackp * opt, lien_back * back, int back_max, int back_index, int lien_n, int lien_tot, int stat_time, hts_stat_struct * stats) {
     // appelé à chaque boucle de HTTrack, permet d'arreter un telechargement
     // si besoin
+    
         
     //printf("loop lien :%s \n");
     [[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -73,10 +74,15 @@ static int __cdecl my_loop(t_hts_callbackarg * carg, httrackp * opt, lien_back *
             [[logic delegate] coreLogicDownloadDidAdvance:logic path:@(back->url_fil) domain:@(back->url_adr) ratio:ratio];
         }
     }];
-
+    
+    [[NSOperationQueue mainQueue] waitUntilAllOperationsAreFinished];
+    
     if(CALLBACKARG_PREV_FUN(carg, loop) != NULL) {
         return CALLBACKARG_PREV_FUN(carg, loop)(CALLBACKARG_PREV_CARG( carg), opt, back, back_max, back_index, lien_n, lien_tot, stat_time, stats);
     }
+    
+    if(opt->state.stop)  /// evite de rester bloqué dans htsparse.c hts_mirror_process_user_interaction()
+        return 0;
 
     return 1;
 }
@@ -261,7 +267,6 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
     _httrack_opt->urlhack = 0;
     
     
-    
     // On recupere le HOME sur mac
     NSArray<NSURL *> * urls = [NSFileManager.defaultManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask];
     NSURL * url = urls.firstObject;
@@ -313,12 +318,23 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
         
         hts_buildtopindex(_httrack_opt, StringBuff(_httrack_opt->path_html), StringBuff(_httrack_opt->path_bin));
         
-        if(_httrack_opt->state.exit_xh != 0) {
-            NSString * description = [NSString stringWithFormat: NSLocalizedString(@"Couldn't connect (%d)", @"When httpmirror return a faulty value"), _httrack_opt->state.exit_xh];
+        NSString * description = nil;
+        switch(_httrack_opt->state.exit_xh) {
+            case 0:
+            case 1:
+                // arret demandé par l'utilisateur, ne rien faire
+                break;
+            case -1:
+                description = [NSString stringWithFormat: NSLocalizedString(@"Disk error (%d)", @"When httrack signals hard drive error"), _httrack_opt->state.exit_xh];
+                break;
+            case 2:
+                description = [NSString stringWithFormat: NSLocalizedString(@"Couldn't connect (%d)", @"When httrack signals network error"), _httrack_opt->state.exit_xh];
+                break;
+        }
+        if(description)
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                 onError(description, MacHttrackErrors, NSURLErrorBadURL);
             }];
-        }
         
         hts_free_opt(_httrack_opt);
         htsthread_wait();             /* wait for pending threads */

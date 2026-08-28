@@ -23,7 +23,7 @@ Bugs
 - [ ] Il reste des fuites de mémoire
 - [x] Apres avoir cliqué sur STOP, appuyer sur download ne fait rien
 - [ ] le robots.txt de perdu.com n'est pas téléchargé
-- [ ] Mettre un téléchargement en pause on ne peut pas appuyer sur play
+- [x] Mettre un téléchargement en pause on ne peut pas appuyer sur play
 si on a arreté un téléchargement avant.
 - [ ] Télécharger "livre-c.gitlab.io" dit url invalide, rajouter
 https:// avant lance le téléchargement, cliquer sur arreter
