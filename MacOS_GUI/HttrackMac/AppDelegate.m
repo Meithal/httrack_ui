@@ -14,7 +14,6 @@
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
     // Insert code here to initialize your application
     
-    
     //[NSApp setPresentationOptions:NSApplicationPresentationDisableAppleMenu];
     
     NSLog(@"tile size= %@", NSStringFromSize( _window.dockTile.size));
@@ -30,7 +29,7 @@
     
     
     NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
-    NSArray* autocomp = [defaults arrayForKey:@"autocomplete"];
+    NSArray* autocomp = [defaults arrayForKey:@"autocomplete_copied_sites"];
     
     NSMutableOrderedSet* ms = [NSMutableOrderedSet orderedSetWithArray:autocomp];
     [ms addObjectsFromArray:[self getLogic].sitesOnHardDrive];
@@ -39,7 +38,7 @@
 //    
 //    [defaults registerDefaults:defs];
     
-    [defaults setObject:[ms array] forKey:@"copied_sites"];
+    [defaults setObject:[ms array] forKey:@"autocomplete_copied_sites"];
     
     NSLog(@"defaults %@", [defaults dictionaryRepresentation]);
 }

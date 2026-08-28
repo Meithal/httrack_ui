@@ -21,15 +21,17 @@ Bugs
 - [x] Le listing de sites a gauche apparait une fois sur deux, sans bugs lancé par NSZombieObjects
 - [x] Le listing fait appraitre grabag deux fois de suite au lieu de teletype.com
 - [ ] Il reste des fuites de mémoire
-- [ ] Apres avoir cliqué sur STOP, appuyer sur download ne fait rien
+- [x] Apres avoir cliqué sur STOP, appuyer sur download ne fait rien
 - [ ] le robots.txt de perdu.com n'est pas téléchargé
 - [ ] Mettre un téléchargement en pause on ne peut pas appuyer sur play
 si on a arreté un téléchargement avant.
 - [ ] Télécharger "livre-c.gitlab.io" dit url invalide, rajouter
 https:// avant lance le téléchargement, cliquer sur arreter
 dit "URL" invalide et affiche https://livre-c.gitlab.io dans le listing
-- [ ] Reessayer de lancer un téléchargement dit url nvalide en boucle
+- [x] Reessayer de lancer un téléchargement dit url nvalide en boucle
 ensuite...
+- [/] Taper livre-c.gitlab.io ne télécharge rien au lieu de
+https://livre-c.gitlab.io
 
 Taches
 ---
@@ -74,6 +76,8 @@ commence un téléchargement
 - [ ] ...... pouvoir lancer la video
 - [ ] ...... ouvrir la video dans un programme externe (quicktime, vlc...)
 - [x] ... Vebview pour page
+- [ ] ... TextField pour du texte
+- [ ] ...... Si JSON, CSV ou XML détecté, proposer coloration syntaxique
 - [ ] Avoir un listing de liens externes référencés par les diverses pages
 - [ ] Commencer a télécharger le favicon du site pour y associer une icone
 - [x] En proposer une vue arborescente comme dans un arbre FTP
@@ -81,14 +85,13 @@ commence un téléchargement
 monitor app, en vue tableau.
 - [ ] S'assurer que le site web puisse s'imprimmer correctement. L'option "imprimer" ou "exporter en PDF" doit donner une vue qui fasse sens ?
 - [ ] Faire une maquette avec une grosse barre d'url en haut
-- [ ] Ajouter un feedback qui empeche de télécharger tant que l'url n'est pas correcte
 - [ ] Poposer un backend via nc pour naviguer sur le site en local et aussi proposer un site de test pour tester lle la lib fonctionne bien. il y a egalement htsserver.
 - [ ] Proposer une alternative plus moderne (storyboard? swift?_) <https://stackoverflow.com/questions/27807951/how-to-embed-a-custom-view-xib-in-a-storyboard-scene>
-- [ ] Version téléphone. UIKit ? SwiftUI pour version universelle ? Optionnel
+- [ ] Version téléphone. UIKit ? Catalyst ? SwiftUI pour version universelle ? Optionnel
 - [ ] App Clip ? Widget ?
 - [ ] Pousser la retrompatibilité derrière big sur ? <https://github.com/devernay/xcodelegacy>
 - [ ] Permettre de verifier si les liens externes ne sont pas en fait des liens internes mais devenus morts suite a un changement de domaine. Ajouter une verification de type garde-fu pour les URL externes tres generiques.
-- [ ] Ajouer un drop down d'urls deja entrées dans le passé
+- [x] Ajouer un drop down d'urls deja entrées dans le passé
 - [ ] ... Pouvoir éditer cette liste
 - [ ] ... Avoir une option incognito pour ne jamais enregistrer cette info
 - [ ] Afficher la date de modification du fichier depuis loop sback->lnk->send_too
@@ -99,15 +102,20 @@ monitor app, en vue tableau.
 - [ ] ... Convertir une url de type file:// vers une url en ligne, sans doute etourderie
 - [ ] ... Signaler les modifications faites
 - [ ] Afficher en temps reel les liens trouvés sur chaque page
-- [ ] Permettre d'afficher la version locale du site d'un clic
-- [ ] Implementer le NSPasteboard protocol mpour glisser deposer des sites vers le finder.
+- [x] Permettre d'afficher la version locale du site d'un clic
+- [ ] Implementer le NSPasteboard protocol pour glisser deposer des sites vers le finder.
 - [ ] Dans le listing de pages, pouvoir en modifier ou ajouter pour forcer le telechargement
 - [ ] Pouvoir exporter l'arborescence d'un site sous forme de json ou de graphe
-- [ ] Afficher une notification bureau quand le site a fini de se télécharger
-- [ ] Pouvoir mettre en pause et arrêter un téléchargement
+- [x] Afficher une notification bureau quand le site a fini de se télécharger
+- [?] Pouvoir mettre en pause et arrêter un téléchargement
 - [ ] Creer une fenetre separée pour lancer un nouveau telechargement ? Peut etre simpliste qui contient un simple textView et a l'aspect d'un crayon
 - [ ] Ajouter des settings
 - [ ] ... Le dossier où on veut faire le mirroir
+- [ ] ... Le liste des autocompletions
+- [ ] ...... Qu'on peut modifier
+- [ ] ... Le nombre de sockets paralleles
+- [ ] ... Si on veut activer le mode "telecharger le HTML avant le contenu image, video, etc." de httrack
+- [ ] ... Implementer nous meme un systeme qui privilegie le contenu léger ou bien le contenu lourd?
 - [ ] Avoir une vue simpliste avec juste une barre de progression
 - [ ] Pouvoir drag et drop une url (page web safari?) sur la fenetre, ou coller du texte
 - [ ] Si on veut telecharger tous les PDF d'une page, separer visiblement les liens d'une certine arborescence d'une autre, et mettre un bouton "telecharger tout d'une arborescence" dans le outliner.
@@ -133,8 +141,6 @@ afficher son contenu (dans un panel, ou dans la vue principale?)
 - [ ] NSSharing service qui compresse le site web et l'envoye par mail & autre.
 - [ ] Utiliser le pasteboard pour automatiquement commencer une copie, aussi un service et pouvoir drag@drop
 - [x] Ouvrir le dossier du site directement en cliquant dessus
-- [ ] Taper livre-c.gitlab.io devrait etre résolu automatiquement vers
-https://livre-c.gitlab.io
 
 Plus tard
 ---

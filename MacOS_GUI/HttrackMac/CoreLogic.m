@@ -28,10 +28,7 @@ NSErrorDomain const MacHttrackErrors = @"com.github.meithal";
 static int __cdecl my_loop(t_hts_callbackarg * carg, httrackp * opt, lien_back * back, int back_max, int back_index, int lien_n, int lien_tot, int stat_time, hts_stat_struct * stats) {
     // appelé à chaque boucle de HTTrack, permet d'arreter un telechargement
     // si besoin
-    if(CALLBACKARG_PREV_FUN(carg, loop) != NULL) {
-        CALLBACKARG_PREV_FUN(carg, loop)(CALLBACKARG_PREV_CARG( carg), opt, back, back_max, back_index, lien_n, lien_tot, stat_time, stats);
-    }
-    
+        
     //printf("loop lien :%s \n");
     [[NSOperationQueue mainQueue] addOperationWithBlock:^{
         if(![[NSApp delegate] respondsToSelector:@selector(getLogic)]){
@@ -41,6 +38,13 @@ static int __cdecl my_loop(t_hts_callbackarg * carg, httrackp * opt, lien_back *
         CoreLogic* logic = [((AppDelegate*)[NSApp delegate]) getLogic];
 
         httrackp * opt = [logic httrack_opt];
+        
+        if(!opt) /// quand on a annulé puis repris un téléchargement ¯\_(ツ)_/¯
+            return;
+
+        if(opt->state.stop && [logic state] == CORELOGIC_STATE_STOPPED)
+            return;
+
         enum CoreLogicState old_state = [logic state];
         if(opt) {
             if(opt->state.stop) {
@@ -70,6 +74,10 @@ static int __cdecl my_loop(t_hts_callbackarg * carg, httrackp * opt, lien_back *
         }
     }];
 
+    if(CALLBACKARG_PREV_FUN(carg, loop) != NULL) {
+        return CALLBACKARG_PREV_FUN(carg, loop)(CALLBACKARG_PREV_CARG( carg), opt, back, back_max, back_index, lien_n, lien_tot, stat_time, stats);
+    }
+
     return 1;
 }
 
@@ -77,14 +85,12 @@ static void __cdecl my_filesave(t_hts_callbackarg * carg,
                                httrackp * opt, const char *file) {
     // Appellé après avoir sauvegardé un fichier
     
+    if(0)
+    printf("TOTO my_filesave %s\n", file);
+    
     if(CALLBACKARG_PREV_FUN(carg, filesave) != NULL) {
         CALLBACKARG_PREV_FUN(carg, filesave)(CALLBACKARG_PREV_CARG(carg), opt, file);
     }
-
-    
-    printf("TOTO my_filesave %s\n", file);
-    
-    return;
 }
 
 static void __cdecl my_filesave2(
@@ -95,18 +101,16 @@ static void __cdecl my_filesave2(
      int not_updated) {
     // Appellé avant de sauvegarder un fichier
     
-    if(CALLBACKARG_PREV_FUN(carg, filesave2) != NULL) {
-        CALLBACKARG_PREV_FUN(carg, filesave2)(CALLBACKARG_PREV_CARG(carg), opt, adr, file, sav, is_new, is_modified, not_updated);
-    }
-    
-    printf("TOTO2 my_filesave2 adr: %s file: %s sac: %s is new %d is modified %d not updated %d\n", adr, file, sav, is_new, is_modified, not_updated);
+    if(0)
+    printf("TOTO my_filesave2 adr: %s file: %s sac: %s is new %d is modified %d not updated %d\n", adr, file, sav, is_new, is_modified, not_updated);
     
     if(strlen(adr) == 0)
         return;
     
     for(int i=0; i < opt->lien_tot; i++) {
-        printf("lien %d: %s\n", i, opt->liens[i]->sav);
+        if(0) printf("lien %d: %s\n", i, opt->liens[i]->sav);
     }
+    NSString *sadr = @(adr), *sfile = @(file), *ssav = @(sav), *scsav = @(strrchr(sav, '/') + 1);
     
 //    if(file[0] == '\0') // empty file
 //        return;
@@ -131,12 +135,14 @@ static void __cdecl my_filesave2(
         [[logic delegate] coreLogicPageAdded:logic];
     }];
     
-    return;
+    if(CALLBACKARG_PREV_FUN(carg, filesave2) != NULL) {
+        CALLBACKARG_PREV_FUN(carg, filesave2)(CALLBACKARG_PREV_CARG(carg), opt, adr, file, sav, is_new, is_modified, not_updated);
+    }
 }
 
 static int __cdecl my_end(
     t_hts_callbackarg * carg, httrackp * opt) {
-    printf("TOTO my_end\n");
+    if(0) printf("TOTO my_end\n");
     /* call parent functions if multiple callbacks are chained. you can skip this part, if you don't want previous callbacks to be called. */
     if (CALLBACKARG_PREV_FUN(carg, end) != NULL) {
       /* status is ok on our side, return other callabck's status */
@@ -148,7 +154,8 @@ static int __cdecl my_end(
 
 static int __cdecl my_linkdetected(t_hts_callbackarg * carg,
                                            httrackp * opt, char *link) {
-    printf("TOTOLINK my_linkdetected %s\n", link);
+    if(0) printf("TOTO my_linkdetected %s\n", link);
+    
     if (CALLBACKARG_PREV_FUN(carg, linkdetected) != NULL) {
       /* status is ok on our side, return other callabck's status */
       return CALLBACKARG_PREV_FUN(carg, linkdetected)(CALLBACKARG_PREV_CARG(carg), opt, link);
@@ -198,9 +205,6 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
     self = [super init];
     
     if (self) {
-        
-        [self initHttrack];
-        _eventDispatcher = [[HtmrEventDispatcher alloc] init];
         _state = CORELOGIC_STATE_STOPPED;
     }
     
@@ -211,7 +215,6 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
 {
     hts_free_opt(_httrack_opt);
     [_websites release];
-    [_eventDispatcher release];
     
     [super dealloc];
 }
@@ -240,6 +243,8 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
 
 #pragma mark initHttrack
 -(void)initHttrack {
+    [self setLogLevel:CORELOGIC_LOG_NONE];
+    
     _httrack_opt = hts_create_opt();
     _httrack_opt->debug = LOG_ERROR;
     _httrack_opt->makeindex = 1;  // devrait construire un index de pages, mais ne semble pas
@@ -249,6 +254,12 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
     _httrack_opt->delete_old = 0;  // dans une arbo flat, supprimer anciens fichiers correspond
     _httrack_opt->log = stdout;
     _httrack_opt->errlog = stderr;
+    _httrack_opt->flush = 1;
+    _httrack_opt->debug = LOG_TRACE;
+    _httrack_opt->verbosedisplay = 1;
+    _httrack_opt->parsedebug = 1;
+    _httrack_opt->urlhack = 0;
+    
     
     
     // On recupere le HOME sur mac
@@ -290,6 +301,11 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
 #pragma mark Lance Telechargement
 -(void)dowloadSite:(NSString*) url onError:(void (^)(NSString *, NSErrorDomain, NSInteger code)) onError
 {
+    if(_httrack_opt != nil)
+        return;
+    
+    [self initHttrack];
+    
     NSBlockOperation * operation = [NSBlockOperation blockOperationWithBlock:^{
         int status = httpmirror([url UTF8String], _httrack_opt);
         
@@ -298,11 +314,17 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
         hts_buildtopindex(_httrack_opt, StringBuff(_httrack_opt->path_html), StringBuff(_httrack_opt->path_bin));
         
         if(_httrack_opt->state.exit_xh != 0) {
-            NSString * description = NSLocalizedString(@"Couldn't connect", @"When httpmirror return a faulty value");
+            NSString * description = [NSString stringWithFormat: NSLocalizedString(@"Couldn't connect (%d)", @"When httpmirror return a faulty value"), _httrack_opt->state.exit_xh];
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                 onError(description, MacHttrackErrors, NSURLErrorBadURL);
             }];
         }
+        
+        hts_free_opt(_httrack_opt);
+        htsthread_wait();             /* wait for pending threads */
+        hts_uninit();
+        
+        _httrack_opt = nil;
         
         /// send a notification that the download is finished
         NSUserNotification* note = [[NSUserNotification alloc] init];
@@ -377,22 +399,18 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
 -(void)setState:(enum CoreLogicState)state {
     _state = state;
 }
+-(enum CoreLogicLogLevel) logLevel {
+    return _log_level;
+}
+-(void)setLogLevel:(enum CoreLogicLogLevel)logLevel {
+    _log_level = logLevel;
+}
 -(void)gracefulTerminate {
     [self stopMirror];
 }
 
 @end
 
-#pragma mark HtmrEventDispatcher
-@implementation HtmrEventDispatcher
-
-- (BOOL)removeEventListener:(nonnull void (^)(void))fun {
-}
-
-- (void)addEventListener:(nonnull void (^)(void))fun {
-}
-
-@end
 
 
 

@@ -193,9 +193,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 @implementation MySearchInputField
--(IBAction)performClick:(nullable id)sender {
-    //[self complete:sender];
-}
 - (BOOL)becomeFirstResponder {
     //[self complete:nil];
     BOOL res = [super becomeFirstResponder];
@@ -203,9 +200,6 @@ NS_ASSUME_NONNULL_BEGIN
         [self.currentEditor complete:self];
     
     return res;
-}
-- (void)textView:(NSTextView *)textView clickedOnCell:(id <NSTextAttachmentCell>)cell inRect:(NSRect)cellFrame atIndex:(NSUInteger)charIndex {
-    [textView complete:textView];
 }
 
 - (void)controlTextDidChange:(NSNotification *)notification
@@ -235,8 +229,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSArray<NSString *> *)textView:(NSTextView *)textView completions:(NSArray<NSString *> *)words forPartialWordRange:(NSRange)charRange indexOfSelectedItem:(nullable NSInteger *)index
 {
-    if([textView.string isEqual: @""])
-        return [[NSUserDefaults standardUserDefaults] valueForKey:@"copied_sites"];
+    if([textView.string isEqual: @""]) /// autocompletion uniquement quand on vient de cliquer sur le champ
+        return [[NSUserDefaults standardUserDefaults] valueForKey:@"autocomplete_copied_sites"];
     return nil;
 }
 

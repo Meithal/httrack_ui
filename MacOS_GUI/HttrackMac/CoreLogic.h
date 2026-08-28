@@ -17,17 +17,16 @@ NS_ASSUME_NONNULL_BEGIN
 -(BOOL)endsWithString:(NSString*)string;
 @end
 
-@class HtmrEventDispatcher;
 @class CoreLogicDelegate;
 
 @interface CoreLogic : NSObject {
     httrackp *_httrack_opt;
-    HtmrEventDispatcher * _eventDispatcher;
     CoreLogicDelegate * _delegate;
     id _objCallback;
     SEL _loopCallback;
     enum CoreLogicState {CORELOGIC_STATE_STOPPED,CORELOGIC_STATE_RUNNING, CORELOGIC_STATE_PAUSED} _state;
     MyDirectoryElements * _websites;
+    enum CoreLogicLogLevel{CORELOGIC_LOG_NONE, CORELOGIC_LOG_ERROR, CORELOGIC_LOC_DEBUG} _log_level;
 }
 -(MyDirectoryElements *) websites;
 -(void)dowloadSite:(NSString*) url onError:(void (^)(NSString *, NSErrorDomain, NSInteger)) onError;
@@ -45,6 +44,8 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)stopMirror;
 -(enum CoreLogicState) state;
 -(void)setState:(enum CoreLogicState)state;
+-(enum CoreLogicLogLevel) logLevel;
+-(void)setLogLevel:(enum CoreLogicLogLevel)logLevel;
 -(void)gracefulTerminate;
 @end
 
@@ -54,14 +55,6 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)coreLogicDownloadDidPause:(CoreLogic*)sender;
 -(void)coreLogicPageAdded:(CoreLogic*)sender;
 -(void)coreLogicDownloadDidAdvance:(CoreLogic*)sender path:(NSString*) path domain:(NSString*) domain ratio:(float)ratio;
-@end
-
-@interface HtmrEventDispatcher: NSObject {
-    NSMutableArray<void(^)(void)> * listeners;
-}
--(void)addEventListener:(void(^)(void)) fun;
--(BOOL)removeEventListener:(void(^)(void)) fun;
-
 @end
 
 NS_ASSUME_NONNULL_END
