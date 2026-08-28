@@ -227,6 +227,9 @@ NS_ASSUME_NONNULL_BEGIN
     if(@available(macOS 11.0, *)) {
         [cell.searchButtonCell setImage: [NSImage imageWithSystemSymbolName:@"tray.and.arrow.down" accessibilityDescription:@"The URL to download"]];
     }
+    if(@available(macOS 14.0, *)) { // autocompletion de type URL disponible a partir de Sonoma
+        [self setContentType:NSTextContentTypeURL];
+    }
     //[self complete:self];
 }
 

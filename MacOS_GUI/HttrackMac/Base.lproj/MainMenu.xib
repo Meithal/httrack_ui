@@ -709,7 +709,7 @@
                                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             </tableHeaderCell>
-                                                            <levelIndicatorCell key="dataCell" state="on" alignment="left" doubleValue="3" maxValue="3" warningValue="3" criticalValue="3" levelIndicatorStyle="continuousCapacity" id="1wo-aJ-obr">
+                                                            <levelIndicatorCell key="dataCell" state="on" alignment="left" maxValue="1" levelIndicatorStyle="continuousCapacity" id="1wo-aJ-obr">
                                                                 <font key="font" metaFont="system"/>
                                                             </levelIndicatorCell>
                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
@@ -799,13 +799,12 @@ DQ
                         <searchField key="view" focusRingType="none" verticalHuggingPriority="750" textCompletion="NO" contentType="url" id="9g4-Du-4T3" customClass="MySearchInputField">
                             <rect key="frame" x="0.0" y="14" width="200" height="30"/>
                             <autoresizingMask key="autoresizingMask"/>
-                            <searchFieldCell key="cell" controlSize="large" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" placeholderString="Type website URL here" usesSingleLineMode="YES" bezelStyle="round" sendsSearchStringImmediately="YES" sendsWholeSearchString="YES" recentsAutosaveName="copied_sites" id="d9W-Cc-DiS">
+                            <searchFieldCell key="cell" controlSize="large" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" placeholderString="Type website URL here" usesSingleLineMode="YES" bezelStyle="round" sendsSearchStringImmediately="YES" sendsWholeSearchString="YES" recentsAutosaveName="autocomplete_copied_sites" id="d9W-Cc-DiS">
                                 <font key="font" metaFont="system"/>
                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                             </searchFieldCell>
                             <connections>
-                                <action selector="performClick:" target="lcu-If-avr" id="dtr-jF-FTf"/>
                                 <outlet property="delegate" destination="lcu-If-avr" id="dQh-j2-sgy"/>
                             </connections>
                         </searchField>
@@ -1288,6 +1287,7 @@ DQ
             </view>
             <point key="canvasLocation" x="-789" y="276.5"/>
         </window>
+        <customObject id="lcu-If-avr" customClass="MySearchInputField"/>
     </objects>
     <resources>
         <image name="NSFolder" width="32" height="32"/>
