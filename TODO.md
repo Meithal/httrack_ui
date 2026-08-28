@@ -22,6 +22,14 @@ Bugs
 - [x] Le listing fait appraitre grabag deux fois de suite au lieu de teletype.com
 - [ ] Il reste des fuites de mémoire
 - [ ] Apres avoir cliqué sur STOP, appuyer sur download ne fait rien
+- [ ] le robots.txt de perdu.com n'est pas téléchargé
+- [ ] Mettre un téléchargement en pause on ne peut pas appuyer sur play
+si on a arreté un téléchargement avant.
+- [ ] Télécharger "livre-c.gitlab.io" dit url invalide, rajouter
+https:// avant lance le téléchargement, cliquer sur arreter
+dit "URL" invalide et affiche https://livre-c.gitlab.io dans le listing
+- [ ] Reessayer de lancer un téléchargement dit url nvalide en boucle
+ensuite...
 
 Taches
 ---
@@ -42,13 +50,15 @@ Taches
 - [ ] ...... Avoir un systeme de background worker qui continue la copie meme quand le programme est arrêté et qui s'y reconnecte quand le programme est redémarré ?
 - [x] Afficher hts_stat_struct update
 - [ ] ... Afficher les warnings, les infos et les erreurs
-- [ ] Autocompletion avec sites deja existants <https://developer.apple.com/library/archive/samplecode/SearchField/Introduction/Intro.html#//apple_ref/doc/uid/DTS10004112-Intro-DontLinkElementID_2>
+- [x] Autocompletion avec sites deja existants <https://developer.apple.com/library/archive/samplecode/SearchField/Introduction/Intro.html#//apple_ref/doc/uid/DTS10004112-Intro-DontLinkElementID_2>
 - [x] ... Quitter l'application proprement avec des handlers de sortie
 - [ ] Avoir un feedback des pages copiées
-- [/] ... Chercher le listing des pages dans httrack plutot que lister l'arborescence
+- [ ] ... Chercher le listing des pages dans httrack plutot que lister l'arborescence
 - [ ] ... Afficher une barre d'avancement de telechargement
+- [/] ... afficher immediatement un site dans l'arbo quand on
+commence un téléchargement
 - [ ] Tester Crackman.TTF si Crackman.ttf n'est pas trouvé
-- [ ] Avoir un bouton pour cacher sidebar <https://developer.apple.com/videos/play/wwdc2020/10104/?time=835> <https://stackoverflow.com/questions/54870957/nssplitviewcontroller-nssplitviewitem-support-in-xibs>
+- [ ] Avoir un bouton pour cacher sidebar <https://developer.apple.com/videos/play/wwdc2020/10104/?time=835> <https://stackoverflow.com/questions/54870957/nssplitviewcontroller-nssplitviewitem-support-in-xibs> On Utilisera un NSDrawer pour < big sur, et un NSSplitViewController pour apres
 - [x] ... résoudre le bug de double declaration d'enum HTTP_STATUS_OK
 - [x] Sauvegarder le listing dans le dossier user plutot que l'endroit de l'executable.
 - [x] Avoir un listing de sites copiés
@@ -122,7 +132,9 @@ afficher son contenu (dans un panel, ou dans la vue principale?)
 - [ ] Utiliser NsWorkBench pour ouvrir safari ou questionner les navigateurs disponibles <https://developer.apple.com/documentation/appkit/nsworkspace>
 - [ ] NSSharing service qui compresse le site web et l'envoye par mail & autre.
 - [ ] Utiliser le pasteboard pour automatiquement commencer une copie, aussi un service et pouvoir drag@drop
-- [x] Ouvrir le dossier du site directement en cloquant dessus
+- [x] Ouvrir le dossier du site directement en cliquant dessus
+- [ ] Taper livre-c.gitlab.io devrait etre résolu automatiquement vers
+https://livre-c.gitlab.io
 
 Plus tard
 ---

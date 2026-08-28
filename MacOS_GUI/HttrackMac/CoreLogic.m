@@ -306,7 +306,7 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
         
         /// send a notification that the download is finished
         NSUserNotification* note = [[NSUserNotification alloc] init];
-        note.title = @"Téléchargement de %@ terminé.";
+        note.title = [NSString stringWithFormat:@"Téléchargement de %@ terminé.", url];
         [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification: note];
 
 
@@ -329,8 +329,10 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
     [queue autorelease];
 }
 
--(void)indexOfDownloadedSites:(MyDirectoryElements *) arbo
+-(NSArray<NSString*>*)sitesOnHardDrive
 {
+    NSMutableArray* arr = [[NSMutableArray alloc] init];
+    
     NSURL * url = [NSURL URLWithString:@"Mirrored Websites/" relativeToURL:[NSFileManager.defaultManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask].firstObject];
     
     NSDirectoryEnumerator * dirEn = [NSFileManager.defaultManager enumeratorAtPath:[url path]];
@@ -343,12 +345,21 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
         {
             if([NSFileManager.defaultManager fileExistsAtPath:[[[url path] stringByAppendingPathComponent:file] stringByAppendingPathComponent:@"index.html"]]) {
                 
-                parseDirectoriesRecurse([ModelsApp addDirectory:file toArborescene:arbo], [url URLByAppendingPathComponent:file]);
-                
+                [arr addObject:file];
             }
         }
     }
     
+    return [arr autorelease];
+}
+
+-(void)indexOfDownloadedSites:(MyDirectoryElements *) arbo
+{
+    NSURL * url = [NSURL URLWithString:@"Mirrored Websites/" relativeToURL:[NSFileManager.defaultManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask].firstObject];
+
+    for (NSString *dir in self.sitesOnHardDrive) {
+        parseDirectoriesRecurse([ModelsApp addDirectory:dir toArborescene:arbo], [url URLByAppendingPathComponent:dir]);
+    }
     return;
 }
 

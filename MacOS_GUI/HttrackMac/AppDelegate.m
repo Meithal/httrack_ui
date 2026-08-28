@@ -27,6 +27,21 @@
     [self.window.dockTile setShowsApplicationBadge:YES];
     [self.window.dockTile display];
     //_window.toolbarStyle = NSWindowToolbarStyleUnified;//
+    
+    
+    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+    NSArray* autocomp = [defaults arrayForKey:@"autocomplete"];
+    
+    NSMutableOrderedSet* ms = [NSMutableOrderedSet orderedSetWithArray:autocomp];
+    [ms addObjectsFromArray:[self getLogic].sitesOnHardDrive];
+    
+//    NSDictionary*defs = [NSDictionary dictionaryWithObjectsAndKeys: [ms array], @"autocomplete", nil];
+//    
+//    [defaults registerDefaults:defs];
+    
+    [defaults setObject:[ms array] forKey:@"copied_sites"];
+    
+    NSLog(@"defaults %@", [defaults dictionaryRepresentation]);
 }
 
 - (void)applicationWillTerminate:(NSNotification *)aNotification {

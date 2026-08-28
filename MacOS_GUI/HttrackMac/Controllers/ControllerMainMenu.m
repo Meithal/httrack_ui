@@ -186,18 +186,39 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 #pragma mark Notre barre de recherche
-@interface MySearchInputField: NSSearchField<NSToolbarDelegate>
+@interface MySearchInputField: NSSearchField<NSToolbarDelegate, NSTextViewDelegate> {
+    BOOL _completePosting;
+}
 @end
 
+
 @implementation MySearchInputField
+-(IBAction)performClick:(nullable id)sender {
+    //[self complete:sender];
+}
+- (BOOL)becomeFirstResponder {
+    //[self complete:nil];
+    BOOL res = [super becomeFirstResponder];
+    if(res)
+        [self.currentEditor complete:self];
+    
+    return res;
+}
+- (void)textView:(NSTextView *)textView clickedOnCell:(id <NSTextAttachmentCell>)cell inRect:(NSRect)cellFrame atIndex:(NSUInteger)charIndex {
+    [textView complete:textView];
+}
+
 - (void)controlTextDidChange:(NSNotification *)notification
 {
     NSTextView *textView = notification.userInfo[@"NSFieldEditor"];
     
     // prevent calling "complete" too often
-    [textView complete:nil];
+    if(!_completePosting) {
+        _completePosting = YES;
+        [textView complete:textView];
+        _completePosting = NO;
+    }
 }
-
 
 -(void)awakeFromNib
 {
@@ -206,7 +227,18 @@ NS_ASSUME_NONNULL_BEGIN
     if(@available(macOS 11.0, *)) {
         [cell.searchButtonCell setImage: [NSImage imageWithSystemSymbolName:@"tray.and.arrow.down" accessibilityDescription:@"The URL to download"]];
     }
-    //[self complete:nil];
+    //[self complete:self];
+}
+
+- (NSArray<NSString *> *)textView:(NSTextView *)textView completions:(NSArray<NSString *> *)words forPartialWordRange:(NSRange)charRange indexOfSelectedItem:(nullable NSInteger *)index
+{
+    if([textView.string isEqual: @""])
+        return [[NSUserDefaults standardUserDefaults] valueForKey:@"copied_sites"];
+    return nil;
+}
+
+- (NSArray<NSString *> *)recentSearches {
+    return [((AppDelegate*)[NSApp delegate]).getLogic.sitesOnHardDrive copy];
 }
 @end
 
