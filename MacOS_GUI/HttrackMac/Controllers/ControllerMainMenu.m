@@ -157,7 +157,12 @@ NS_ASSUME_NONNULL_BEGIN
     
     if([chemin.pathExtension.lowercaseString isEqualTo:@"html"]) {
         WKWebViewConfiguration* wvc = [[WKWebViewConfiguration alloc] init];
-        WKWebView* wv = [[WKWebView alloc] initWithFrame:self.safeAreaRect];
+        WKWebView* wv;
+        if(@available(macOS 11.0, *)) {
+            wv = [[WKWebView alloc] initWithFrame:self.safeAreaRect];
+        } else {
+            wv = [[WKWebView alloc] initWithFrame:self.bounds];
+        }
         
         [wv setUIDelegate:self];
         [wv loadRequest:[NSURLRequest requestWithURL:[NSURL fileURLWithPath:chemin]]];
