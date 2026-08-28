@@ -9,12 +9,6 @@ if(APPLE AND NOT CMAKE_OSX_SYSROOT)
     set(CMAKE_OSX_SYSROOT "${_sdk_path}" CACHE PATH "macOS SDK" FORCE)
 endif()
 
-### set the lowest xcode 26 handles
-set(MAX_SDK "10.8")
-if(APPLE)
-	set(CMAKE_OSX_DEPLOYMENT_TARGET ${MAX_SDK})
-	set(MACOSX_DEPLOYMENT_TARGET ${MAX_SDK})
-endif()
 
 project(Httrack C OBJC)
 
@@ -53,7 +47,6 @@ list(TRANSFORM HTTRACK_HEADERS PREPEND "${SRC_ROOT}/")
 
 add_library(httr_lib STATIC ${HTTRACK_SOURCES})
 target_sources(httr_lib PRIVATE ${HTTRACK_HEADERS})
-target_compile_definitions(httr_lib PRIVATE DEBUG=1 HDEBUG=1 BDEBUG=1 DEBUGCA=1)
 
 target_include_directories(httr_lib PUBLIC 
 	"${SRC_ROOT}/coucal"
@@ -91,10 +84,16 @@ target_link_libraries(httr_lib PUBLIC
 	Iconv::Iconv 
 )
 
-target_compile_definitions(httr_lib PUBLIC 
+target_compile_definitions(httr_lib PUBLIC
 	# HTTRACK_SKIP_GNU_BUILDTOOLS=1
 	HTS_DO_NOT_REDEFINE_in_addr_t=1
 	HAVE_STRNLEN=1
+    DEBUG_ROBOTS=1
+    DEBUG=3
+    HDEBUG=2
+    BDEBUG=1
+    HTS_DEBUG_CLOSESOCK=1
+    DEBUGCA=1
 	#HTS_USEOPENSSL=0 // with find_package LibreSSL::SSL, SSL_library_init isnt available, so this can be used instead to download only http sites (not https)
 )
 
@@ -106,7 +105,12 @@ target_link_libraries(httr PUBLIC httr_lib)
 
 
 if(APPLE)
-	set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.github.meithal")
+    ### set the lowest xcode 26 handles
+    set(MAX_SDK "10.13")
+    set(CMAKE_OSX_DEPLOYMENT_TARGET ${MAX_SDK})
+    #set(MACOSX_DEPLOYMENT_TARGET ${MAX_SDK})
+
+	set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.github.meithal.machttrack")
 
 	add_executable(
 		HttrackMac
@@ -123,7 +127,10 @@ if(APPLE)
 		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/CoreLogic.m
 	)
 
-	target_sources(HttrackMac PRIVATE "${CMAKE_CURRENT_LIST_DIR}/TODO.md")
+	target_sources(HttrackMac PRIVATE
+        "${CMAKE_CURRENT_LIST_DIR}/TODO.md"
+        "${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/plist.in"
+    )
 
 	target_link_libraries(HttrackMac PRIVATE httr_lib "-framework AppKit -framework WebKit")
 	target_include_directories(HttrackMac PRIVATE "${SRC_ROOT}")
@@ -140,6 +147,7 @@ if(APPLE)
 		  PROPERTIES
 		    MACOSX_BUNDLE 1
 		    MACOSX_BUNDLE_GUI_IDENTIFIER ${MACOSX_BUNDLE_GUI_IDENTIFIER}
+            XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER ${MACOSX_BUNDLE_GUI_IDENTIFIER}
 		    MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/plist.in
 	)
 
