@@ -10,7 +10,7 @@ if(APPLE AND NOT CMAKE_OSX_SYSROOT)
 endif()
 
 
-project(Httrack C OBJC)
+project(Httpack C OBJC)
 
 set(HTTRACK_WANT_VERBOSE 0)
 
@@ -117,10 +117,10 @@ if(APPLE)
     set(CMAKE_OSX_DEPLOYMENT_TARGET ${MAX_SDK})
     #set(MACOSX_DEPLOYMENT_TARGET ${MAX_SDK})
 
-	set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.github.meithal.machttrack")
+	set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.github.meithal.httpack")
 
 	add_executable(
-		HttrackMac
+		Httpack
 		MACOSX_BUNDLE
 		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/AppDelegate.h
 		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/AppDelegate.m
@@ -134,14 +134,14 @@ if(APPLE)
 		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/CoreLogic.m
 	)
 
-	target_sources(HttrackMac PRIVATE
+	target_sources(Httpack PRIVATE
         "${CMAKE_CURRENT_LIST_DIR}/TODO.md"
         "${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/plist.in"
     )
 
-	target_link_libraries(HttrackMac PRIVATE httr_lib "-framework AppKit -framework WebKit")
-	target_include_directories(HttrackMac PRIVATE "${SRC_ROOT}")
-    target_compile_definitions(HttrackMac PRIVATE HTS_INTERNAL_BYTECODE HTTRACK_WANT_VERBOSE=${HTTRACK_WANT_VERBOSE})
+	target_link_libraries(Httpack PRIVATE httr_lib "-framework AppKit -framework WebKit")
+	target_include_directories(Httpack PRIVATE "${SRC_ROOT}")
+    target_compile_definitions(Httpack PRIVATE HTS_INTERNAL_BYTECODE HTTRACK_WANT_VERBOSE=${HTTRACK_WANT_VERBOSE})
     
 	set_source_files_properties(
 		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/Base.lproj/MainMenu.xib
@@ -150,7 +150,7 @@ if(APPLE)
 	)
 
 	set_target_properties(
-		HttrackMac
+		Httpack
 		  PROPERTIES
 		    MACOSX_BUNDLE 1
 		    MACOSX_BUNDLE_GUI_IDENTIFIER ${MACOSX_BUNDLE_GUI_IDENTIFIER}
@@ -162,17 +162,17 @@ if(APPLE)
 	# cf https://stackoverflow.com/a/78355693/13577241
 	find_package(XCTest REQUIRED)
 
-	xctest_add_bundle(UnitTests HttrackMac
+	xctest_add_bundle(UnitTests Httpack
     	${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMacTests/HttrackMacTests.m
 	)
 	set_target_properties(UnitTests 
 		PROPERTIES 
 		XCODE_ATTRIBUTE_TEST_HOST ""
-		# XCODE_ATTRIBUTE_TEST_TARGET_NAME HttrackMac
+		# XCODE_ATTRIBUTE_TEST_TARGET_NAME Httpack
 		XCODE_PRODUCT_TYPE com.apple.product-type.bundle.unit-test
 	)
 
-	xctest_add_bundle(UITests HttrackMac
+	xctest_add_bundle(UITests Httpack
 		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMacUITests/HttrackMacUITests.m
 		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMacUITests/HttrackMacUITestsLaunchTests.m
 	)
@@ -181,7 +181,7 @@ if(APPLE)
 		 PROPERTIES 
 	      XCODE_ATTRIBUTE_TEST_HOST ""
 		  # XCODE_ATTRIBUTE_BUNDLE_LOADER ""
-		  # XCODE_ATTRIBUTE_TEST_TARGET_NAME HttrackMac
+		  # XCODE_ATTRIBUTE_TEST_TARGET_NAME Httpack
 		  XCODE_PRODUCT_TYPE com.apple.product-type.bundle.ui-testing
 	)
 
