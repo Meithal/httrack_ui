@@ -10,7 +10,7 @@ if(APPLE AND NOT CMAKE_OSX_SYSROOT)
 endif()
 
 
-project(Httpack C OBJC)
+project(Httpack VERSION 0.1.1 LANGUAGES C OBJC)
 
 set(HTTRACK_WANT_VERBOSE 0)
 
@@ -198,6 +198,3 @@ if(APPLE)
 
 endif()
 
-add_executable(
-	objctest "test.m"
-)
