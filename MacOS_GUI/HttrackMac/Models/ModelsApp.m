@@ -53,18 +53,42 @@ atPath:(nonnull NSString *)path {
     return [me autorelease];
 }
 
--(float)avancement {
-    int completedFiles = 0;
+- (int) numberOfChildren
+{
+    int count = 0;
+    
+    count += self.files.count;
+    for(int i=0; i<self.directories.count; i++)
+        count += [self.directories[i] numberOfChildren];
+    
+    return count;
+}
+
+- (int) numberOfCompleted
+{
+    int count = 0;
+    
     for (int i = 0, ct = (int)self.files.count; i <ct; i++) {
         if(self.files[i].avancement >= 1)
-            completedFiles ++;
+            count ++;
     }
-    return self.files.count;
+    for(int i=0; i<self.directories.count; i++)
+        count += [self.directories[i] numberOfCompleted];
+    
+    return count;
+}
+
+-(float)avancement {
+    int total = self.numberOfChildren;
+    int completedFiles = self.numberOfCompleted;
+    return (float)completedFiles / total;
 }
 
 - (BOOL)updateAdvancement:(nonnull MyDowloadableFile*)file ratio:(float)ratio {
     //NSLog(@"me: %@ path: %@ site: %@ ratio: %.2f\n", _name, path, site, ratio);
+    float old = file->_downloadAdvancement;
     file->_downloadAdvancement = ratio;
+    return old != ratio;
 }
 
 @end

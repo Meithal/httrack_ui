@@ -29,8 +29,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, atomic) NSMutableArray<MyDowloadableFile *> * files;
 @property NSInteger depth;
 
-- (NSString *) debugDescription;
 +(instancetype) createFromString:(NSString*) name;
+- (NSString *) debugDescription;
+- (int) numberOfChildren;
+- (int) numberOfCompleted;
 -(BOOL) updateAdvancement:(MyDowloadableFile*)file ratio:(float)ratio;
 @end
 

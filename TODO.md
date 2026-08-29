@@ -32,7 +32,8 @@ dit "URL" invalide et affiche https://livre-c.gitlab.io dans le listing
 ensuite...
 - [ ] Taper livre-c.gitlab.io ne télécharge rien au lieu de
 https://livre-c.gitlab.io
-- [ ] Sur grabag.free.fr on peut pas dérouler un dossier tant qu'un téléchargement est en cours
+- [x] Sur grabag.free.fr on peut pas dérouler un dossier tant qu'un téléchargement est en cours (fix : trop de reloadData)
+- [ ] Demarrer un telechargement d'un autre site quand un autre est en pause semble faire planter, desactiver le textfield ?
 
 Taches
 ---
@@ -57,7 +58,7 @@ Taches
 - [x] ... Quitter l'application proprement avec des handlers de sortie
 - [ ] Avoir un feedback des pages copiées
 - [ ] ... Chercher le listing des pages dans httrack plutot que lister l'arborescence
-- [ ] ... Afficher une barre d'avancement de telechargement
+- [x] ... Afficher une barre d'avancement de telechargement
 - [x] ... afficher immediatement un site dans l'arbo quand on
 commence un téléchargement
 - [ ] Tester Crackman.TTF si Crackman.ttf n'est pas trouvé
@@ -65,7 +66,7 @@ commence un téléchargement
 - [x] ... résoudre le bug de double declaration d'enum HTTP_STATUS_OK
 - [x] Sauvegarder le listing dans le dossier user plutot que l'endroit de l'executable.
 - [x] Avoir un listing de sites copiés
-- [ ] ... Afficher l'avancement de chaque recopie
+- [x] ... Afficher l'avancement de chaque recopie
 - [x] ... Faire en sorte que ce listing se mette a jour en temps reel
 - [x] ... Le listing doit se faire sur un thread different
 - [ ] Avoir une icone a coté de chaque nom de site (favicon)
@@ -108,7 +109,8 @@ monitor app, en vue tableau.
 - [ ] Dans le listing de pages, pouvoir en modifier ou ajouter pour forcer le telechargement
 - [ ] Pouvoir exporter l'arborescence d'un site sous forme de json ou de graphe
 - [x] Afficher une notification bureau quand le site a fini de se télécharger
-- [?] Pouvoir mettre en pause et arrêter un téléchargement
+- [x] Pouvoir mettre en pause et arrêter un téléchargement
+- [ ] ... Meme pour les gros téléchargements déjà lancés
 - [ ] Creer une fenetre separée pour lancer un nouveau telechargement ? Peut etre simpliste qui contient un simple textView et a l'aspect d'un crayon
 - [ ] Ajouter des settings
 - [ ] ... Le dossier où on veut faire le mirroir
