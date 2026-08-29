@@ -184,6 +184,17 @@ if(APPLE)
 		  # XCODE_ATTRIBUTE_TEST_TARGET_NAME Httpack
 		  XCODE_PRODUCT_TYPE com.apple.product-type.bundle.ui-testing
 	)
+ 
+    # generate a DragNDrop installer
+    set(CPACK_BUNDLE_NAME ${CMAKE_PROJECT_NAME})
+    set(CPACK_GENERATOR "DragNDrop")
+    install(TARGETS Httpack 
+		BUNDLE
+		COMPONENT Application
+		DESTINATION .
+	)
+	set(CPACK_INSTALL_CMAKE_PROJECTS "${CMAKE_BINARY_DIR};${CMAKE_PROJECT_NAME};Application;/")
+    include(CPack)
 
 endif()
 

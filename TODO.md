@@ -34,6 +34,7 @@ ensuite...
 https://livre-c.gitlab.io
 - [x] Sur grabag.free.fr on peut pas dérouler un dossier tant qu'un téléchargement est en cours (fix : trop de reloadData)
 - [ ] Demarrer un telechargement d'un autre site quand un autre est en pause semble faire planter, desactiver le textfield ?
+- [ ] Sur theoldnet.com, un fichier html.tmp s'affiche comme complété alors qu'il n'est pas encore téléchargé
 
 Taches
 ---
@@ -61,6 +62,9 @@ Taches
 - [x] ... Afficher une barre d'avancement de telechargement
 - [x] ... afficher immediatement un site dans l'arbo quand on
 commence un téléchargement
+- [ ] ... Afficher en rouge les 404, 50x
+- [ ] ...... Afficher un tooltip et un texte pour l'erreur en question.
+- [ ] ...... Maintenir un cache par site web pour ne pas perdre cette info au redemarrage
 - [ ] Tester Crackman.TTF si Crackman.ttf n'est pas trouvé
 - [ ] Avoir un bouton pour cacher sidebar <https://developer.apple.com/videos/play/wwdc2020/10104/?time=835> <https://stackoverflow.com/questions/54870957/nssplitviewcontroller-nssplitviewitem-support-in-xibs> On Utilisera un NSDrawer pour < big sur, et un NSSplitViewController pour apres
 - [x] ... résoudre le bug de double declaration d'enum HTTP_STATUS_OK
