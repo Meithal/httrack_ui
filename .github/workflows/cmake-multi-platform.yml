@@ -57,9 +57,9 @@ jobs:
       run: ctest --build-config ${{ matrix.build_type }}
 
     - name: Package
-      working-directory: ${{ steps.strings.outputs.build-output-dir }}/build
+      working-directory: ${{ steps.strings.outputs.build-output-dir }}
       run: |
-       cpack -C ${{env.BUILD_TYPE}}
+       cpack -C ${{ matrix.build_type }}
 
     - uses: actions/upload-artifact@v7
       with:
