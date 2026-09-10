@@ -17,8 +17,7 @@ enum {
 @interface ControllerMainMenu : NSViewController<CoreLogicDelegate>
 {
     IBOutlet AppDelegate *_AppDelegate;
-    CoreLogic* _logic;
-    CoreLogicDelegate * _logicDelegate;
+    IBOutlet CoreLogic* _logic;
     
     IBOutlet ProjectsOutlineView * _projectsOutlineView;
     IBOutlet NSButton* _downloadButton;

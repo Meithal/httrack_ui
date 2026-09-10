@@ -5,12 +5,12 @@
 
 @interface AppDelegate : NSObject <NSApplicationDelegate>
 {
-    CoreLogic* _logic;
+    IBOutlet CoreLogic* _logic;
 }
 // MARK: overrides
 -(void)changeWindowSubtitle:(NSString*)newSubtitle;
 // MARK: ours
 -(void)warnUser:(NSString*)description domain:(NSErrorDomain) domain code:(NSInteger) code; /* show a popup warning */
--(CoreLogic*)getLogic;
+-(CoreLogic*)logic;
 @end
 

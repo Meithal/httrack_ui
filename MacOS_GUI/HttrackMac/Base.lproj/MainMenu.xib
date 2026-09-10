@@ -15,6 +15,7 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customObject id="Voe-Tx-rLC" customClass="AppDelegate">
             <connections>
+                <outlet property="_logic" destination="YmQ-IQ-Bgp" id="4fF-4R-fCC"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="gIp-Ho-8D9"/>
             </connections>
         </customObject>
@@ -867,6 +868,7 @@ DQ
                 <outlet property="_httrTotalUpdatedFilesLabel" destination="t6M-1N-uZj" id="3hK-7i-bkw"/>
                 <outlet property="_httrTotalWarningsLabel" destination="RGU-6M-b96" id="MOP-vr-joF"/>
                 <outlet property="_httrTotalWrittenFilesLabel" destination="hE2-qT-ZI2" id="j3j-AR-Sxk"/>
+                <outlet property="_logic" destination="YmQ-IQ-Bgp" id="oEC-Sp-lER"/>
                 <outlet property="_playpausestopControl" destination="piV-pD-az3" id="GOD-2k-wqW"/>
                 <outlet property="_projectsOutlineView" destination="508-O8-Dav" id="Zcq-uY-HJI"/>
                 <outlet property="httrSiteUrl" destination="9g4-Du-4T3" id="hT6-VU-v9n"/>
@@ -1288,6 +1290,7 @@ DQ
             <point key="canvasLocation" x="-789" y="276.5"/>
         </window>
         <customObject id="lcu-If-avr" customClass="MySearchInputField"/>
+        <customObject id="YmQ-IQ-Bgp" customClass="CoreLogic"/>
     </objects>
     <resources>
         <image name="NSFolder" width="32" height="32"/>

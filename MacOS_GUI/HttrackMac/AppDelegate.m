@@ -16,7 +16,7 @@
     
     //[NSApp setPresentationOptions:NSApplicationPresentationDisableAppleMenu];
     
-    NSLog(@"tile size= %@", NSStringFromSize( _window.dockTile.size));
+    // NSLog(@"tile size= %@", NSStringFromSize( _window.dockTile.size));
     NSView* w = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 128, 128)];
     self.AppIcon.wantsLayer = YES;
     self.AppIcon.layer.backgroundColor = NSColor.greenColor.CGColor;
@@ -32,7 +32,7 @@
     NSArray* autocomp = [defaults arrayForKey:@"autocomplete_copied_sites"];
     
     NSMutableOrderedSet* ms = [NSMutableOrderedSet orderedSetWithArray:autocomp];
-    [ms addObjectsFromArray:[self getLogic].sitesOnHardDrive];
+    [ms addObjectsFromArray:[self logic].sitesOnHardDrive];
     
 //    NSDictionary*defs = [NSDictionary dictionaryWithObjectsAndKeys: [ms array], @"autocomplete", nil];
 //    
@@ -40,7 +40,7 @@
     
     [defaults setObject:[ms array] forKey:@"autocomplete_copied_sites"];
     
-    NSLog(@"defaults %@", [defaults dictionaryRepresentation]);
+    //NSLog(@"defaults %@", [defaults dictionaryRepresentation]);
 }
 
 - (void)applicationWillTerminate:(NSNotification *)aNotification {
@@ -65,9 +65,7 @@
 }
 
 // MARK: Our functions
--(CoreLogic*)getLogic {
-    if(_logic == nil)
-        _logic = [[CoreLogic alloc] init];
+-(CoreLogic*)logic {
     return _logic;
 }
 
@@ -88,6 +86,5 @@
 //    [underlyingError autorelease];
 //    [error autorelease];
 }
-
 
 @end

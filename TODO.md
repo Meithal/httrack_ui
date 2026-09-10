@@ -23,11 +23,8 @@ Bugs
 - [ ] Il reste des fuites de mémoire
 - [x] Apres avoir cliqué sur STOP, appuyer sur download ne fait rien
 - [ ] le robots.txt de perdu.com n'est pas téléchargé
-- [x] Mettre un téléchargement en pause on ne peut pas appuyer sur play
-si on a arreté un téléchargement avant.
-- [x] Télécharger "livre-c.gitlab.io" dit url invalide, rajouter
-https:// avant lance le téléchargement, cliquer sur arreter
-dit "URL" invalide et affiche https://livre-c.gitlab.io dans le listing
+- [x] Mettre un téléchargement en pause on ne peut pas appuyer sur play si on a arreté un téléchargement avant.
+- [x] Télécharger "livre-c.gitlab.io" dit url invalide, rajouter https:// avant lance le téléchargement, cliquer sur arreter dit "URL" invalide et affiche https://livre-c.gitlab.io dans le listing
 - [x] Reessayer de lancer un téléchargement dit url nvalide en boucle
 ensuite...
 - [ ] Taper livre-c.gitlab.io ne télécharge rien au lieu de
@@ -60,8 +57,7 @@ Taches
 - [ ] Avoir un feedback des pages copiées
 - [ ] ... Chercher le listing des pages dans httrack plutot que lister l'arborescence
 - [x] ... Afficher une barre d'avancement de telechargement
-- [x] ... afficher immediatement un site dans l'arbo quand on
-commence un téléchargement
+- [x] ... afficher immediatement un site dans l'arbo quand on commence un téléchargement
 - [ ] ... Afficher en rouge les 404, 50x
 - [ ] ...... Afficher un tooltip et un texte pour l'erreur en question.
 - [ ] ...... Maintenir un cache par site web pour ne pas perdre cette info au redemarrage
@@ -88,8 +84,7 @@ commence un téléchargement
 - [ ] Avoir un listing de liens externes référencés par les diverses pages
 - [ ] Commencer a télécharger le favicon du site pour y associer une icone
 - [x] En proposer une vue arborescente comme dans un arbre FTP
-- [ ] Montrer le nombre d'octets telechargés par page comme dans le process
-monitor app, en vue tableau.
+- [ ] Montrer le nombre d'octets telechargés par page comme dans le process monitor app, en vue tableau.
 - [ ] S'assurer que le site web puisse s'imprimmer correctement. L'option "imprimer" ou "exporter en PDF" doit donner une vue qui fasse sens ?
 - [ ] Faire une maquette avec une grosse barre d'url en haut
 - [ ] Poposer un backend via nc pour naviguer sur le site en local et aussi proposer un site de test pour tester lle la lib fonctionne bien. il y a egalement htsserver.
@@ -97,7 +92,7 @@ monitor app, en vue tableau.
 - [ ] Version téléphone. UIKit ? Catalyst ? SwiftUI pour version universelle ? Optionnel
 - [ ] App Clip ? Widget ?
 - [ ] Pousser la retrompatibilité derrière big sur ? <https://github.com/devernay/xcodelegacy>
-- [ ] Permettre de verifier si les liens externes ne sont pas en fait des liens internes mais devenus morts suite a un changement de domaine. Ajouter une verification de type garde-fu pour les URL externes tres generiques.
+- [ ] Permettre de verifier si les liens externes ne sont pas en fait des liens internes mais devenus morts suite a un changement de domaine. Ajouter une verification de type garde-fou pour les URL externes tres generiques.
 - [x] Ajouer un drop down d'urls deja entrées dans le passé
 - [ ] ... Pouvoir éditer cette liste
 - [ ] ... Avoir une option incognito pour ne jamais enregistrer cette info
@@ -133,17 +128,12 @@ monitor app, en vue tableau.
 - [ ] ajouter un service de type texte qui permette de telecharger l'URL selectionnee dans safari ou n'importe ou
 - [ ] Afficher une barre de progression dans l'icone comme pour la stack de telechargement de safari
 - [ ] Idem pour l'icone de la toolbar qui ouvre un panel
-- [ ] Utiliser PaperKit pour montrer comment les pages sont liées entre elles avec
-des fleches, en mode Figma, afficher le contenu des pages avec webkit.
-- [ ] Faire que le panel de stats soit lié au bouton de la toolbar (qui reste actif
-tant que le panel est ouvert), ce bouton doit permettre de "toggle" le panel.
-- [x] Quand dans l'outline on clique sur un fichier html,
-afficher la page (dans un panel, ou dans la vue principale?)
-- [x] Quand dans l'outline on clique sur une image,
-afficher l'image (dans un panel, ou dans la vue principale?)
+- [ ] Utiliser PaperKit pour montrer comment les pages sont liées entre elles avec des fleches, en mode Figma, afficher le contenu des pages avec webkit.
+- [ ] Faire que le panel de stats soit lié au bouton de la toolbar (qui reste actif tant que le panel est ouvert), ce bouton doit permettre de "toggle" le panel.
+- [x] Quand dans l'outline on clique sur un fichier html, afficher la page (dans un panel, ou dans la vue principale?)
+- [x] Quand dans l'outline on clique sur une image, afficher l'image (dans un panel, ou dans la vue principale?)
 - [ ] Afficher toutes les images dans un CollectionLayout <https://developer.apple.com/documentation/appkit/nscollectionview>
-- [ ] Quand dans l'outline on clique sur un dossier zip,
-afficher son contenu (dans un panel, ou dans la vue principale?)
+- [ ] Quand dans l'outline on clique sur un dossier zip, afficher son contenu (dans un panel, ou dans la vue principale?)
 - [x] Dans l'outline, a coté de chaque image en afficher une miniature
 - [ ] Utiliser NsWorkBench pour ouvrir safari ou questionner les navigateurs disponibles <https://developer.apple.com/documentation/appkit/nsworkspace>
 - [ ] NSSharing service qui compresse le site web et l'envoye par mail & autre.

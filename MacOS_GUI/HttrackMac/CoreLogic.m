@@ -31,11 +31,11 @@ static int __cdecl my_loop(t_hts_callbackarg * carg, httrackp * opt, lien_back *
     
     //printf("loop lien :%s \n");
     [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-        if(![[NSApp delegate] respondsToSelector:@selector(getLogic)]){
+        if(![[NSApp delegate] respondsToSelector:@selector(logic)]){
             return;
         }
         
-        CoreLogic* logic = [((AppDelegate*)[NSApp delegate]) getLogic];
+        CoreLogic* logic = [((AppDelegate*)[NSApp delegate]) logic];
 
         httrackp * opt = [logic httrack_opt];
         
@@ -120,7 +120,7 @@ static void __cdecl my_filesave(t_hts_callbackarg * carg,
         return; /// on veut pas sauvegarder les fichiers d'intendance qui se trouvent a la racine
     
     [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-        CoreLogic* logic = [((AppDelegate*)[NSApp delegate]) getLogic];
+        CoreLogic* logic = [((AppDelegate*)[NSApp delegate]) logic];
 
         httrackp * opt = [logic httrack_opt];
         

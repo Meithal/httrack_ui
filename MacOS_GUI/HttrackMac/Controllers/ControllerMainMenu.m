@@ -9,8 +9,6 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark ControllerMainMenu
 @implementation ControllerMainMenu
 -(void) awakeFromNib {
-    
-    _logic = _AppDelegate.getLogic;
     [_logic setDelegate:self];
     [_logic setLoopCallback:@selector(updateState:) withObject:self];
 }
@@ -239,7 +237,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (NSArray<NSString *> *)recentSearches {
-    return [((AppDelegate*)[NSApp delegate]).getLogic.sitesOnHardDrive copy];
+    return [((AppDelegate*)[NSApp delegate]).logic.sitesOnHardDrive copy];
 }
 @end
 
@@ -280,9 +278,6 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
 @end
 
 @implementation ProjectsDataSource
--(void)awakeFromNib {
-    _logic = _delegate.getLogic;
-}
 #pragma mark NSOutlineViewDataSource
 - (BOOL)outlineView:(nonnull NSOutlineView *)outlineView isItemExpandable:(nonnull MyDirectoryElements *)item {
     if(item.class == MyDowloadableFile.class) // ou != MyDirectoryElements.class
@@ -293,7 +288,7 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
 
 - (NSInteger)outlineView:(nonnull NSOutlineView *)outlineView numberOfChildrenOfItem:(nullable MyDirectoryElements *)item {
     if(item == nil)
-        return _delegate.getLogic.websites.directories.count;
+        return _delegate.logic.websites.directories.count;
     else if (item.class == MyDowloadableFile.class)
         return 0;
     else
@@ -332,7 +327,7 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
 
 - (nonnull id)outlineView:(nonnull NSOutlineView *)outlineView child:(NSInteger)index ofItem:(nullable MyDirectoryElements*)item {
     if(item == nil)
-        return _delegate.getLogic.websites.directories[index];
+        return _delegate.logic.websites.directories[index];
     else {
         if(index < item.directories.count)
             return item.directories[index];
