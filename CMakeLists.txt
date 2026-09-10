@@ -113,7 +113,7 @@ target_link_libraries(httr PUBLIC httr_lib)
 
 if(APPLE)
     ### set the lowest xcode 26 handles
-    set(MAX_SDK "10.13")
+    set(MAX_SDK "10.8")
     set(CMAKE_OSX_DEPLOYMENT_TARGET ${MAX_SDK})
     #set(MACOSX_DEPLOYMENT_TARGET ${MAX_SDK})
 

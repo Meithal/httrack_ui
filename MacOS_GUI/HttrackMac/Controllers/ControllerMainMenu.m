@@ -28,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (IBAction)httrDowloadButton:(NSButton *)sender {
-    NSLog(@"Push %@", [self.httrSiteUrl stringValue]);
+//    NSLog(@"Push %@", [self.httrSiteUrl stringValue]);
     
     [_AppDelegate changeWindowSubtitle:[self.httrSiteUrl stringValue]];
     //[self.coreLogic indexOfDownloadedSites];
@@ -40,7 +40,6 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 -(IBAction)segmentedControl:(NSSegmentedControl*)sender {
-    //NSLog(@"Segment %@\n", [sender selectedSegment]);
     switch ([sender selectedTag]) {
         case HTR_CONTROL_PLAY:
             [_logic pauseMirror:0];
@@ -56,7 +55,6 @@ NS_ASSUME_NONNULL_BEGIN
     }
 }
 
-#pragma mark mise a jour de l'appli en fonction des infos de httrack
 -(void)updateState:(hts_stat_struct *) stats {
     if(stats == NULL)
         return;
@@ -93,9 +91,7 @@ NS_ASSUME_NONNULL_BEGIN
     [formatter release];
 }
 
-#pragma mark logique des boutons pause et play, y compris venant de httrack
 -(BOOL)coreLogicDownloadWillStart:(CoreLogicDelegate *)sender {
-    //NSLog(@"Download did start");
     
     [_downloadButton setEnabled:NO];
     [_playpausestopControl setSelectedSegment:HTR_CONTROL_PLAY];
@@ -120,7 +116,6 @@ NS_ASSUME_NONNULL_BEGIN
     [_playpausestopControl setEnabled:YES forSegment:HTR_CONTROL_PLAY];
 }
 
-#pragma mark mise a jour de l'outline view
 - (void)coreLogicPageAdded:(nonnull CoreLogic *)sender {
     [[self projectsOutlineView] reloadData];
 }
@@ -129,7 +124,6 @@ NS_ASSUME_NONNULL_BEGIN
     
     //[[self projectsOutlineView] reloadData];
 }
-
 @end
 
 @implementation MonContenuPreview
@@ -377,9 +371,25 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
 -(ControllerMainMenu*)mainController {
     return _mainController;
 }
-
 @end
 
+/// Gere le bouton de la toolbar qui allume ou eteint le panel de stats
+@implementation MyToolbarStatsButton
+-(IBAction)myclick:(MyToolbarStatsButton*)sender {
+    if(sender->_httrackStatsPanel.isVisible) {
+        [sender->_httrackStatsPanel close];
+    } else {
+        //[sender->_httrackStatsPanel makeKeyAndOrderFront:sender];
+        [sender->_myParentWindow addChildWindow:sender->_httrackStatsPanel ordered:NSWindowAbove];
+
+    }
+    //[_httrackStatsPanel makeKeyAndOrderFront:sender];
+}
+- (void)windowWillClose:(NSNotification *)notification {
+    [(NSButton*)[self view] setState:NSControlStateValueOff];
+    [self toolbar].selectedItemIdentifier = nil;
+}
+@end
 
 
 NS_ASSUME_NONNULL_END

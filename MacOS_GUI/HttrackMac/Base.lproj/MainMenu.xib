@@ -788,9 +788,11 @@ DQ
                     <toolbarItem implicitItemIdentifier="NSToolbarShowColorsItem" id="h1O-xQ-r4q"/>
                     <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="HpB-6i-Uuh"/>
                     <toolbarItem implicitItemIdentifier="NSToolbarShowFontsItem" id="VCw-il-hsB"/>
-                    <toolbarItem implicitItemIdentifier="C2C7BCFA-C39E-4F4F-BC16-0B19B34AA976" label="Stats" paletteLabel="Stats" toolTip="Show httrack statistics" tag="-1" image="NSTouchBarGetInfoTemplate" sizingBehavior="auto" id="gGH-d2-S7a" userLabel="Stats">
+                    <toolbarItem implicitItemIdentifier="C2C7BCFA-C39E-4F4F-BC16-0B19B34AA976" label="Stats" paletteLabel="Stats" toolTip="Show httrack statistics" tag="-1" image="NSTouchBarGetInfoTemplate" sizingBehavior="auto" selectable="YES" id="gGH-d2-S7a" userLabel="Stats" customClass="MyToolbarStatsButton">
                         <connections>
-                            <action selector="makeKeyAndOrderFront:" target="N1X-Rc-Vy8" id="x2V-rd-cvW"/>
+                            <action selector="myclick:" target="DlI-Zg-TxX" id="P9N-v0-2Lf"/>
+                            <outlet property="_httrackStatsPanel" destination="N1X-Rc-Vy8" id="JmE-9X-zqh"/>
+                            <outlet property="_myParentWindow" destination="QvC-M9-y7g" id="Gbt-jm-JmY"/>
                         </connections>
                     </toolbarItem>
                     <toolbarItem implicitItemIdentifier="NSToolbarPrintItem" id="VAG-MH-31e"/>
@@ -869,6 +871,7 @@ DQ
                 <outlet property="_httrTotalWarningsLabel" destination="RGU-6M-b96" id="MOP-vr-joF"/>
                 <outlet property="_httrTotalWrittenFilesLabel" destination="hE2-qT-ZI2" id="j3j-AR-Sxk"/>
                 <outlet property="_logic" destination="YmQ-IQ-Bgp" id="oEC-Sp-lER"/>
+                <outlet property="_myParentWindow" destination="QvC-M9-y7g" id="u19-nV-gTq"/>
                 <outlet property="_playpausestopControl" destination="piV-pD-az3" id="GOD-2k-wqW"/>
                 <outlet property="_projectsOutlineView" destination="508-O8-Dav" id="Zcq-uY-HJI"/>
                 <outlet property="httrSiteUrl" destination="9g4-Du-4T3" id="hT6-VU-v9n"/>
@@ -1287,10 +1290,14 @@ DQ
                     </textField>
                 </subviews>
             </view>
+            <connections>
+                <outlet property="delegate" destination="gGH-d2-S7a" id="hx7-h0-hvY"/>
+            </connections>
             <point key="canvasLocation" x="-789" y="276.5"/>
         </window>
         <customObject id="lcu-If-avr" customClass="MySearchInputField"/>
         <customObject id="YmQ-IQ-Bgp" customClass="CoreLogic"/>
+        <customObject id="DlI-Zg-TxX" customClass="MyToolbarStatsButton"/>
     </objects>
     <resources>
         <image name="NSFolder" width="32" height="32"/>

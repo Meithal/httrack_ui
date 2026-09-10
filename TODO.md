@@ -129,7 +129,7 @@ Taches
 - [ ] Afficher une barre de progression dans l'icone comme pour la stack de telechargement de safari
 - [ ] Idem pour l'icone de la toolbar qui ouvre un panel
 - [ ] Utiliser PaperKit pour montrer comment les pages sont liées entre elles avec des fleches, en mode Figma, afficher le contenu des pages avec webkit.
-- [ ] Faire que le panel de stats soit lié au bouton de la toolbar (qui reste actif tant que le panel est ouvert), ce bouton doit permettre de "toggle" le panel.
+- [x] Faire que le panel de stats soit lié au bouton de la toolbar (qui reste actif tant que le panel est ouvert), ce bouton doit permettre de "toggle" le panel.
 - [x] Quand dans l'outline on clique sur un fichier html, afficher la page (dans un panel, ou dans la vue principale?)
 - [x] Quand dans l'outline on clique sur une image, afficher l'image (dans un panel, ou dans la vue principale?)
 - [ ] Afficher toutes les images dans un CollectionLayout <https://developer.apple.com/documentation/appkit/nscollectionview>

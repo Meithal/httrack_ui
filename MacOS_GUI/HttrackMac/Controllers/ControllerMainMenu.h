@@ -79,4 +79,11 @@ enum {
 @end
 
 
+@interface MyToolbarStatsButton: NSToolbarItem<NSWindowDelegate> {
+    IBOutlet NSPanel* _httrackStatsPanel;
+    IBOutlet NSWindow* _myParentWindow;
+}
+-(IBAction)myclick:(id)sender;
+@end
+
 NS_ASSUME_NONNULL_END
