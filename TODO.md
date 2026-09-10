@@ -82,6 +82,7 @@ commence un téléchargement
 - [ ] ...... pouvoir lancer la video
 - [ ] ...... ouvrir la video dans un programme externe (quicktime, vlc...)
 - [x] ... Vebview pour page
+- [x] ...... Pouvoir naviguer en avant et en arriere dans le webview
 - [ ] ... TextField pour du texte
 - [ ] ...... Si JSON, CSV ou XML détecté, proposer coloration syntaxique
 - [ ] Avoir un listing de liens externes référencés par les diverses pages
@@ -148,6 +149,7 @@ afficher son contenu (dans un panel, ou dans la vue principale?)
 - [ ] NSSharing service qui compresse le site web et l'envoye par mail & autre.
 - [ ] Utiliser le pasteboard pour automatiquement commencer une copie, aussi un service et pouvoir drag@drop
 - [x] Ouvrir le dossier du site directement en cliquant dessus
+- [ ] Afficher une webview pour se connecter sur le site et recuperer les cookies pour scrapper avec un sessionid valide
 
 Plus tard
 ---

@@ -29,7 +29,6 @@ NS_ASSUME_NONNULL_BEGIN
     return _contenuPreview;
 }
 
-
 - (IBAction)httrDowloadButton:(NSButton *)sender {
     NSLog(@"Push %@", [self.httrSiteUrl stringValue]);
     
@@ -164,6 +163,7 @@ NS_ASSUME_NONNULL_BEGIN
         }
         
         [wv setUIDelegate:self];
+        [wv setAllowsBackForwardNavigationGestures:YES];
         [wv loadRequest:[NSURLRequest requestWithURL:[NSURL fileURLWithPath:chemin]]];
         
         [wvc autorelease];
