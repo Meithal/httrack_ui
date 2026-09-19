@@ -7,6 +7,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import "htscore.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol YTPavancement
@@ -28,12 +30,20 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, atomic) NSMutableArray<MyDirectoryElements *> * directories;
 @property (strong, atomic) NSMutableArray<MyDowloadableFile *> * files;
 @property NSInteger depth;
-
 +(instancetype) createFromString:(NSString*) name;
 - (NSString *) debugDescription;
 - (int) numberOfChildren;
 - (int) numberOfCompleted;
 -(BOOL) updateAdvancement:(MyDowloadableFile*)file ratio:(float)ratio;
+@end
+
+@interface MyLiens : NSObject {
+    int _count;
+    lien_back* _liens;
+}
+-(void)updateLiens:(lien_back*)liens total:(int)tot;
+-(int)count;
+-(lien_back*)liens;
 @end
 
 @interface ModelsApp : NSObject

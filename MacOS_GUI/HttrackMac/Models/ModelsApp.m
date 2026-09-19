@@ -18,7 +18,6 @@ atPath:(nonnull NSString *)path {
     me->_downloadAdvancement = -1;
     return [me autorelease];
 }
-
 -(float)avancement {
     // si progression en direct
     if(_downloadAdvancement != -1)
@@ -44,7 +43,6 @@ atPath:(nonnull NSString *)path {
 - (NSString *) description {
     return [self debugDescription];
 }
-
 +(instancetype) createFromString:(NSString *) name {
     MyDirectoryElements * me =[[MyDirectoryElements alloc] init];
     me.name = name;
@@ -52,7 +50,6 @@ atPath:(nonnull NSString *)path {
     me.files = [[NSMutableArray alloc] init];
     return [me autorelease];
 }
-
 - (int) numberOfChildren
 {
     int count = 0;
@@ -63,7 +60,6 @@ atPath:(nonnull NSString *)path {
     
     return count;
 }
-
 - (int) numberOfCompleted
 {
     int count = 0;
@@ -77,20 +73,40 @@ atPath:(nonnull NSString *)path {
     
     return count;
 }
-
 -(float)avancement {
     int total = self.numberOfChildren;
     int completedFiles = self.numberOfCompleted;
     return (float)completedFiles / total;
 }
-
 - (BOOL)updateAdvancement:(nonnull MyDowloadableFile*)file ratio:(float)ratio {
     //NSLog(@"me: %@ path: %@ site: %@ ratio: %.2f\n", _name, path, site, ratio);
     float old = file->_downloadAdvancement;
     file->_downloadAdvancement = ratio;
     return old != ratio;
 }
+@end
 
+@implementation MyLiens
+-(void)dealloc {
+    free(_liens);
+    
+    [super dealloc];
+}
+- (void)updateLiens:(nonnull lien_back *)liens total:(int)tot {
+    if(_liens == NULL) {
+        _liens = calloc(tot + 1, sizeof(lien_back));
+        if(_liens == NULL) // OOM
+            exit(EXIT_FAILURE);
+    }
+    memcpy(_liens, liens, sizeof(lien_back) * tot);
+    _count = tot;
+}
+-(int)count {
+    return _count;
+}
+-(lien_back*)liens {
+    return _liens;
+}
 @end
 
 @implementation ModelsApp
@@ -100,21 +116,18 @@ atPath:(nonnull NSString *)path {
     dir.depth = 0;
     return dir;
 }
-
 + (nonnull MyDowloadableFile*)addFile:(nonnull NSString *)file toArborescence:(nonnull MyDirectoryElements *)arbo sittingAtCompletePath:(NSString*) path {
     MyDowloadableFile*f =[MyDowloadableFile createFromString:file atPath:path];
     [arbo.files addObject:f];
     
     return f;
 }
-
 + (nonnull MyDirectoryElements *)addDirectory:(nonnull NSString *)dirname toArborescene:(nonnull MyDirectoryElements *)arbo {
     MyDirectoryElements *n =[MyDirectoryElements createFromString:dirname];
     n.depth = arbo.depth + 1;
     [arbo.directories addObject:n];
     return n;
 }
-
 +(MyDowloadableFile*)addPathComponents:(NSArray<NSString*>*)comps toArborescence:(MyDirectoryElements *)arbo atCompletePath:(NSString*)complete_path
 {
     MyDirectoryElements * orig = arbo;
@@ -143,7 +156,6 @@ atPath:(nonnull NSString *)path {
     
     return f;
 }
-
 @end
 
 NS_ASSUME_NONNULL_END

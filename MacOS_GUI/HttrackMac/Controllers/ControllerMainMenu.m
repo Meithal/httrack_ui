@@ -32,6 +32,16 @@ NS_ASSUME_NONNULL_BEGIN
     
     //[_liensDrawerButton setImage:NSImageNameInfo];
     //[(NSButtonCell*)[_liensDrawerButton cell] setShowsStateBy:NSContentsCellMask | NSChangeGrayCellMask];
+    
+    /// change l'image de fond du panel de droite
+    //_rightPanel.wantsLayer = YES;
+    
+    
+    //_rightPanel.layer.backgroundColor = [NSColor colorWithPatternImage:[NSImage imageNamed:@"TexturedFullScreen"]].CGColor;
+    //_rightPanel.layer.contentsScale = kCAContentsScalingRepeat;
+
+    //_rightPanel.layer.contents = [NSImage imageNamed:@"TexturedFullScreen"];
+   // _rightPanel.layer.contentsGravity = @"topLeft";
 }
 
 -(void) dealloc {
@@ -49,7 +59,7 @@ NS_ASSUME_NONNULL_BEGIN
         [_liensDrawerButton setState:NSControlStateValueOn];
     }
 }
-
+/// callbacks du delegate de nsdrawer quand celui ci se ferme ou s'ouvre
 - (void)drawerDidOpen:(NSNotification *)notification {
     [self updateState];
 }
@@ -174,6 +184,12 @@ NS_ASSUME_NONNULL_BEGIN
     
     //[[self projectsOutlineView] reloadData];
 }
+
+- (void)coreLogicUpdateLinks:(nonnull CoreLogic *)sender links:(nonnull lien_back *)liens total:(int)tot { 
+    
+    [self->_liensTable reloadData];
+}
+
 @end
 
 @implementation MonContenuPreview
@@ -421,7 +437,6 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
 @end
 
 #pragma mark ProjectsOutlineView
-
 @implementation ProjectsOutlineView
 -(void)awakeFromNib{
     [self reloadData];
@@ -449,5 +464,32 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
 }
 @end
 
+@implementation LiensDataSource
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
+{
+    if(self->core_logic == nil)
+        return 0;
+    
+    return self->core_logic.myLiens.count;
+}
+/* This method is required for the "Cell Based" TableView, and is optional for the "View Based" TableView. If implemented in the latter case, the value will be set to the view at a given row/column if the view responds to -setObjectValue: (such as NSControl and NSTableCellView). Note that NSTableCellView does not actually display the objectValue, and its value is to be used for bindings. See NSTableCellView.h for more information.
+ */
+- (nullable id)tableView:(NSTableView *)tableView objectValueForTableColumn:(nullable NSTableColumn *)tableColumn row:(NSInteger)row
+{
+    if(tableColumn == nil)
+        return nil;
+    
+    if ([tableColumn.identifier isEqualTo:@"TCIurl"]) {
+        return @(self->core_logic.myLiens.liens[row].url_adr);
+    } else if ([tableColumn.identifier isEqualTo:@"TCIlocal"]) {
+        return @(self->core_logic.myLiens.liens[row].url_fil);
+    } else if ([tableColumn.identifier isEqualTo:@"TCIreferer"]) {
+        return @(self->core_logic.myLiens.liens[row].referer_adr);
+    } else if ([tableColumn.identifier isEqualTo:@"TCIstatus"]) {
+        return @(self->core_logic.myLiens.liens[row].status);
+    }
+    return @"toto";
+}
+@end
 
 NS_ASSUME_NONNULL_END

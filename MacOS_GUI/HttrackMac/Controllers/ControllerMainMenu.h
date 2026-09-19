@@ -11,6 +11,7 @@ enum {
 };
 @class ProjectsOutlineView;
 @class MonContenuPreview;
+@class LiensDataSource;
 /**
  Notre "controlleur" qui fait l'interface entre l'UI et la logique+données
  */
@@ -19,6 +20,8 @@ enum {
     IBOutlet AppDelegate *_AppDelegate;
     IBOutlet CoreLogic* _logic;
     IBOutlet NSWindow* _myParentWindow;
+    
+    IBOutlet NSView* _rightPanel;
     
     IBOutlet ProjectsOutlineView * _projectsOutlineView;
     IBOutlet NSButton* _downloadButton;
@@ -52,6 +55,7 @@ enum {
     IBOutlet NSDrawer * _drawerLiens;
     IBOutlet NSView * _drawerContentView;
     IBOutlet NSButton* _liensDrawerButton;
+    IBOutlet NSTableView* _liensTable;
 }
 
 @property (assign) IBOutlet NSTextField *httrSiteUrl;
@@ -91,6 +95,12 @@ enum {
     IBOutlet NSWindow* _myParentWindow;
 }
 -(IBAction)myclick:(id)sender;
+@end
+
+@interface LiensDataSource: NSObject<NSTableViewDataSource, NSTableViewDelegate>
+{
+    IBOutlet CoreLogic* core_logic;
+}
 @end
 
 NS_ASSUME_NONNULL_END

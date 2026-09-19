@@ -33,6 +33,7 @@ static int __cdecl my_loop(t_hts_callbackarg * carg, httrackp * opt, lien_back *
     //printf("loop lien :%s \n");
     [[NSOperationQueue mainQueue] addOperationWithBlock:^{
         if(![[NSApp delegate] respondsToSelector:@selector(logic)]){
+            [NSException raise:@"Misfit object" format:@"bad configuration"];
             return;
         }
         
@@ -92,6 +93,11 @@ static int __cdecl my_loop(t_hts_callbackarg * carg, httrackp * opt, lien_back *
             }
             if(changed)
                 [[logic delegate] coreLogicPageAdded:logic]; // sert juste a refresh le outlineView
+            
+            
+            [[logic delegate] coreLogicUpdateLinks:logic links:back total:back_max];
+            [logic.myLiens updateLiens:back total:back_max];
+
         }
     }];
     
@@ -180,7 +186,6 @@ static int __cdecl my_linkdetected(t_hts_callbackarg * carg,
 
 #pragma mark -
 #pragma mark fonction coeur de metier
-
 /**
  Construit une arborescence de site a partir des fichiers existants dans le system
 A eviter car ca contient des meta fichiers de httrack.
@@ -216,33 +221,30 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
 #pragma mark -
 #pragma mark CoreLogic
 @implementation CoreLogic
-
 -(id)init{
     self = [super init];
     
     if (self) {
         _state = CORELOGIC_STATE_STOPPED;
+        _my_liens = [[MyLiens alloc] init]; // init: s'assure que le pointeur interne est a NULL
     }
     
     return self;
 }
-
 - (void)dealloc
 {
     hts_free_opt(_httrack_opt);
     [_websites release];
+    [_my_liens release];
     
     [super dealloc];
 }
-
 -(void)setDelegate:(nullable CoreLogicDelegate*)newDelegate {
     _delegate = newDelegate;
 }
-
 -(CoreLogicDelegate*)delegate {
     return _delegate;
 }
-
 -(void)setLoopCallback:(nullable SEL) callback withObject:(nullable id) obj {
     _loopCallback = callback;
     _objCallback = obj;
@@ -254,9 +256,8 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
     return _objCallback;
 }
 -(nullable httrackp*)httrack_opt {
-    return _httrack_opt;;
+    return _httrack_opt;
 }
-
 #pragma mark initHttrack
 -(void)initHttrack {
     [self setLogLevel:CORELOGIC_LOG_NONE];
@@ -312,7 +313,6 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
         printf("%s\n", _httrack_opt->liens[i]->sav);
     }
 }
-
 -(MyDirectoryElements *) websites
 {
     if(_websites == nil) {
@@ -322,7 +322,6 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
     
     return _websites;
 }
-
 #pragma mark Lance Telechargement
 -(void)dowloadSite:(NSString*) url onError:(void (^)(NSString *, NSErrorDomain, NSInteger code)) onError
 {
@@ -385,7 +384,6 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
     //[operation autorelease];
     [queue autorelease];
 }
-
 -(NSArray<NSString*>*)sitesOnHardDrive
 {
     NSMutableArray* arr = [[NSMutableArray alloc] init];
@@ -409,7 +407,6 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
     
     return [arr autorelease];
 }
-
 -(void)indexOfDownloadedSites:(MyDirectoryElements *) arbo
 {
     NSURL * url = [NSURL URLWithString:@"Mirrored Websites/" relativeToURL:[NSFileManager.defaultManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask].firstObject];
@@ -419,15 +416,12 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
     }
     return;
 }
-
 -(void)pauseMirror:(int)p {
     hts_setpause(_httrack_opt, p);
 }
-
 -(void)stopMirror {
     hts_request_stop(_httrack_opt, 0);
 }
-
 -(enum CoreLogicState) state {
     return _state;
 }
@@ -443,10 +437,10 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
 -(void)gracefulTerminate {
     [self stopMirror];
 }
+- (nonnull MyLiens *)myLiens {
+    return _my_liens;
+}
 
 @end
-
-
-
 
 NS_ASSUME_NONNULL_END
