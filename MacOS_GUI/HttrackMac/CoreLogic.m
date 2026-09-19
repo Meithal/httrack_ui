@@ -24,6 +24,7 @@ NSErrorDomain const MacHttrackErrors = @"com.github.meithal";
 }
 @end
 
+#pragma mark -
 #pragma mark fonctions bridge httrack
 static int __cdecl my_loop(t_hts_callbackarg * carg, httrackp * opt, lien_back * back, int back_max, int back_index, int lien_n, int lien_tot, int stat_time, hts_stat_struct * stats) {
     // appelé à chaque boucle de HTTrack, permet d'arreter un telechargement
@@ -177,6 +178,7 @@ static int __cdecl my_linkdetected(t_hts_callbackarg * carg,
     return 1;
 }
 
+#pragma mark -
 #pragma mark fonction coeur de metier
 
 /**
@@ -211,6 +213,7 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
 }
 
 
+#pragma mark -
 #pragma mark CoreLogic
 @implementation CoreLogic
 
@@ -266,6 +269,7 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
     _httrack_opt->makeindex = 1;  // devrait construire un index de pages, mais ne semble pas
     _httrack_opt->makestat = 1;
     _httrack_opt->maketrack = 1;
+    _httrack_opt->maxsoc = 2;
     // fonctionner
     _httrack_opt->delete_old = 0;  // dans une arbo flat, supprimer anciens fichiers correspond
     _httrack_opt->log = stdout;
@@ -372,9 +376,8 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
     NSOperationQueue * queue = [[NSOperationQueue alloc] init];
     [queue setName:@"Httrack download queue"];
     
-    if(![_delegate coreLogicDownloadWillStart:self]) { // our delegate callback
-        return;
-    }
+    [_delegate coreLogicDownloadWillStart:self]; // our delegate callback
+    
     [operation setName:@"Httrack download operation"];
     
     [queue addOperation:operation];

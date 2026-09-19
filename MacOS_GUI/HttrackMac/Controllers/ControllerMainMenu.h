@@ -14,10 +14,11 @@ enum {
 /**
  Notre "controlleur" qui fait l'interface entre l'UI et la logique+données
  */
-@interface ControllerMainMenu : NSViewController<CoreLogicDelegate>
+@interface ControllerMainMenu : NSViewController<CoreLogicDelegate, NSDrawerDelegate>
 {
     IBOutlet AppDelegate *_AppDelegate;
     IBOutlet CoreLogic* _logic;
+    IBOutlet NSWindow* _myParentWindow;
     
     IBOutlet ProjectsOutlineView * _projectsOutlineView;
     IBOutlet NSButton* _downloadButton;
@@ -46,11 +47,17 @@ enum {
     IBOutlet NSTextField* _httrLastRequestLabel;
     
     IBOutlet MonContenuPreview* _contenuPreview;
+    
+    /// section des drawers
+    IBOutlet NSDrawer * _drawerLiens;
+    IBOutlet NSView * _drawerContentView;
+    IBOutlet NSButton* _liensDrawerButton;
 }
 
 @property (assign) IBOutlet NSTextField *httrSiteUrl;
 
--(void)updateState:(hts_stat_struct *) stats;
+-(void)updateGlobalStats:(hts_stat_struct *) stats;
+-(void)updateState;
 -(ProjectsOutlineView*)projectsOutlineView;
 -(MonContenuPreview*) contenuPreview;
 

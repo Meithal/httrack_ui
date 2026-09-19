@@ -6,18 +6,67 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark ControllerMainMenu
 @implementation ControllerMainMenu
 -(void) awakeFromNib {
     [_logic setDelegate:self];
-    [_logic setLoopCallback:@selector(updateState:) withObject:self];
+    [_logic setLoopCallback:@selector(updateGlobalStats:) withObject:self];
+    
+    /// On crée le NSDrawer programmatiquement vu qu'on ne peut pas le créer via interface builder
+    CGSize size = self.view.frame.size;
+    size.height /= 2;
+    _drawerLiens = [[NSDrawer alloc] initWithContentSize:size preferredEdge:NSRectEdgeMaxY];
+    [_drawerLiens setParentWindow:self->_myParentWindow];
+    //[self->_myParentWindow addChildWindow:_drawerLiens ordered:NSWindowBelow];
+    [_drawerLiens setMinContentSize:size];
+    [_drawerLiens setMaxContentSize:size];
+    
+    [self->_drawerContentView setFrameSize:_drawerLiens.contentView.frame.size];
+    [self->_drawerContentView setAutoresizingMask:_drawerLiens.contentView.autoresizingMask];
+
+    [self->_drawerContentView setNeedsLayout:YES];
+    [self->_drawerContentView setNeedsDisplay:YES];
+    [self->_drawerContentView resizeSubviewsWithOldSize:_drawerLiens.contentView.frame.size];
+    [_drawerLiens setContentView:self->_drawerContentView];
+    
+    [_drawerLiens setDelegate:self];
+    
+    //[_liensDrawerButton setImage:NSImageNameInfo];
+    //[(NSButtonCell*)[_liensDrawerButton cell] setShowsStateBy:NSContentsCellMask | NSChangeGrayCellMask];
 }
 
 -(void) dealloc {
     [_logic setDelegate:nil];
     [_logic setLoopCallback:nil withObject:nil];
+    [_drawerLiens dealloc];
     [super dealloc];
 }
+
+-(void)updateState {
+    NSDrawerState state = [_drawerLiens state];
+    if(state == NSDrawerClosedState || state == NSDrawerClosingState) {
+        [_liensDrawerButton setState:NSControlStateValueOff];
+    } else {
+        [_liensDrawerButton setState:NSControlStateValueOn];
+    }
+}
+
+- (void)drawerDidOpen:(NSNotification *)notification {
+    [self updateState];
+}
+- (void)drawerDidClose:(NSNotification *)notification {
+    [self updateState];
+}
+
+-(IBAction)toggleLinksDrawer:(id)sender {
+    
+    NSDrawerState state = [_drawerLiens state];
+    if(state == NSDrawerClosedState || state == NSDrawerClosingState) {
+        [_drawerLiens open];
+    } else {
+        [_drawerLiens close];
+    }
+}
+
 
 -(ProjectsOutlineView*)projectsOutlineView {
     return _projectsOutlineView;
@@ -55,7 +104,9 @@ NS_ASSUME_NONNULL_BEGIN
     }
 }
 
--(void)updateState:(hts_stat_struct *) stats {
+-(void)updateGlobalStats:(hts_stat_struct *) stats {
+        
+    /// partie qui gere la mise a jour des sdtatistiques globales de httrack
     if(stats == NULL)
         return;
     
@@ -91,14 +142,13 @@ NS_ASSUME_NONNULL_BEGIN
     [formatter release];
 }
 
--(BOOL)coreLogicDownloadWillStart:(CoreLogicDelegate *)sender {
+-(void)coreLogicDownloadWillStart:(CoreLogicDelegate *)sender {
     
     [_downloadButton setEnabled:NO];
     [_playpausestopControl setSelectedSegment:HTR_CONTROL_PLAY];
     [_playpausestopControl setEnabled:YES forSegment:HTR_CONTROL_PAUSE];
     [_playpausestopControl setEnabled:YES forSegment:HTR_CONTROL_STOP];
     [_playpausestopControl setEnabled:NO forSegment:HTR_CONTROL_PLAY];
-    return YES;
 }
 
 -(void)coreLogicDownloadDidStop:(CoreLogic*)sender {
@@ -127,6 +177,14 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @implementation MonContenuPreview
+
+-(void)drawRect:(NSRect)dirtyRect {
+    [super drawRect:dirtyRect];
+    
+    [[NSColor colorWithPatternImage:[NSImage imageNamed:@"TexturedFullScreen"]] setFill];
+    
+    NSRectFill(dirtyRect);
+}
 
 -(void)mainChangePreview:(NSString*)chemin {
     

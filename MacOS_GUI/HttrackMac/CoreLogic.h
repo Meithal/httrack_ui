@@ -52,7 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @protocol CoreLogicDelegate<NSObject>
--(BOOL)coreLogicDownloadWillStart:(CoreLogic*)sender;
+-(void)coreLogicDownloadWillStart:(CoreLogic*)sender;
 -(void)coreLogicDownloadDidStop:(CoreLogic*)sender;
 -(void)coreLogicDownloadDidPause:(CoreLogic*)sender;
 -(void)coreLogicPageAdded:(CoreLogic*)sender;
