@@ -28,6 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
     MyDirectoryElements * _websites;
     enum CoreLogicLogLevel{CORELOGIC_LOG_NONE, CORELOGIC_LOG_ERROR, CORELOGIC_LOC_DEBUG} _log_level;
     MyLiens* _my_liens;
+    MyBacking* _my_backing;
 }
 -(MyDirectoryElements *) websites;
 -(void)dowloadSite:(NSString*) url onError:(void (^)(NSString *, NSErrorDomain, NSInteger)) onError;
@@ -47,6 +48,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)setLogLevel:(enum CoreLogicLogLevel)logLevel;
 -(void)gracefulTerminate;
 -(MyLiens*)myLiens;
+-(MyBacking*)myBacking;
 @end
 
 @protocol CoreLogicDelegate<NSObject>

@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
     [_drawerLiens setParentWindow:self->_myParentWindow];
     //[self->_myParentWindow addChildWindow:_drawerLiens ordered:NSWindowBelow];
     [_drawerLiens setMinContentSize:size];
+    size.height *= 2;
     [_drawerLiens setMaxContentSize:size];
     
     [self->_drawerContentView setFrameSize:_drawerLiens.contentView.frame.size];
@@ -187,7 +188,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)coreLogicUpdateLinks:(nonnull CoreLogic *)sender links:(nonnull lien_back *)liens total:(int)tot { 
     
-    [self->_liensTable reloadData];
+    [self->_tableBacking reloadData];
+    [self->_tableLiens reloadData];
 }
 
 @end
@@ -478,15 +480,48 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
 {
     if(tableColumn == nil)
         return nil;
+    //return nil;
+    if ([tableColumn.identifier isEqualTo:@"TCIurl"]) {
+        return [@(self->core_logic.myLiens.liens[row].adr)stringByAppendingString:@(self->core_logic.myLiens.liens[row].fil)];
+    } else if ([tableColumn.identifier isEqualTo:@"TCIredirection"]) {
+        return [@(self->core_logic.myLiens.liens[row].former_adr)stringByAppendingString:@(self->core_logic.myLiens.liens[row].former_fil)];
+    } else if ([tableColumn.identifier isEqualTo:@"TCIprecedent"]) {
+        return @(self->core_logic.myLiens.liens[row].precedent);
+    } else if ([tableColumn.identifier isEqualTo:@"TCIprofondeur"]) {
+        return @(self->core_logic.myLiens.liens[row].depth);
+    } else if ([tableColumn.identifier isEqualTo:@"TCIsecondepasse"]) {
+        return @(self->core_logic.myLiens.liens[row].pass2);
+    } else if ([tableColumn.identifier isEqualTo:@"TCIretries"]) {
+        return @(self->core_logic.myLiens.liens[row].retry);
+    }
+
+    return @"toto";
+}
+@end
+
+@implementation BackingDataSource
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
+{
+    if(self->core_logic == nil)
+        return 0;
+    
+    return self->core_logic.myBacking.count;
+}
+/* This method is required for the "Cell Based" TableView, and is optional for the "View Based" TableView. If implemented in the latter case, the value will be set to the view at a given row/column if the view responds to -setObjectValue: (such as NSControl and NSTableCellView). Note that NSTableCellView does not actually display the objectValue, and its value is to be used for bindings. See NSTableCellView.h for more information.
+ */
+- (nullable id)tableView:(NSTableView *)tableView objectValueForTableColumn:(nullable NSTableColumn *)tableColumn row:(NSInteger)row
+{
+    if(tableColumn == nil)
+        return nil;
     
     if ([tableColumn.identifier isEqualTo:@"TCIurl"]) {
-        return @(self->core_logic.myLiens.liens[row].url_adr);
+        return @(self->core_logic.myBacking.backing[row].url_fil);
     } else if ([tableColumn.identifier isEqualTo:@"TCIlocal"]) {
-        return @(self->core_logic.myLiens.liens[row].url_fil);
+        return @(self->core_logic.myBacking.backing[row].url_sav);
     } else if ([tableColumn.identifier isEqualTo:@"TCIreferer"]) {
-        return @(self->core_logic.myLiens.liens[row].referer_adr);
+        return [@(self->core_logic.myBacking.backing[row].referer_adr)stringByAppendingString:@(self->core_logic.myBacking.backing[row].referer_fil)];
     } else if ([tableColumn.identifier isEqualTo:@"TCIstatus"]) {
-        return @(self->core_logic.myLiens.liens[row].status);
+        return @(self->core_logic.myBacking.backing[row].status);
     }
     return @"toto";
 }

@@ -95,8 +95,9 @@ static int __cdecl my_loop(t_hts_callbackarg * carg, httrackp * opt, lien_back *
                 [[logic delegate] coreLogicPageAdded:logic]; // sert juste a refresh le outlineView
             
             
+            [logic.myBacking updateBacking:back total:back_max];
+            [logic.myLiens updateLiens:opt->liens total:opt->lien_tot];
             [[logic delegate] coreLogicUpdateLinks:logic links:back total:back_max];
-            [logic.myLiens updateLiens:back total:back_max];
 
         }
     }];
@@ -227,6 +228,7 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
     if (self) {
         _state = CORELOGIC_STATE_STOPPED;
         _my_liens = [[MyLiens alloc] init]; // init: s'assure que le pointeur interne est a NULL
+        _my_backing = [[MyBacking alloc] init]; // init: s'assure que le pointeur interne est a NULL
     }
     
     return self;
@@ -236,6 +238,7 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
     hts_free_opt(_httrack_opt);
     [_websites release];
     [_my_liens release];
+    [_my_backing release];
     
     [super dealloc];
 }
@@ -439,6 +442,9 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
 }
 - (nonnull MyLiens *)myLiens {
     return _my_liens;
+}
+- (nonnull MyBacking *)myBacking {
+    return _my_backing;
 }
 
 @end

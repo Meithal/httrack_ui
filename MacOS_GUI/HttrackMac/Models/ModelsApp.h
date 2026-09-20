@@ -39,11 +39,20 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MyLiens : NSObject {
     int _count;
-    lien_back* _liens;
+    lien_url* _liens;
 }
--(void)updateLiens:(lien_back*)liens total:(int)tot;
+-(void)updateLiens:(lien_url*_Nullable*_Nullable)liens total:(int)tot;
 -(int)count;
--(lien_back*)liens;
+-(lien_url*)liens;
+@end
+
+@interface MyBacking : NSObject {
+    int _count;
+    lien_back* _backing;
+}
+-(void)updateBacking:(lien_back*)backing total:(int)tot;
+-(int)count;
+-(lien_back*)backing;
 @end
 
 @interface ModelsApp : NSObject

@@ -92,20 +92,46 @@ atPath:(nonnull NSString *)path {
     
     [super dealloc];
 }
-- (void)updateLiens:(nonnull lien_back *)liens total:(int)tot {
-    if(_liens == NULL) {
-        _liens = calloc(tot + 1, sizeof(lien_back));
-        if(_liens == NULL) // OOM
-            exit(EXIT_FAILURE);
-    }
-    memcpy(_liens, liens, sizeof(lien_back) * tot);
+- (void)updateLiens:(lien_url*_Nullable*_Nullable)liens total:(int)tot {
+    if(tot == _count)
+        return;
+    if(_liens != NULL)
+        free(_liens);
+    _liens = calloc(tot, sizeof(lien_url));
+    if(_liens == NULL) // OOM
+        exit(EXIT_FAILURE);
+    
+    memcpy(_liens, *liens, sizeof(lien_url) * tot);
     _count = tot;
 }
 -(int)count {
     return _count;
 }
--(lien_back*)liens {
+-(lien_url*)liens {
     return _liens;
+}
+@end
+
+@implementation MyBacking
+-(void)dealloc {
+    free(_backing);
+    
+    [super dealloc];
+}
+- (void)updateBacking:(nonnull lien_back *)backing total:(int)tot {
+    if(_backing == NULL) {
+        _backing = calloc(tot + 1, sizeof(lien_back));
+        if(_backing == NULL) // OOM
+            exit(EXIT_FAILURE);
+    }
+    memcpy(_backing, backing, sizeof(lien_back) * tot);
+    _count = tot;
+}
+-(int)count {
+    return _count;
+}
+-(lien_back*)backing {
+    return _backing;
 }
 @end
 
