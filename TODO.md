@@ -49,7 +49,7 @@ Taches
 - [x] ... Mettre un bouton de pause lors du telechargement
 - [x] ... Avoir un feedback qu'une copie est en cours
 - [x] ... Quand la fenetre associée est fermée, arrêter le thread de copie (?)
-- [ ] ...... Avoir un systeme de background worker qui continue la copie meme quand le programme est arrêté et qui s'y reconnecte quand le programme est redémarré ?
+- [ ] ...... Avoir un systeme de background worker qui continue la copie meme quand le programme est arrêté et qui s'y reconnecte quand le programme est redémarré ? https://developer.apple.com/documentation/foundation/nsconnection + https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/DistrObjects/Concepts/connections.html - https://developer.apple.com/documentation/backgroundassets/badownloaderextension-qwaw pour macos 10.13 >
 - [x] Afficher hts_stat_struct update
 - [ ] ... Afficher les warnings, les infos et les erreurs
 - [x] Autocompletion avec sites deja existants <https://developer.apple.com/library/archive/samplecode/SearchField/Introduction/Intro.html#//apple_ref/doc/uid/DTS10004112-Intro-DontLinkElementID_2>

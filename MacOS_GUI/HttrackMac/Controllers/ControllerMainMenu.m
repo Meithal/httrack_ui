@@ -34,15 +34,6 @@ NS_ASSUME_NONNULL_BEGIN
     //[_liensDrawerButton setImage:NSImageNameInfo];
     //[(NSButtonCell*)[_liensDrawerButton cell] setShowsStateBy:NSContentsCellMask | NSChangeGrayCellMask];
     
-    /// change l'image de fond du panel de droite
-    //_rightPanel.wantsLayer = YES;
-    
-    
-    //_rightPanel.layer.backgroundColor = [NSColor colorWithPatternImage:[NSImage imageNamed:@"TexturedFullScreen"]].CGColor;
-    //_rightPanel.layer.contentsScale = kCAContentsScalingRepeat;
-
-    //_rightPanel.layer.contents = [NSImage imageNamed:@"TexturedFullScreen"];
-   // _rightPanel.layer.contentsGravity = @"topLeft";
 }
 
 -(void) dealloc {
@@ -199,9 +190,12 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
     
-    [[NSColor colorWithPatternImage:[NSImage imageNamed:@"TexturedFullScreen"]] setFill];
-    
-    NSRectFill(dirtyRect);
+    NSImage* back = [NSImage imageNamed:@"TexturedFullScreen"];
+    if(back) {
+        [[NSColor colorWithPatternImage:back] setFill];
+        
+        NSRectFill(dirtyRect);
+    }
 }
 
 -(void)mainChangePreview:(NSString*)chemin {

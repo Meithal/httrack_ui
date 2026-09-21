@@ -138,6 +138,9 @@ if(APPLE)
         "${CMAKE_CURRENT_LIST_DIR}/TODO.md"
         "${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/plist.in"
     )
+	target_sources(Httpack PUBLIC
+        "${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/TexturedFullScreen.png"
+    )
 
 	target_link_libraries(Httpack PRIVATE httr_lib "-framework AppKit -framework WebKit")
 	target_include_directories(Httpack PRIVATE "${SRC_ROOT}")
@@ -145,6 +148,11 @@ if(APPLE)
     
 	set_source_files_properties(
 		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/Base.lproj/MainMenu.xib
+		  PROPERTIES
+		    MACOSX_PACKAGE_LOCATION Resources
+	)
+	set_source_files_properties(
+		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/TexturedFullScreen.png
 		  PROPERTIES
 		    MACOSX_PACKAGE_LOCATION Resources
 	)
@@ -158,6 +166,7 @@ if(APPLE)
 		    MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/plist.in
 	)
 
+	######### TESTING ###########
 	#enable_testing()
 	# cf https://stackoverflow.com/a/78355693/13577241
 	find_package(XCTest REQUIRED)
@@ -185,6 +194,7 @@ if(APPLE)
 		  XCODE_PRODUCT_TYPE com.apple.product-type.bundle.ui-testing
 	)
  
+	########## DRAG&DROP INSTALLER ############
     # generate a DragNDrop installer
     set(CPACK_BUNDLE_NAME ${CMAKE_PROJECT_NAME})
     set(CPACK_GENERATOR "DragNDrop")
@@ -193,7 +203,9 @@ if(APPLE)
 		COMPONENT Application
 		DESTINATION .
 	)
-	set(CPACK_INSTALL_CMAKE_PROJECTS "${CMAKE_BINARY_DIR};${CMAKE_PROJECT_NAME};Application;/")
+	set(CPACK_INSTALL_CMAKE_PROJECTS 
+	   "${CMAKE_BINARY_DIR};${CMAKE_PROJECT_NAME};Application;/"
+	)
     include(CPack)
 
 endif()
