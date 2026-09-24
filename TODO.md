@@ -64,7 +64,7 @@ Taches
 - [ ] ...... Afficher un tooltip et un texte pour l'erreur en question.
 - [ ] ...... Maintenir un cache par site web pour ne pas perdre cette info au redemarrage
 - [ ] ... Pouvoir détacher du NSDrawer ces statistiques avec une pression longue sur le toggle
-- [ ] ... Pouvoir changer l'orientation du splitview
+- [x] ... Pouvoir changer l'orientation du splitview
 - [ ] Tester Crackman.TTF si Crackman.ttf n'est pas trouvé
 - [ ] Avoir un bouton pour cacher sidebar <https://developer.apple.com/videos/play/wwdc2020/10104/?time=835> <https://stackoverflow.com/questions/54870957/nssplitviewcontroller-nssplitviewitem-support-in-xibs> On Utilisera un NSDrawer pour < big sur, et un NSSplitViewController pour apres
 - [x] ... résoudre le bug de double declaration d'enum HTTP_STATUS_OK

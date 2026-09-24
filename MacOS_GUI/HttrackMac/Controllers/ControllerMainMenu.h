@@ -57,6 +57,8 @@ enum {
     IBOutlet NSButton* _liensDrawerButton;
     IBOutlet NSTableView* _tableBacking;
     IBOutlet NSTableView* _tableLiens;
+    IBOutlet NSSplitView* _splitLiens;
+    IBOutlet NSButton* _splitOrientationChanger;
     
     /// panel de statistiques generales
     IBOutlet NSPanel* _httrackStatsPanel;

@@ -47,8 +47,10 @@ NS_ASSUME_NONNULL_BEGIN
     NSDrawerState state = [_drawerLiens state];
     if(state == NSDrawerClosedState || state == NSDrawerClosingState) {
         [_liensDrawerButton setState:NSControlStateValueOff];
+        [_splitOrientationChanger setHidden:YES];
     } else {
         [_liensDrawerButton setState:NSControlStateValueOn];
+        [_splitOrientationChanger setHidden:NO];
     }
 }
 /// callbacks du delegate de nsdrawer quand celui ci se ferme ou s'ouvre
@@ -68,8 +70,9 @@ NS_ASSUME_NONNULL_BEGIN
         [_drawerLiens close];
     }
 }
-
-
+-(IBAction)rotateSplitStats:(id)sender {
+    [_splitLiens setVertical:![_splitLiens isVertical]];
+}
 -(ProjectsOutlineView*)projectsOutlineView {
     return _projectsOutlineView;
 }
