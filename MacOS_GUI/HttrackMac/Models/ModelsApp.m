@@ -86,51 +86,87 @@ atPath:(nonnull NSString *)path {
 }
 @end
 
+@implementation MyLinkBidge
+@end
 @implementation MyLiens
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _liensBridge = [[NSMutableArray alloc] init];
+    }
+    return self;
+}
 -(void)dealloc {
-    free(_liens);
+    [_liensBridge dealloc];
     
     [super dealloc];
 }
-- (void)updateLiens:(lien_url*_Nullable*_Nullable)liens total:(int)tot {
-    if(tot == _count)
-        return;
-    if(_liens != NULL)
-        free(_liens);
-    _liens = calloc(tot, sizeof(lien_url));
-    if(_liens == NULL) // OOM
-        exit(EXIT_FAILURE);
+- (void)updateLiens:(lien_url*)liens total:(int)tot {
+    int diff = tot - (int)[_liensBridge count];
+    for(int i = 0; i < diff ; i++) {
+        MyLinkBidge* mlb = [[MyLinkBidge alloc] init];
+        mlb->remoteUrl = [[NSString stringWithFormat:@"%@%@", @(liens[_liensBridge.count].adr), @(liens[_liensBridge.count].fil)] copy];
+        mlb->status = [[NSString stringWithFormat:@"%@%@", @(liens[_liensBridge.count].former_adr), @(liens[_liensBridge.count].former_fil)] copy];
+        mlb->previous = [NSNumber numberWithInt:liens[_liensBridge.count].precedent];
+        mlb->passe = [NSNumber numberWithInt:liens[_liensBridge.count].pass2];
+        mlb->depth = [NSNumber numberWithInt:liens[_liensBridge.count].depth];
+        mlb->retires = [NSNumber numberWithInt:liens[_liensBridge.count].retry];
+        [_liensBridge addObject:mlb];
+        [mlb release];
+    }
     
-    memcpy(_liens, *liens, sizeof(lien_url) * tot);
-    _count = tot;
 }
 -(int)count {
-    return _count;
+    return (int)[_liensBridge count];
 }
--(lien_url*)liens {
-    return _liens;
+-(NSArray<MyLinkBidge*>*)liens {
+    return _liensBridge;
 }
 @end
 
+@implementation MyBackingBridge
+@end
 @implementation MyBacking
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _backing = [[NSMutableArray alloc] init];
+    }
+    return self;
+}
 -(void)dealloc {
-    free(_backing);
+    [_backing release];
     
     [super dealloc];
 }
 - (void)updateBacking:(nonnull lien_back *)backing total:(int)tot {
-    if(_backing == NULL) {
-        _backing = calloc(tot + 1, sizeof(lien_back));
-        if(_backing == NULL) // OOM
-            exit(EXIT_FAILURE);
+    if([_backing count] != tot) {
+        [_backing removeAllObjects];
+        for(int i=0; i<tot; i++) {
+            MyBackingBridge * b = [[MyBackingBridge alloc] init];
+            [_backing addObject:b];
+            [b release];
+        }
     }
-    memcpy(_backing, backing, sizeof(lien_back) * tot);
-    _count = tot;
+    for(int i = 0; i<tot; i++) {
+        [_backing[i]->remote release];
+        [_backing[i]->referer release];
+        [_backing[i]->local release];
+        [_backing[i]->status release];
+        [_backing[i]->progression release];
+        _backing[i]->remote = [[NSString stringWithFormat:@"%@%@", @(backing[i].url_adr), @(backing[i].url_fil)] copy];
+        _backing[i]->referer = [[NSString stringWithFormat:@"%s%s", backing[i].referer_adr, backing[i].referer_fil] copy];
+        _backing[i]->local = [[NSString stringWithFormat:@"%s", backing[i].url_sav] copy];
+        _backing[i]->status = [[NSNumber numberWithInt:backing[i].r.statuscode] copy];
+        _backing[i]->progression = [[NSNumber numberWithFloat: backing[i].r.totalsize ? (float)backing[i].r.size / backing[i].r.totalsize : 0] copy];
+    }
 }
 -(int)count {
-    return _count;
+    return (int)[_backing count];
 }
--(lien_back*)backing {
+-(NSArray<MyBackingBridge*>*)backing {
     return _backing;
 }
 @end

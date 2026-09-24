@@ -142,7 +142,7 @@ if(APPLE)
         "${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/TexturedFullScreen.png"
     )
 
-	target_link_libraries(Httpack PRIVATE httr_lib "-framework AppKit -framework WebKit")
+	target_link_libraries(Httpack PRIVATE httr_lib "-framework AppKit -framework WebKit -framework Metal")
 	target_include_directories(Httpack PRIVATE "${SRC_ROOT}")
     target_compile_definitions(Httpack PRIVATE HTS_INTERNAL_BYTECODE HTTRACK_WANT_VERBOSE=${HTTRACK_WANT_VERBOSE})
     

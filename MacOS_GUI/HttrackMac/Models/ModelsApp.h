@@ -37,22 +37,39 @@ NS_ASSUME_NONNULL_BEGIN
 -(BOOL) updateAdvancement:(MyDowloadableFile*)file ratio:(float)ratio;
 @end
 
+@interface MyLinkBidge: NSObject {
+    @public
+    NSString* remoteUrl;
+    NSString* status;
+    NSNumber* previous;
+    NSNumber* passe;
+    NSNumber* depth;
+    NSNumber* retires;
+};
+@end
 @interface MyLiens : NSObject {
-    int _count;
-    lien_url* _liens;
+    NSMutableArray<MyLinkBidge*>* _liensBridge;
 }
--(void)updateLiens:(lien_url*_Nullable*_Nullable)liens total:(int)tot;
+-(void)updateLiens:(lien_url*)liens total:(int)tot;  /// TODO: on ne devrait pas avoir a connaitre les details de la couche inferieure ici
 -(int)count;
--(lien_url*)liens;
+-(NSArray<MyLinkBidge*>*)liens;
 @end
 
+@interface MyBackingBridge: NSObject {
+    @public
+    NSString* remote;
+    NSString* referer;
+    NSString* local;
+    NSNumber* status;
+    NSNumber* progression;
+}
+@end
 @interface MyBacking : NSObject {
-    int _count;
-    lien_back* _backing;
+    NSMutableArray<MyBackingBridge*>* _backing;
 }
 -(void)updateBacking:(lien_back*)backing total:(int)tot;
 -(int)count;
--(lien_back*)backing;
+-(NSArray<MyBackingBridge*>*)backing;
 @end
 
 @interface ModelsApp : NSObject

@@ -96,7 +96,7 @@ static int __cdecl my_loop(t_hts_callbackarg * carg, httrackp * opt, lien_back *
             
             
             [logic.myBacking updateBacking:back total:back_max];
-            [logic.myLiens updateLiens:opt->liens total:opt->lien_tot];
+            [logic.myLiens updateLiens:*opt->liens total:opt->lien_tot];
             [[logic delegate] coreLogicUpdateLinks:logic links:back total:back_max];
 
         }

@@ -490,19 +490,19 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
 {
     if(tableColumn == nil)
         return nil;
-    //return nil;
+
     if ([tableColumn.identifier isEqualTo:@"TCIurl"]) {
-        return [@(self->core_logic.myLiens.liens[row].adr)stringByAppendingString:@(self->core_logic.myLiens.liens[row].fil)];
+        return [self->core_logic.myLiens.liens objectAtIndex:row]->remoteUrl;
     } else if ([tableColumn.identifier isEqualTo:@"TCIredirection"]) {
-        return [@(self->core_logic.myLiens.liens[row].former_adr)stringByAppendingString:@(self->core_logic.myLiens.liens[row].former_fil)];
+        return [self->core_logic.myLiens.liens objectAtIndex:row]->status;
     } else if ([tableColumn.identifier isEqualTo:@"TCIprecedent"]) {
-        return @(self->core_logic.myLiens.liens[row].precedent);
+        return [self->core_logic.myLiens.liens objectAtIndex:row]->previous;
     } else if ([tableColumn.identifier isEqualTo:@"TCIprofondeur"]) {
-        return @(self->core_logic.myLiens.liens[row].depth);
+        return [self->core_logic.myLiens.liens objectAtIndex:row]->depth;
     } else if ([tableColumn.identifier isEqualTo:@"TCIsecondepasse"]) {
-        return @(self->core_logic.myLiens.liens[row].pass2);
+        return [self->core_logic.myLiens.liens objectAtIndex:row]->passe;
     } else if ([tableColumn.identifier isEqualTo:@"TCIretries"]) {
-        return @(self->core_logic.myLiens.liens[row].retry);
+        return [self->core_logic.myLiens.liens objectAtIndex:row]->retires;
     }
 
     return @"toto";
@@ -525,16 +525,19 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
         return nil;
     
     if ([tableColumn.identifier isEqualTo:@"TCIurl"]) {
-        return @(self->core_logic.myBacking.backing[row].url_fil);
+        return [self->core_logic.myBacking.backing objectAtIndex:row]->remote;
     } else if ([tableColumn.identifier isEqualTo:@"TCIlocal"]) {
-        return @(self->core_logic.myBacking.backing[row].url_sav);
+        return [self->core_logic.myBacking.backing objectAtIndex:row]->local;
     } else if ([tableColumn.identifier isEqualTo:@"TCIreferer"]) {
-        return [@(self->core_logic.myBacking.backing[row].referer_adr)stringByAppendingString:@(self->core_logic.myBacking.backing[row].referer_fil)];
+        return [self->core_logic.myBacking.backing objectAtIndex:row]->referer;
     } else if ([tableColumn.identifier isEqualTo:@"TCIstatus"]) {
-        return @(self->core_logic.myBacking.backing[row].status);
+        return [self->core_logic.myBacking.backing objectAtIndex:row]->status;
+    } else if ([tableColumn.identifier isEqualTo:@"Progression"]) {
+        return [self->core_logic.myBacking.backing objectAtIndex:row]->progression;
     }
     return @"toto";
 }
+
 @end
 
 NS_ASSUME_NONNULL_END

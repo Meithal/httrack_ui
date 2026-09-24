@@ -32,6 +32,10 @@ https://livre-c.gitlab.io
 - [x] Sur grabag.free.fr on peut pas dérouler un dossier tant qu'un téléchargement est en cours (fix : trop de reloadData)
 - [ ] Demarrer un telechargement d'un autre site quand un autre est en pause semble faire planter, desactiver le textfield ?
 - [ ] Sur theoldnet.com, un fichier html.tmp s'affiche comme complété alors qu'il n'est pas encore téléchargé
+- [x] Corruption de données
+Dans les statistiques de téléchargement
+- [ ] Plein de warnings
+Quand on ouvre une webview
 
 Taches
 ---
