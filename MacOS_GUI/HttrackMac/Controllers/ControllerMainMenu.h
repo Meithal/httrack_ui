@@ -76,7 +76,6 @@ enum {
 @interface ProjectsDataSource: NSObject<NSOutlineViewDataSource, NSOutlineViewDelegate>
 {
     IBOutlet AppDelegate *_delegate;
-    CoreLogic* _logic;
 }
 @end
 

@@ -56,7 +56,6 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)coreLogicDownloadDidStop:(CoreLogic*)sender;
 -(void)coreLogicDownloadDidPause:(CoreLogic*)sender;
 -(void)coreLogicPageAdded:(CoreLogic*)sender;
--(void)coreLogicDownloadDidAdvance:(CoreLogic*)sender path:(NSString*) path domain:(NSString*) domain ratio:(float)ratio;
 -(void)coreLogicUpdateLinks:(CoreLogic *)sender links:(lien_back*)liens total:(int)tot;
 @end
 

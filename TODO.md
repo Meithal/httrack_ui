@@ -32,10 +32,8 @@ https://livre-c.gitlab.io
 - [x] Sur grabag.free.fr on peut pas dérouler un dossier tant qu'un téléchargement est en cours (fix : trop de reloadData)
 - [ ] Demarrer un telechargement d'un autre site quand un autre est en pause semble faire planter, desactiver le textfield ?
 - [ ] Sur theoldnet.com, un fichier html.tmp s'affiche comme complété alors qu'il n'est pas encore téléchargé
-- [x] Corruption de données
-Dans les statistiques de téléchargement
-- [ ] Plein de warnings
-Quand on ouvre une webview
+- [x] Corruption de données dans les statistiques de téléchargement
+- [ ] Plein de warnings quand on ouvre une webview
 
 Taches
 ---
@@ -65,6 +63,8 @@ Taches
 - [ ] ... Afficher en rouge les 404, 50x
 - [ ] ...... Afficher un tooltip et un texte pour l'erreur en question.
 - [ ] ...... Maintenir un cache par site web pour ne pas perdre cette info au redemarrage
+- [ ] ... Pouvoir détacher du NSDrawer ces statistiques avec une pression longue sur le toggle
+- [ ] ... Pouvoir changer l'orientation du splitview
 - [ ] Tester Crackman.TTF si Crackman.ttf n'est pas trouvé
 - [ ] Avoir un bouton pour cacher sidebar <https://developer.apple.com/videos/play/wwdc2020/10104/?time=835> <https://stackoverflow.com/questions/54870957/nssplitviewcontroller-nssplitviewitem-support-in-xibs> On Utilisera un NSDrawer pour < big sur, et un NSSplitViewController pour apres
 - [x] ... résoudre le bug de double declaration d'enum HTTP_STATUS_OK
@@ -120,9 +120,11 @@ Taches
 - [ ] ... Le dossier où on veut faire le mirroir
 - [ ] ... Le liste des autocompletions
 - [ ] ...... Qu'on peut modifier
+- [x] ...... Qu'on peut prune
 - [ ] ... Le nombre de sockets paralleles
 - [ ] ... Si on veut activer le mode "telecharger le HTML avant le contenu image, video, etc." de httrack
 - [ ] ... Implementer nous meme un systeme qui privilegie le contenu léger ou bien le contenu lourd?
+- [x] ... Pour effacer tous les setting sauf les autocompletions
 - [ ] Avoir une vue simpliste avec juste une barre de progression
 - [ ] Pouvoir drag et drop une url (page web safari?) sur la fenetre, ou coller du texte
 - [ ] Si on veut telecharger tous les PDF d'une page, separer visiblement les liens d'une certine arborescence d'une autre, et mettre un bouton "telecharger tout d'une arborescence" dans le outliner.

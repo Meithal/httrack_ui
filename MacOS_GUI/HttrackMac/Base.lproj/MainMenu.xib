@@ -1334,14 +1334,14 @@ DQ
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <subviews>
                         <scrollView fixedFrame="YES" autohidesScrollers="YES" horizontalLineScroll="24" horizontalPageScroll="10" verticalLineScroll="24" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="np4-ep-qTd">
-                            <rect key="frame" x="0.0" y="0.0" width="406" height="372"/>
+                            <rect key="frame" x="0.0" y="0.0" width="405" height="372"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <clipView key="contentView" id="W7T-9o-eW8">
-                                <rect key="frame" x="1" y="1" width="404" height="370"/>
+                                <rect key="frame" x="1" y="1" width="403" height="370"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveName="autosaveLiens" rowHeight="24" headerView="0x6-1d-dlu" id="OZH-wE-EDx">
-                                        <rect key="frame" x="0.0" y="0.0" width="481" height="342"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="457" height="342"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <size key="intercellSpacing" width="17" height="0.0"/>
                                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -1407,7 +1407,7 @@ DQ
                                                 </textFieldCell>
                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                             </tableColumn>
-                                            <tableColumn identifier="TCIredirection" width="64" minWidth="40" maxWidth="200" id="e0z-dL-42T">
+                                            <tableColumn identifier="TCIredirection" width="40" minWidth="40" maxWidth="200" id="e0z-dL-42T">
                                                 <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Redirection">
                                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                     <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
@@ -1428,7 +1428,7 @@ DQ
                                 </subviews>
                             </clipView>
                             <scroller key="horizontalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="A92-kD-kjE">
-                                <rect key="frame" x="1" y="355" width="404" height="16"/>
+                                <rect key="frame" x="1" y="355" width="403" height="16"/>
                                 <autoresizingMask key="autoresizingMask"/>
                             </scroller>
                             <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="LDf-Ve-jFj">
@@ -1436,19 +1436,19 @@ DQ
                                 <autoresizingMask key="autoresizingMask"/>
                             </scroller>
                             <tableHeaderView key="headerView" wantsLayer="YES" id="0x6-1d-dlu">
-                                <rect key="frame" x="0.0" y="0.0" width="481" height="28"/>
+                                <rect key="frame" x="0.0" y="0.0" width="457" height="28"/>
                                 <autoresizingMask key="autoresizingMask"/>
                             </tableHeaderView>
                         </scrollView>
                         <scrollView fixedFrame="YES" autohidesScrollers="YES" horizontalLineScroll="24" horizontalPageScroll="10" verticalLineScroll="24" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="fMV-2z-Cby">
-                            <rect key="frame" x="416" y="0.0" width="405" height="372"/>
+                            <rect key="frame" x="415" y="0.0" width="406" height="372"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <clipView key="contentView" id="gai-NP-lcd">
-                                <rect key="frame" x="1" y="1" width="403" height="370"/>
+                                <rect key="frame" x="1" y="1" width="404" height="370"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveName="autosaveBacking" rowHeight="24" headerView="fGm-hB-NGK" id="fWS-uY-r4C">
-                                        <rect key="frame" x="0.0" y="0.0" width="442" height="342"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="410" height="342"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <size key="intercellSpacing" width="17" height="0.0"/>
                                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -1459,7 +1459,7 @@ DQ
                                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                     <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                 </tableHeaderCell>
-                                                <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" title="Text Cell" id="7OA-JS-je4">
+                                                <textFieldCell key="dataCell" lineBreakMode="truncatingHead" selectable="YES" editable="YES" alignment="right" title="Text Cell" id="7OA-JS-je4">
                                                     <font key="font" metaFont="system"/>
                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -1474,6 +1474,18 @@ DQ
                                                 <levelIndicatorCell key="dataCell" state="on" alignment="left" maxValue="1" warningValue="3" criticalValue="3" levelIndicatorStyle="continuousCapacity" id="422-XJ-Mhh">
                                                     <font key="font" metaFont="system"/>
                                                 </levelIndicatorCell>
+                                                <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                            </tableColumn>
+                                            <tableColumn identifier="Total size" width="64" minWidth="10" maxWidth="120" id="zQK-To-Fch">
+                                                <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Total size">
+                                                    <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </tableHeaderCell>
+                                                <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="ACg-BS-PST">
+                                                    <font key="font" metaFont="system"/>
+                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                </textFieldCell>
                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                             </tableColumn>
                                             <tableColumn identifier="TCIlocal" width="55" minWidth="40" maxWidth="1000" id="Opa-Eg-Xsc">
@@ -1500,24 +1512,12 @@ DQ
                                                 </textFieldCell>
                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                             </tableColumn>
-                                            <tableColumn identifier="TCIstatus" width="42" minWidth="10" maxWidth="120" id="qKO-vz-wOX">
+                                            <tableColumn identifier="TCIstatus" width="10" minWidth="10" maxWidth="120" id="qKO-vz-wOX">
                                                 <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Status">
                                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </tableHeaderCell>
                                                 <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="58n-6t-2eu">
-                                                    <font key="font" metaFont="system"/>
-                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                    <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                </textFieldCell>
-                                                <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                            </tableColumn>
-                                            <tableColumn width="64" minWidth="10" maxWidth="120" id="zQK-To-Fch">
-                                                <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border">
-                                                    <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
-                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                </tableHeaderCell>
-                                                <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="ACg-BS-PST">
                                                     <font key="font" metaFont="system"/>
                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -1533,7 +1533,7 @@ DQ
                                 </subviews>
                             </clipView>
                             <scroller key="horizontalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="OUy-Fs-vrc">
-                                <rect key="frame" x="1" y="355" width="403" height="16"/>
+                                <rect key="frame" x="1" y="355" width="404" height="16"/>
                                 <autoresizingMask key="autoresizingMask"/>
                             </scroller>
                             <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="b3u-0O-tay">
@@ -1541,7 +1541,7 @@ DQ
                                 <autoresizingMask key="autoresizingMask"/>
                             </scroller>
                             <tableHeaderView key="headerView" wantsLayer="YES" id="fGm-hB-NGK">
-                                <rect key="frame" x="0.0" y="0.0" width="442" height="28"/>
+                                <rect key="frame" x="0.0" y="0.0" width="410" height="28"/>
                                 <autoresizingMask key="autoresizingMask"/>
                             </tableHeaderView>
                         </scrollView>

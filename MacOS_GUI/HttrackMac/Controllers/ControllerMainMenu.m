@@ -172,10 +172,6 @@ NS_ASSUME_NONNULL_BEGIN
     [[self projectsOutlineView] reloadData];
 }
 
-- (void)coreLogicDownloadDidAdvance:(nonnull CoreLogic *)sender path:(nonnull NSString *)path domain:(nonnull NSString *)domain ratio:(float)ratio {
-    
-    //[[self projectsOutlineView] reloadData];
-}
 
 - (void)coreLogicUpdateLinks:(nonnull CoreLogic *)sender links:(nonnull lien_back *)liens total:(int)tot { 
     
@@ -528,6 +524,8 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
         return [self->core_logic.myBacking.backing objectAtIndex:row]->remote;
     } else if ([tableColumn.identifier isEqualTo:@"TCIlocal"]) {
         return [self->core_logic.myBacking.backing objectAtIndex:row]->local;
+    } else if ([tableColumn.identifier isEqualTo:@"Total size"]) {
+        return [self->core_logic.myBacking.backing objectAtIndex:row]->totalsize;
     } else if ([tableColumn.identifier isEqualTo:@"TCIreferer"]) {
         return [self->core_logic.myBacking.backing objectAtIndex:row]->referer;
     } else if ([tableColumn.identifier isEqualTo:@"TCIstatus"]) {

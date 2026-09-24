@@ -89,11 +89,9 @@ static int __cdecl my_loop(t_hts_callbackarg * carg, httrackp * opt, lien_back *
                 
                 MyDowloadableFile* f = [ModelsApp addPathComponents:components toArborescence:[logic websites] atCompletePath:@(back[i].url_sav)];
                 changed = [[logic websites] updateAdvancement:f ratio:ratio];
-                [[logic delegate] coreLogicDownloadDidAdvance:logic path:@(back[i].url_fil) domain:@(back[i].url_adr) ratio:ratio]; // trop d'appels a reloadData dans la boucle
             }
             if(changed)
                 [[logic delegate] coreLogicPageAdded:logic]; // sert juste a refresh le outlineView
-            
             
             [logic.myBacking updateBacking:back total:back_max];
             [logic.myLiens updateLiens:*opt->liens total:opt->lien_tot];

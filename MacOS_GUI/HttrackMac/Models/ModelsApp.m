@@ -161,6 +161,7 @@ atPath:(nonnull NSString *)path {
         _backing[i]->local = [[NSString stringWithFormat:@"%s", backing[i].url_sav] copy];
         _backing[i]->status = [[NSNumber numberWithInt:backing[i].r.statuscode] copy];
         _backing[i]->progression = [[NSNumber numberWithFloat: backing[i].r.totalsize ? (float)backing[i].r.size / backing[i].r.totalsize : 0] copy];
+        _backing[i]->totalsize = [[NSNumber numberWithLong: backing[i].r.totalsize] copy];
     }
 }
 -(int)count {

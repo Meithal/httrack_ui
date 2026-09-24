@@ -62,6 +62,7 @@ NS_ASSUME_NONNULL_BEGIN
     NSString* local;
     NSNumber* status;
     NSNumber* progression;
+    NSNumber* totalsize;
 }
 @end
 @interface MyBacking : NSObject {
