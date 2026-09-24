@@ -32,7 +32,11 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="VOq-y0-SEH"/>
-                            <menuItem title="Preferences…" keyEquivalent="," id="BOF-NM-1cW"/>
+                            <menuItem title="Preferences…" keyEquivalent="," id="BOF-NM-1cW">
+                                <connections>
+                                    <action selector="orderFront:" target="owF-S0-tLr" id="sqP-Qg-yYE"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="wFC-TO-SCJ"/>
                             <menuItem title="Services" id="NMo-om-nkz">
                                 <modifierMask key="keyEquivalentModifierMask"/>
@@ -807,16 +811,14 @@ DQ
                     <toolbarItem implicitItemIdentifier="NSToolbarShowColorsItem" id="h1O-xQ-r4q"/>
                     <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="HpB-6i-Uuh"/>
                     <toolbarItem implicitItemIdentifier="NSToolbarShowFontsItem" id="VCw-il-hsB"/>
-                    <toolbarItem implicitItemIdentifier="C2C7BCFA-C39E-4F4F-BC16-0B19B34AA976" label="Stats" paletteLabel="Stats" toolTip="Show httrack statistics" tag="-1" image="NSTouchBarGetInfoTemplate" sizingBehavior="auto" selectable="YES" id="gGH-d2-S7a" userLabel="Stats" customClass="MyToolbarStatsButton">
+                    <toolbarItem implicitItemIdentifier="C2C7BCFA-C39E-4F4F-BC16-0B19B34AA976" explicitItemIdentifier="MyToolbarGeneralStats" label="Stats" paletteLabel="Stats" toolTip="Show httrack statistics" image="NSTouchBarGetInfoTemplate" sizingBehavior="auto" selectable="YES" id="gGH-d2-S7a" userLabel="Stats" customClass="MyToolbarStatsButton">
                         <connections>
-                            <action selector="myclick:" target="DlI-Zg-TxX" id="P9N-v0-2Lf"/>
-                            <outlet property="_httrackStatsPanel" destination="N1X-Rc-Vy8" id="JmE-9X-zqh"/>
-                            <outlet property="_myParentWindow" destination="QvC-M9-y7g" id="Gbt-jm-JmY"/>
+                            <action selector="generalStatsClick:" target="Nbn-6H-ZPH" id="KgC-r5-TJB"/>
                         </connections>
                     </toolbarItem>
                     <toolbarItem implicitItemIdentifier="NSToolbarPrintItem" id="VAG-MH-31e"/>
                     <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="slz-Sm-gLL"/>
-                    <toolbarItem implicitItemIdentifier="CA9773B3-AD22-4C37-8E8E-558B7F66573C" label="Download URL" paletteLabel="Download URL" sizingBehavior="auto" id="Aka-G2-Lya">
+                    <toolbarItem implicitItemIdentifier="CA9773B3-AD22-4C37-8E8E-558B7F66573C" explicitItemIdentifier="MyToolbarURLLink" label="Download URL" paletteLabel="Download URL" sizingBehavior="auto" id="Aka-G2-Lya">
                         <nil key="toolTip"/>
                         <searchField key="view" focusRingType="none" verticalHuggingPriority="750" textCompletion="NO" id="9g4-Du-4T3" customClass="MySearchInputField">
                             <rect key="frame" x="0.0" y="14" width="200" height="30"/>
@@ -831,7 +833,7 @@ DQ
                             </connections>
                         </searchField>
                     </toolbarItem>
-                    <toolbarItem implicitItemIdentifier="989DFC1B-BA3F-489E-8B04-E5156B69134B" label="Download" paletteLabel="Download" sizingBehavior="auto" navigational="YES" id="IRy-Mn-bjF">
+                    <toolbarItem implicitItemIdentifier="989DFC1B-BA3F-489E-8B04-E5156B69134B" explicitItemIdentifier="MyToolbarPlayPauseStop" label="Download" paletteLabel="Download" sizingBehavior="auto" navigational="YES" id="IRy-Mn-bjF">
                         <nil key="toolTip"/>
                         <segmentedControl key="view" verticalHuggingPriority="750" springLoaded="YES" id="piV-pD-az3">
                             <rect key="frame" x="0.0" y="14" width="71" height="23"/>
@@ -891,6 +893,7 @@ DQ
                 <outlet property="_httrTotalUpdatedFilesLabel" destination="t6M-1N-uZj" id="3hK-7i-bkw"/>
                 <outlet property="_httrTotalWarningsLabel" destination="RGU-6M-b96" id="MOP-vr-joF"/>
                 <outlet property="_httrTotalWrittenFilesLabel" destination="hE2-qT-ZI2" id="j3j-AR-Sxk"/>
+                <outlet property="_httrackStatsPanel" destination="N1X-Rc-Vy8" id="vYP-tO-m3k"/>
                 <outlet property="_liensDrawerButton" destination="3WW-2a-D9f" id="ym9-51-j4D"/>
                 <outlet property="_logic" destination="YmQ-IQ-Bgp" id="oEC-Sp-lER"/>
                 <outlet property="_myParentWindow" destination="QvC-M9-y7g" id="u19-nV-gTq"/>
@@ -1322,7 +1325,6 @@ DQ
         </window>
         <customObject id="lcu-If-avr" customClass="MySearchInputField"/>
         <customObject id="YmQ-IQ-Bgp" customClass="CoreLogic"/>
-        <customObject id="DlI-Zg-TxX" customClass="MyToolbarStatsButton"/>
         <customView id="zzu-eL-N6O" userLabel="MyLinksDrawerContents">
             <rect key="frame" x="0.0" y="0.0" width="648" height="372"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

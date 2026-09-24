@@ -57,6 +57,10 @@ enum {
     IBOutlet NSButton* _liensDrawerButton;
     IBOutlet NSTableView* _tableBacking;
     IBOutlet NSTableView* _tableLiens;
+    
+    /// panel de statistiques generales
+    IBOutlet NSPanel* _httrackStatsPanel;
+
 }
 
 @property (assign) IBOutlet NSTextField *httrSiteUrl;
@@ -92,10 +96,7 @@ enum {
 
 
 @interface MyToolbarStatsButton: NSToolbarItem<NSWindowDelegate> {
-    IBOutlet NSPanel* _httrackStatsPanel;
-    IBOutlet NSWindow* _myParentWindow;
 }
--(IBAction)myclick:(id)sender;
 @end
 
 @interface BackingDataSource: NSObject<NSTableViewDataSource, NSTableViewDelegate>

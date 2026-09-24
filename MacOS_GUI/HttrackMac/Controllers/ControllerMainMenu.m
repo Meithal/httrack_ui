@@ -200,6 +200,15 @@ NS_ASSUME_NONNULL_BEGIN
     [defaults synchronize];
 }
 
+-(IBAction)generalStatsClick:(MyToolbarStatsButton*)sender {
+    if(_httrackStatsPanel.isVisible) {
+        [_httrackStatsPanel close];
+    } else {
+        [self.view.window addChildWindow:_httrackStatsPanel ordered:NSWindowAbove];
+        [_httrackStatsPanel makeKeyAndOrderFront:sender];
+
+    }
+}
 @end
 
 @implementation MonContenuPreview
@@ -461,16 +470,6 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
 
 /// Gere le bouton de la toolbar qui allume ou eteint le panel de stats
 @implementation MyToolbarStatsButton
--(IBAction)myclick:(MyToolbarStatsButton*)sender {
-    if(sender->_httrackStatsPanel.isVisible) {
-        [sender->_httrackStatsPanel close];
-    } else {
-        //[sender->_httrackStatsPanel makeKeyAndOrderFront:sender];
-        [sender->_myParentWindow addChildWindow:sender->_httrackStatsPanel ordered:NSWindowAbove];
-
-    }
-    //[_httrackStatsPanel makeKeyAndOrderFront:sender];
-}
 - (void)windowWillClose:(NSNotification *)notification {
     [(NSButton*)[self view] setState:NSControlStateValueOff];
     [self toolbar].selectedItemIdentifier = nil;
