@@ -34,6 +34,7 @@ https://livre-c.gitlab.io
 - [ ] Sur theoldnet.com, un fichier html.tmp s'affiche comme complété alors qu'il n'est pas encore téléchargé
 - [x] Corruption de données dans les statistiques de téléchargement
 - [ ] Plein de warnings quand on ouvre une webview
+- [ ] Redémarrer le télechargement laisse un fichier dans le backing
 
 Taches
 ---
@@ -63,7 +64,7 @@ Taches
 - [ ] ... Afficher en rouge les 404, 50x
 - [ ] ...... Afficher un tooltip et un texte pour l'erreur en question.
 - [ ] ...... Maintenir un cache par site web pour ne pas perdre cette info au redemarrage
-- [ ] ... Pouvoir détacher du NSDrawer ces statistiques avec une pression longue sur le toggle
+- [x] ... Pouvoir détacher du NSDrawer ces statistiques avec un bouton dédié
 - [x] ... Pouvoir changer l'orientation du splitview
 - [ ] Tester Crackman.TTF si Crackman.ttf n'est pas trouvé
 - [ ] Avoir un bouton pour cacher sidebar <https://developer.apple.com/videos/play/wwdc2020/10104/?time=835> <https://stackoverflow.com/questions/54870957/nssplitviewcontroller-nssplitviewitem-support-in-xibs> On Utilisera un NSDrawer pour < big sur, et un NSSplitViewController pour apres
@@ -85,6 +86,9 @@ Taches
 - [x] ...... Pouvoir naviguer en avant et en arriere dans le webview
 - [ ] ... TextField pour du texte
 - [ ] ...... Si JSON, CSV ou XML détecté, proposer coloration syntaxique
+- [ ] ... Pour une archive en proposer une vue interne
+- [ ] ...... Pouvoir extraire le contenu de l'archive
+- [ ] ...... Pouvoir y mettre des choses
 - [ ] Avoir un listing de liens externes référencés par les diverses pages
 - [ ] Commencer a télécharger le favicon du site pour y associer une icone
 - [x] En proposer une vue arborescente comme dans un arbre FTP

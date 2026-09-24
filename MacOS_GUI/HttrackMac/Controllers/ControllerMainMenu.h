@@ -15,14 +15,12 @@ enum {
 /**
  Notre "controlleur" qui fait l'interface entre l'UI et la logique+données
  */
-@interface ControllerMainMenu : NSViewController<CoreLogicDelegate, NSDrawerDelegate>
+@interface ControllerMainMenu : NSViewController<CoreLogicDelegate, NSDrawerDelegate, NSWindowDelegate>
 {
     IBOutlet AppDelegate *_AppDelegate;
     IBOutlet CoreLogic* _logic;
     IBOutlet NSWindow* _myParentWindow;
-    
-    IBOutlet NSView* _rightPanel;
-    
+        
     IBOutlet ProjectsOutlineView * _projectsOutlineView;
     IBOutlet NSButton* _downloadButton;
     IBOutlet NSSegmentedControl* _playpausestopControl;
@@ -51,14 +49,21 @@ enum {
     
     IBOutlet MonContenuPreview* _contenuPreview;
     
-    /// section des drawers
-    IBOutlet NSDrawer * _drawerLiens;
+    /// Section des drawers
+    
+    ///Le drawer qui affiche les stats de téléchargement
+    NSDrawer * _drawerLiens;
     IBOutlet NSView * _drawerContentView;
     IBOutlet NSButton* _liensDrawerButton;
     IBOutlet NSTableView* _tableBacking;
     IBOutlet NSTableView* _tableLiens;
     IBOutlet NSSplitView* _splitLiens;
     IBOutlet NSButton* _splitOrientationChanger;
+    IBOutlet NSButton* _detachButton;
+    
+    ///Le panel alternatif pour les stats de téléchargement
+    IBOutlet NSPanel* _downloadStatsPanel;
+    BOOL isDownloadsStatsPanelClosing;
     
     /// panel de statistiques generales
     IBOutlet NSPanel* _httrackStatsPanel;
@@ -71,7 +76,7 @@ enum {
 -(void)updateState;
 -(ProjectsOutlineView*)projectsOutlineView;
 -(MonContenuPreview*) contenuPreview;
-
+-(void)moveStatsTo:(id)view;
 @end
 
 

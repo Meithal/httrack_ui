@@ -815,6 +815,17 @@ DQ
                             <action selector="rotateSplitStats:" target="Nbn-6H-ZPH" id="Wm3-YD-8Pr"/>
                         </connections>
                     </button>
+                    <button toolTip="Detach statistics" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DB2-nk-Lcb">
+                        <rect key="frame" x="671" y="4" width="26" height="23"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                        <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="bird" catalog="system" imagePosition="only" alignment="center" lineBreakMode="truncatingTail" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Xai-gv-OBJ">
+                            <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="detachStats:" target="Nbn-6H-ZPH" id="Wik-5i-GBj"/>
+                        </connections>
+                    </button>
                 </subviews>
             </view>
             <toolbar key="toolbar" implicitIdentifier="89E57C56-516B-4FD9-ACF6-3089F1500223" autosavesConfiguration="NO" showsBaselineSeparator="NO" displayMode="iconOnly" sizeMode="regular" id="34P-3C-a7p">
@@ -881,7 +892,9 @@ DQ
             <connections>
                 <outlet property="_AppDelegate" destination="Voe-Tx-rLC" id="u0o-xm-Iaz"/>
                 <outlet property="_contenuPreview" destination="L3y-5D-Mzt" id="HPR-54-c7c"/>
+                <outlet property="_detachButton" destination="DB2-nk-Lcb" id="9N1-SX-rxP"/>
                 <outlet property="_downloadButton" destination="5Ii-9n-Rqw" id="Zbp-pK-Btk"/>
+                <outlet property="_downloadStatsPanel" destination="xuy-BI-Mmf" id="wo8-ok-sp8"/>
                 <outlet property="_drawerContentView" destination="zzu-eL-N6O" id="dY8-Zk-VY7"/>
                 <outlet property="_httrLastConnectLabel" destination="gi9-fV-jFH" id="FWT-rQ-ioS"/>
                 <outlet property="_httrLastRequestLabel" destination="cwc-pv-FTk" id="NkX-S9-ncZ"/>
@@ -910,7 +923,6 @@ DQ
                 <outlet property="_myParentWindow" destination="QvC-M9-y7g" id="u19-nV-gTq"/>
                 <outlet property="_playpausestopControl" destination="piV-pD-az3" id="GOD-2k-wqW"/>
                 <outlet property="_projectsOutlineView" destination="508-O8-Dav" id="Zcq-uY-HJI"/>
-                <outlet property="_rightPanel" destination="9T3-Qw-mWp" id="naE-Tf-pi7"/>
                 <outlet property="_splitLiens" destination="7mp-kW-WY7" id="jpD-Xk-ian"/>
                 <outlet property="_splitOrientationChanger" destination="BgU-dC-CVk" id="fcc-xm-bhq"/>
                 <outlet property="_tableBacking" destination="fWS-uY-r4C" id="EHC-y6-8jN"/>
@@ -1351,7 +1363,7 @@ DQ
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <clipView key="contentView" id="W7T-9o-eW8">
                                 <rect key="frame" x="1" y="1" width="403" height="370"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <autoresizingMask key="autoresizingMask"/>
                                 <subviews>
                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveName="autosaveLiens" rowHeight="24" headerView="0x6-1d-dlu" id="OZH-wE-EDx">
                                         <rect key="frame" x="0.0" y="0.0" width="457" height="342"/>
@@ -1458,7 +1470,7 @@ DQ
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <clipView key="contentView" id="gai-NP-lcd">
                                 <rect key="frame" x="1" y="1" width="404" height="370"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <autoresizingMask key="autoresizingMask"/>
                                 <subviews>
                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveName="autosaveBacking" rowHeight="24" headerView="fGm-hB-NGK" id="fWS-uY-r4C">
                                         <rect key="frame" x="0.0" y="0.0" width="410" height="342"/>
@@ -1612,6 +1624,20 @@ DQ
             </view>
             <point key="canvasLocation" x="371" y="1073"/>
         </window>
+        <window title="Download statistics" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" hidesOnDeactivate="YES" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="xuy-BI-Mmf" customClass="NSPanel">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" utility="YES"/>
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="182" y="123" width="276" height="382"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1800" height="1125"/>
+            <view key="contentView" id="a1N-as-vWF">
+                <rect key="frame" x="0.0" y="0.0" width="276" height="382"/>
+                <autoresizingMask key="autoresizingMask"/>
+            </view>
+            <connections>
+                <outlet property="delegate" destination="Nbn-6H-ZPH" id="5Jt-td-qtQ"/>
+            </connections>
+            <point key="canvasLocation" x="912" y="12"/>
+        </window>
     </objects>
     <resources>
         <image name="NSFolder" width="32" height="32"/>
@@ -1619,6 +1645,7 @@ DQ
         <image name="NSTouchBarPauseTemplate" width="14" height="17"/>
         <image name="NSTouchBarPlayTemplate" width="15" height="17"/>
         <image name="NSTouchBarRecordStopTemplate" width="18" height="17"/>
+        <image name="bird" catalog="system" width="19" height="20"/>
         <image name="info.circle" catalog="system" width="15" height="15"/>
         <image name="rotate.right.fill" catalog="system" width="15" height="17"/>
     </resources>

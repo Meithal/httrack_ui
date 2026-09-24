@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
     /// On crée le NSDrawer programmatiquement vu qu'on ne peut pas le créer via interface builder
     CGSize size = self.view.frame.size;
     size.height /= 2;
-    _drawerLiens = [[NSDrawer alloc] initWithContentSize:size preferredEdge:NSRectEdgeMaxY];
+    _drawerLiens = [[NSDrawer alloc] initWithContentSize:size preferredEdge:NSRectEdgeMinY];
     [_drawerLiens setParentWindow:self->_myParentWindow];
     //[self->_myParentWindow addChildWindow:_drawerLiens ordered:NSWindowBelow];
     [_drawerLiens setMinContentSize:size];
@@ -30,10 +30,6 @@ NS_ASSUME_NONNULL_BEGIN
     [_drawerLiens setContentView:self->_drawerContentView];
     
     [_drawerLiens setDelegate:self];
-    
-    //[_liensDrawerButton setImage:NSImageNameInfo];
-    //[(NSButtonCell*)[_liensDrawerButton cell] setShowsStateBy:NSContentsCellMask | NSChangeGrayCellMask];
-    
 }
 
 -(void) dealloc {
@@ -44,13 +40,23 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 -(void)updateState {
-    NSDrawerState state = [_drawerLiens state];
-    if(state == NSDrawerClosedState || state == NSDrawerClosingState) {
-        [_liensDrawerButton setState:NSControlStateValueOff];
-        [_splitOrientationChanger setHidden:YES];
-    } else {
-        [_liensDrawerButton setState:NSControlStateValueOn];
-        [_splitOrientationChanger setHidden:NO];
+    if(_drawerLiens.contentView.subviews.count > 0) { /// le cas où on utilise le drawer`
+        NSDrawerState state = [_drawerLiens state];
+        if(state == NSDrawerClosedState || state == NSDrawerClosingState) {
+            [_liensDrawerButton setState:NSControlStateValueOff];
+            [_splitOrientationChanger setHidden:YES];
+        } else {
+            [_liensDrawerButton setState:NSControlStateValueOn];
+            [_splitOrientationChanger setHidden:NO];
+        }
+    } else { /// le cas où on utilise le panel
+        if(isDownloadsStatsPanelClosing) {
+            [_liensDrawerButton setState:NSControlStateValueOff];
+            [_splitOrientationChanger setHidden:YES];
+        } else {
+            [_liensDrawerButton setState:NSControlStateValueOn];
+            [_splitOrientationChanger setHidden:NO];
+        }
     }
 }
 /// callbacks du delegate de nsdrawer quand celui ci se ferme ou s'ouvre
@@ -60,18 +66,47 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)drawerDidClose:(NSNotification *)notification {
     [self updateState];
 }
+- (void)windowWillClose:(NSNotification *)notification {
+    isDownloadsStatsPanelClosing = YES;
+    [self updateState];
+}
+-(void)windowDidBecomeKey:(NSNotification *)notification {
+    isDownloadsStatsPanelClosing = NO;
+    [self updateState];
+}
 
 -(IBAction)toggleLinksDrawer:(id)sender {
-    
-    NSDrawerState state = [_drawerLiens state];
-    if(state == NSDrawerClosedState || state == NSDrawerClosingState) {
-        [_drawerLiens open];
+    if(_drawerLiens.contentView.subviews.count > 0) {
+        NSDrawerState state = [_drawerLiens state];
+        if(state == NSDrawerClosedState || state == NSDrawerClosingState) {
+            [_drawerLiens open];
+        } else {
+            [_drawerLiens close];
+        }
     } else {
-        [_drawerLiens close];
+        if(_downloadStatsPanel.contentView.window.isVisible) {
+            [_downloadStatsPanel.contentView.window close];
+        } else {
+            [_downloadStatsPanel.contentView.window makeKeyAndOrderFront:self];
+        }
     }
 }
 -(IBAction)rotateSplitStats:(id)sender {
     [_splitLiens setVertical:![_splitLiens isVertical]];
+}
+-(IBAction)detachStats:(id)sender {
+    if(_drawerLiens.contentView.subviews.count > 0) {
+        [_downloadStatsPanel setContentView:_drawerContentView];
+        [_downloadStatsPanel makeKeyAndOrderFront:self];
+        [_drawerLiens close];
+    } else {
+        [_drawerLiens setContentView:_drawerContentView];
+        [_downloadStatsPanel performClose:self];
+        [_drawerLiens open];
+    }
+}
+-(void)moveStatsTo:(id)view {
+    
 }
 -(ProjectsOutlineView*)projectsOutlineView {
     return _projectsOutlineView;
