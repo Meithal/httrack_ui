@@ -1564,6 +1564,41 @@ DQ
                 <outlet property="core_logic" destination="YmQ-IQ-Bgp" id="U9e-79-Igb"/>
             </connections>
         </customObject>
+        <window title="Settings" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" hidesOnDeactivate="YES" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="owF-S0-tLr" customClass="NSPanel">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" utility="YES"/>
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="182" y="123" width="276" height="378"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1800" height="1125"/>
+            <view key="contentView" id="CjU-4k-gsc">
+                <rect key="frame" x="0.0" y="0.0" width="276" height="378"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kkJ-Yt-EiA">
+                        <rect key="frame" x="13" y="331" width="250" height="32"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="push" title="Restore initial preferences" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="h29-Fq-m9i">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="preferencesResetAppPreferences:" target="Nbn-6H-ZPH" id="Dpf-pv-XNr"/>
+                        </connections>
+                    </button>
+                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2Ne-dU-e2T">
+                        <rect key="frame" x="13" y="299" width="250" height="32"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="push" title="Delete Autocomplete" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="qLb-bD-YC3">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="preferencesDeleteAutocomplete:" target="Nbn-6H-ZPH" id="mxF-aS-eWc"/>
+                        </connections>
+                    </button>
+                </subviews>
+            </view>
+            <point key="canvasLocation" x="371" y="1073"/>
+        </window>
     </objects>
     <resources>
         <image name="NSFolder" width="32" height="32"/>

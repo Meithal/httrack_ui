@@ -183,6 +183,23 @@ NS_ASSUME_NONNULL_BEGIN
     [self->_tableLiens reloadData];
 }
 
+-(IBAction)preferencesResetAppPreferences:(id)sender {
+    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+    NSArray* keys = [[defaults dictionaryRepresentation] allKeys];
+    for (int i = 0, ct = (int)keys.count; i < ct; i++) {
+        if([keys[i] isEqualTo:preference_autocomplete_copied_sites])
+            continue;
+        [defaults setValue:nil forKey:keys[i]];
+    }
+    [defaults synchronize];
+}
+
+-(IBAction)preferencesDeleteAutocomplete:(id)sender {
+    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setValue:nil forKey:preference_autocomplete_copied_sites];
+    [defaults synchronize];
+}
+
 @end
 
 @implementation MonContenuPreview
@@ -296,7 +313,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSArray<NSString *> *)textView:(NSTextView *)textView completions:(NSArray<NSString *> *)words forPartialWordRange:(NSRange)charRange indexOfSelectedItem:(nullable NSInteger *)index
 {
     if([textView.string isEqual: @""]) /// autocompletion uniquement quand on vient de cliquer sur le champ
-        return [[NSUserDefaults standardUserDefaults] valueForKey:@"autocomplete_copied_sites"];
+        return [[NSUserDefaults standardUserDefaults] valueForKey:preference_autocomplete_copied_sites];
     return nil;
 }
 

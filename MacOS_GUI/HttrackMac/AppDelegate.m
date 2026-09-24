@@ -2,6 +2,8 @@
 
 #import "AppDelegate.h"
 
+NSString *preference_autocomplete_copied_sites = @"autocomplete_copied_sites";
+
 @interface AppDelegate ()
 
 @property (strong) IBOutlet NSView *AppIcon;
@@ -30,7 +32,7 @@
     
     
     NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
-    NSArray* autocomp = [defaults arrayForKey:@"autocomplete_copied_sites"];
+    NSArray* autocomp = [defaults arrayForKey:preference_autocomplete_copied_sites];
     
     NSMutableOrderedSet* ms = [NSMutableOrderedSet orderedSetWithArray:autocomp];
     [ms addObjectsFromArray:[self logic].sitesOnHardDrive];
@@ -39,7 +41,7 @@
 //    
 //    [defaults registerDefaults:defs];
     
-    [defaults setObject:[ms array] forKey:@"autocomplete_copied_sites"];
+    [defaults setObject:[ms array] forKey:preference_autocomplete_copied_sites];
     
     //NSLog(@"defaults %@", [defaults dictionaryRepresentation]);
 }

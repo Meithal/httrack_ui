@@ -3,6 +3,8 @@
 
 #import "CoreLogic.h"
 
+extern NSString *preference_autocomplete_copied_sites;
+
 @interface AppDelegate : NSObject <NSApplicationDelegate>
 {
     IBOutlet CoreLogic* _logic;
