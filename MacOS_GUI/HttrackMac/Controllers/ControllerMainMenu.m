@@ -31,14 +31,12 @@ NS_ASSUME_NONNULL_BEGIN
     
     [_drawerLiens setDelegate:self];
 }
-
 -(void) dealloc {
     [_logic setDelegate:nil];
     [_logic setLoopCallback:nil withObject:nil];
     [_drawerLiens dealloc];
     [super dealloc];
 }
-
 -(void)updateState {
     if(_drawerLiens.contentView.subviews.count > 0) { /// le cas où on utilise le drawer`
         NSDrawerState state = [_drawerLiens state];
@@ -74,7 +72,6 @@ NS_ASSUME_NONNULL_BEGIN
     isDownloadsStatsPanelClosing = NO;
     [self updateState];
 }
-
 -(IBAction)toggleLinksDrawer:(id)sender {
     if(_drawerLiens.contentView.subviews.count > 0) {
         NSDrawerState state = [_drawerLiens state];
@@ -105,29 +102,43 @@ NS_ASSUME_NONNULL_BEGIN
         [_drawerLiens open];
     }
 }
--(void)moveStatsTo:(id)view {
-    
-}
 -(ProjectsOutlineView*)projectsOutlineView {
     return _projectsOutlineView;
 }
-
 -(MonContenuPreview*) contenuPreview {
     return _contenuPreview;
 }
+-(void)changeWindowSubtitle:(NSString*)newSubtitle
+{
+    if(@available(macOS 11.0, *)) {
+        [[[NSApplication sharedApplication] mainWindow] setSubtitle:newSubtitle];
+    }
+}
+-(void)warnUser:(NSString*)description domain:(NSErrorDomain) domain code:(NSInteger) code
+{
+    NSError * underlyingError = [[NSError alloc] initWithDomain:domain code:code userInfo:nil];
+    
+    NSDictionary<NSErrorUserInfoKey, id> * errorDictionary = @{
+        NSLocalizedDescriptionKey : description,
+        NSUnderlyingErrorKey : underlyingError,
+        NSLocalizedRecoverySuggestionErrorKey: @"Try a a different URL",
+        //NSURLErrorKey : url
+    };
 
+    NSError * error= [[NSError alloc] initWithDomain:domain code:code userInfo:errorDictionary];
+    [[NSAlert alertWithError:error] runModal];
+}
 - (IBAction)httrDowloadButton:(NSButton *)sender {
 //    NSLog(@"Push %@", [self.httrSiteUrl stringValue]);
     
-    [_AppDelegate changeWindowSubtitle:[self.httrSiteUrl stringValue]];
+    [self changeWindowSubtitle:[self.httrSiteUrl stringValue]];
     //[self.coreLogic indexOfDownloadedSites];
     [_logic
      dowloadSite:[self.httrSiteUrl stringValue]
      onError:^(NSString *description, NSErrorDomain domain, NSInteger code) {
-        [_AppDelegate warnUser:description domain:domain code:code];
+        [self warnUser:description domain:domain code:code];
     }];
 }
-
 -(IBAction)segmentedControl:(NSSegmentedControl*)sender {
     switch ([sender selectedTag]) {
         case HTR_CONTROL_PLAY:
@@ -143,7 +154,6 @@ NS_ASSUME_NONNULL_BEGIN
             break;
     }
 }
-
 -(void)updateGlobalStats:(hts_stat_struct *) stats {
         
     /// partie qui gere la mise a jour des sdtatistiques globales de httrack
@@ -181,7 +191,6 @@ NS_ASSUME_NONNULL_BEGIN
 
     [formatter release];
 }
-
 -(void)coreLogicDownloadWillStart:(CoreLogicDelegate *)sender {
     
     [_downloadButton setEnabled:NO];
@@ -190,7 +199,6 @@ NS_ASSUME_NONNULL_BEGIN
     [_playpausestopControl setEnabled:YES forSegment:HTR_CONTROL_STOP];
     [_playpausestopControl setEnabled:NO forSegment:HTR_CONTROL_PLAY];
 }
-
 -(void)coreLogicDownloadDidStop:(CoreLogic*)sender {
     [_downloadButton setEnabled:YES];
     [_playpausestopControl setSelectedSegment:HTR_CONTROL_STOP];
@@ -198,25 +206,20 @@ NS_ASSUME_NONNULL_BEGIN
     [_playpausestopControl setEnabled:NO forSegment:HTR_CONTROL_STOP];
     [_playpausestopControl setEnabled:NO forSegment:HTR_CONTROL_PLAY];
 }
-
 -(void)coreLogicDownloadDidPause:(CoreLogic*)sender {
     [_playpausestopControl setSelectedSegment:HTR_CONTROL_PAUSE];
     [_playpausestopControl setEnabled:NO forSegment:HTR_CONTROL_PAUSE];
     [_playpausestopControl setEnabled:YES forSegment:HTR_CONTROL_STOP];
     [_playpausestopControl setEnabled:YES forSegment:HTR_CONTROL_PLAY];
 }
-
 - (void)coreLogicPageAdded:(nonnull CoreLogic *)sender {
     [[self projectsOutlineView] reloadData];
 }
-
-
 - (void)coreLogicUpdateLinks:(nonnull CoreLogic *)sender links:(nonnull lien_back *)liens total:(int)tot { 
     
     [self->_tableBacking reloadData];
     [self->_tableLiens reloadData];
 }
-
 -(IBAction)preferencesResetAppPreferences:(id)sender {
     NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
     NSArray* keys = [[defaults dictionaryRepresentation] allKeys];
@@ -227,26 +230,22 @@ NS_ASSUME_NONNULL_BEGIN
     }
     [defaults synchronize];
 }
-
 -(IBAction)preferencesDeleteAutocomplete:(id)sender {
     NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
     [defaults setValue:nil forKey:preference_autocomplete_copied_sites];
     [defaults synchronize];
 }
-
 -(IBAction)generalStatsClick:(MyToolbarStatsButton*)sender {
     if(_httrackStatsPanel.isVisible) {
         [_httrackStatsPanel close];
     } else {
         [self.view.window addChildWindow:_httrackStatsPanel ordered:NSWindowAbove];
         [_httrackStatsPanel makeKeyAndOrderFront:sender];
-
     }
 }
 @end
 
 @implementation MonContenuPreview
-
 -(void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
     
@@ -257,7 +256,6 @@ NS_ASSUME_NONNULL_BEGIN
         NSRectFill(dirtyRect);
     }
 }
-
 -(void)mainChangePreview:(NSString*)chemin {
     
     if(0) { /// a garder en tete pour comment envoyer des notifications plus tard
@@ -292,7 +290,6 @@ NS_ASSUME_NONNULL_BEGIN
         [wv autorelease];
         [wv setAutoresizingMask:self.autoresizingMask];
         
-        
         [self addSubview:wv];
     }
     
@@ -307,16 +304,14 @@ NS_ASSUME_NONNULL_BEGIN
     }
     
 }
-
 @end
-
 
 #pragma mark Notre barre de recherche
 @interface MySearchInputField: NSSearchField<NSToolbarDelegate, NSTextViewDelegate> {
     BOOL _completePosting;
+    IBOutlet CoreLogic* _logic;
 }
 @end
-
 
 @implementation MySearchInputField
 - (BOOL)becomeFirstResponder {
@@ -327,7 +322,6 @@ NS_ASSUME_NONNULL_BEGIN
     
     return res;
 }
-
 - (void)controlTextDidChange:(NSNotification *)notification
 {
     NSTextView *textView = notification.userInfo[@"NSFieldEditor"];
@@ -339,7 +333,6 @@ NS_ASSUME_NONNULL_BEGIN
         _completePosting = NO;
     }
 }
-
 -(void)awakeFromNib
 {
     //[self setDelegate:self]; // cause autocompletion incontrolable
@@ -352,16 +345,14 @@ NS_ASSUME_NONNULL_BEGIN
     }
     //[self complete:self];
 }
-
 - (NSArray<NSString *> *)textView:(NSTextView *)textView completions:(NSArray<NSString *> *)words forPartialWordRange:(NSRange)charRange indexOfSelectedItem:(nullable NSInteger *)index
 {
     if([textView.string isEqual: @""]) /// autocompletion uniquement quand on vient de cliquer sur le champ
         return [[NSUserDefaults standardUserDefaults] valueForKey:preference_autocomplete_copied_sites];
     return nil;
 }
-
 - (NSArray<NSString *> *)recentSearches {
-    return [((AppDelegate*)[NSApp delegate]).logic.sitesOnHardDrive copy];
+    return [_logic.sitesOnHardDrive copy];
 }
 @end
 
@@ -412,7 +403,7 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
 
 - (NSInteger)outlineView:(nonnull NSOutlineView *)outlineView numberOfChildrenOfItem:(nullable MyDirectoryElements *)item {
     if(item == nil)
-        return _delegate.logic.websites.directories.count;
+        return _logic.websites.directories.count;
     else if (item.class == MyDowloadableFile.class)
         return 0;
     else
@@ -451,7 +442,7 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
 
 - (nonnull id)outlineView:(nonnull NSOutlineView *)outlineView child:(NSInteger)index ofItem:(nullable MyDirectoryElements*)item {
     if(item == nil)
-        return _delegate.logic.websites.directories[index];
+        return _logic.websites.directories[index];
     else {
         if(index < item.directories.count)
             return item.directories[index];

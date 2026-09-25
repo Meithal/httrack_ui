@@ -52,7 +52,7 @@ Taches
 - [x] ... Mettre un bouton de pause lors du telechargement
 - [x] ... Avoir un feedback qu'une copie est en cours
 - [x] ... Quand la fenetre associée est fermée, arrêter le thread de copie (?)
-- [ ] ...... Avoir un systeme de background worker qui continue la copie meme quand le programme est arrêté et qui s'y reconnecte quand le programme est redémarré ? https://developer.apple.com/documentation/foundation/nsconnection + https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/DistrObjects/Concepts/connections.html - https://developer.apple.com/documentation/backgroundassets/badownloaderextension-qwaw pour macos 10.13 >
+- [ ] ...... Avoir un systeme de background worker qui continue la copie meme quand le programme est arrêté et qui s'y reconnecte quand le programme est redémarré ? https://developer.apple.com/documentation/foundation/nsconnection + https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/DistrObjects/Concepts/connections.html - https://developer.apple.com/documentation/backgroundassets/badownloaderextension-qwaw pour macos 10.13 > Voir aussi les status bar https://developer.apple.com/documentation/appkit/nsstatusbar + https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/StatusBar/StatusBar.html
 - [x] Afficher hts_stat_struct update
 - [ ] ... Afficher les warnings, les infos et les erreurs
 - [x] Autocompletion avec sites deja existants <https://developer.apple.com/library/archive/samplecode/SearchField/Introduction/Intro.html#//apple_ref/doc/uid/DTS10004112-Intro-DontLinkElementID_2>
@@ -135,7 +135,16 @@ Taches
 - [ ] Utiliser NSdocument pour representer la copie d'un site? D'un reseau de sites interconnecté ? Permettrait undo/redo et icloud. Avoir un panel de sites visibles dans "fenetres" et pouvoir en ouvrir plusieurs.
 - [ ] Pouvoir customiser en profondeur l'apparence du site avant de l'imprimer en pdf, afficher les images d'un dossier en mosaique par exemple.
 - [ ] Ajouter un pont vers AppleScript
-- [ ] ajouter un service de type texte qui permette de telecharger l'URL selectionnee dans safari ou n'importe ou
+- [x] ajouter un service de type texte qui permette de telecharger l'URL selectionnee dans safari ou n'importe ou
+- [ ] Interface experte qui permette de télécharger plusieurs sites en meme temps, et de modifier les réglages
+- [ ] ... avoir une interface qui extraye tous les liens d'un corpus et permette d'en télécharger plusieurs
+- [ ] ...... extraire les liens depuis les images
+- [ ] ... implementer dans httrack une limite de sockets par domaines plutot que globale pour permettre les telechargements paralelles
+- [ ] ...... pouvoir changer en live la limite de sockets avant de lancer le telechargement
+- [ ] ...... afficher des statistiques de santé du serveur (geolocalisation, latence, traceroute?)
+- [ ] ...... diminuer ou augmenter en live le nombre de sockets, la vitesse, etc. en fonction de la santé du serveur
+- [ ] Pouvoir modifier les regles de téléchargement avant le lancement
+- [ ] ... Aussi pendant le lancement
 - [ ] Afficher une barre de progression dans l'icone comme pour la stack de telechargement de safari
 - [ ] Idem pour l'icone de la toolbar qui ouvre un panel
 - [ ] Utiliser PaperKit pour montrer comment les pages sont liées entre elles avec des fleches, en mode Figma, afficher le contenu des pages avec webkit.

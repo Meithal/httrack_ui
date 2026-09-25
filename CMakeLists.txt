@@ -132,6 +132,8 @@ if(APPLE)
 		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/Models/ModelsApp.m
 		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/CoreLogic.h
 		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/CoreLogic.m
+		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/AppProvidedServices.m
+		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/AppProvidedServices.h
 	)
 
 	target_sources(Httpack PRIVATE

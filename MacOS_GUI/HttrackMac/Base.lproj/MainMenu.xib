@@ -15,6 +15,7 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customObject id="Voe-Tx-rLC" customClass="AppDelegate">
             <connections>
+                <outlet property="_aps" destination="H04-Rp-7U5" id="yIy-Ax-EhP"/>
                 <outlet property="_logic" destination="YmQ-IQ-Bgp" id="4fF-4R-fCC"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="gIp-Ho-8D9"/>
             </connections>
@@ -888,9 +889,8 @@ DQ
             </connections>
             <point key="canvasLocation" x="228" y="84"/>
         </window>
-        <customObject id="Nbn-6H-ZPH" userLabel="ControllerMainMenu" customClass="ControllerMainMenu">
+        <customObject id="Nbn-6H-ZPH" customClass="ControllerMainMenu">
             <connections>
-                <outlet property="_AppDelegate" destination="Voe-Tx-rLC" id="u0o-xm-Iaz"/>
                 <outlet property="_contenuPreview" destination="L3y-5D-Mzt" id="HPR-54-c7c"/>
                 <outlet property="_detachButton" destination="DB2-nk-Lcb" id="9N1-SX-rxP"/>
                 <outlet property="_downloadButton" destination="5Ii-9n-Rqw" id="Zbp-pK-Btk"/>
@@ -931,9 +931,9 @@ DQ
             </connections>
         </customObject>
         <customObject id="hRe-LL-tCG" customClass="MainSplitViewDelegate"/>
-        <customObject id="ekE-Pl-wKh" userLabel="ProjectsDataSource" customClass="ProjectsDataSource">
+        <customObject id="ekE-Pl-wKh" customClass="ProjectsDataSource">
             <connections>
-                <outlet property="_delegate" destination="Voe-Tx-rLC" id="XkV-W6-uCE"/>
+                <outlet property="_logic" destination="YmQ-IQ-Bgp" id="6LN-t6-LGT"/>
             </connections>
         </customObject>
         <window title="Stats" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="N1X-Rc-Vy8" customClass="NSPanel">
@@ -1348,7 +1348,11 @@ DQ
             </connections>
             <point key="canvasLocation" x="-789" y="207.5"/>
         </window>
-        <customObject id="lcu-If-avr" customClass="MySearchInputField"/>
+        <customObject id="lcu-If-avr" customClass="MySearchInputField">
+            <connections>
+                <outlet property="_logic" destination="YmQ-IQ-Bgp" id="iT2-RH-t6t"/>
+            </connections>
+        </customObject>
         <customObject id="YmQ-IQ-Bgp" customClass="CoreLogic"/>
         <customView id="zzu-eL-N6O" userLabel="MyLinksDrawerContents">
             <rect key="frame" x="0.0" y="0.0" width="821" height="372"/>
@@ -1363,7 +1367,7 @@ DQ
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <clipView key="contentView" id="W7T-9o-eW8">
                                 <rect key="frame" x="1" y="1" width="403" height="370"/>
-                                <autoresizingMask key="autoresizingMask"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveName="autosaveLiens" rowHeight="24" headerView="0x6-1d-dlu" id="OZH-wE-EDx">
                                         <rect key="frame" x="0.0" y="0.0" width="457" height="342"/>
@@ -1372,7 +1376,7 @@ DQ
                                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                         <tableColumns>
-                                            <tableColumn identifier="TCIurl" width="64" minWidth="40" maxWidth="200" id="8hh-R8-ELx">
+                                            <tableColumn identifier="TCIurl" width="64" minWidth="40" maxWidth="1000" id="8hh-R8-ELx">
                                                 <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Remote URL">
                                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                     <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
@@ -1470,7 +1474,7 @@ DQ
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <clipView key="contentView" id="gai-NP-lcd">
                                 <rect key="frame" x="1" y="1" width="404" height="370"/>
-                                <autoresizingMask key="autoresizingMask"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveName="autosaveBacking" rowHeight="24" headerView="fGm-hB-NGK" id="fWS-uY-r4C">
                                         <rect key="frame" x="0.0" y="0.0" width="410" height="342"/>
@@ -1625,7 +1629,7 @@ DQ
             <point key="canvasLocation" x="371" y="1073"/>
         </window>
         <window title="Download statistics" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" hidesOnDeactivate="YES" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="xuy-BI-Mmf" customClass="NSPanel">
-            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" utility="YES"/>
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="182" y="123" width="276" height="382"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1800" height="1125"/>
@@ -1638,6 +1642,11 @@ DQ
             </connections>
             <point key="canvasLocation" x="912" y="12"/>
         </window>
+        <customObject id="H04-Rp-7U5" customClass="AppProvidedServices">
+            <connections>
+                <outlet property="_cmm" destination="Nbn-6H-ZPH" id="0qv-x9-6jf"/>
+            </connections>
+        </customObject>
     </objects>
     <resources>
         <image name="NSFolder" width="32" height="32"/>

@@ -8,7 +8,7 @@
 <plist version="1.0">
 <dict>
   <key>CFBundleDevelopmentRegion</key><string>en</string>
-  <key>CFBundleDisplayName</key><string>${PRODUCT_NAME}</string>
+  <key>CFBundleDisplayName</key><string>${PROJECT_NAME}</string>
   <key>CFBundleExecutable</key><string>${MACOSX_BUNDLE_EXECUTABLE_NAME}</string>
   <key>CFBundleGetInfoString</key><string>${MACOSX_BUNDLE_INFO_STRING}</string>
   <key>CFBundleIconFile</key><string>${MACOSX_BUNDLE_ICON_FILE}</string>
@@ -25,5 +25,22 @@
   <key>LSMinimumSystemVersion</key><string>${CMAKE_OSX_DEPLOYMENT_TARGET}</string>
   <key>NSMainNibFile</key><string>MainMenu</string>
   <key>NSPrincipalClass</key><string>NSApplication</string>
+  <key>NSServices</key>
+  <array>
+      <dict>
+          <key>NSMessage</key><string>downloadWebsite</string>
+          <key>NSPortName</key><string>${PROJECT_NAME}</string>
+          <key>NSMenuItem</key><dict><key>default</key><string>Download this website with ${PROJECT_NAME}...</string></dict>
+<!--          <key>NSSendFileTypes</key><array><string>public.url</string></array>-->
+          <key>NSServiceDescription</key><string>Make a local copy of this website</string>
+          <key>NSSendTypes</key>
+          <array>
+              <string>NSURLPboardType</string>
+              <string>NSStringPboardType</string>
+          </array>
+          <key>NSRequiredContext</key><dict/>
+          <key>NSRestricted</key><false/>
+      </dict>
+  </array>
 </dict>
 </plist>

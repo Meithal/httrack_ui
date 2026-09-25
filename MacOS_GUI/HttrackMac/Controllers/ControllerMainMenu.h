@@ -2,6 +2,8 @@
 #import <Cocoa/Cocoa.h>
 #import <WebKit/WebKit.h>
 
+#import "../CoreLogic.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 enum {
@@ -17,7 +19,7 @@ enum {
  */
 @interface ControllerMainMenu : NSViewController<CoreLogicDelegate, NSDrawerDelegate, NSWindowDelegate>
 {
-    IBOutlet AppDelegate *_AppDelegate;
+    //IBOutlet AppDelegate *_AppDelegate;
     IBOutlet CoreLogic* _logic;
     IBOutlet NSWindow* _myParentWindow;
         
@@ -67,26 +69,22 @@ enum {
     
     /// panel de statistiques generales
     IBOutlet NSPanel* _httrackStatsPanel;
-
 }
-
 @property (assign) IBOutlet NSTextField *httrSiteUrl;
-
 -(void)updateGlobalStats:(hts_stat_struct *) stats;
 -(void)updateState;
 -(ProjectsOutlineView*)projectsOutlineView;
 -(MonContenuPreview*) contenuPreview;
--(void)moveStatsTo:(id)view;
+-(void)changeWindowSubtitle:(NSString*)newSubtitle;
 @end
 
 
 @interface ProjectsDataSource: NSObject<NSOutlineViewDataSource, NSOutlineViewDelegate>
 {
-    IBOutlet AppDelegate *_delegate;
+    //IBOutlet AppDelegate *_delegate;
+    IBOutlet CoreLogic* _logic;
 }
 @end
-
-@class ControllerMainMenu;
 
 @interface ProjectsOutlineView: NSOutlineView
 {
@@ -100,7 +98,6 @@ enum {
 -(void)mainChangePreview:(NSString*)chemin;
 @end
 
-
 @interface MyToolbarStatsButton: NSToolbarItem<NSWindowDelegate> {
 }
 @end
@@ -110,6 +107,7 @@ enum {
     IBOutlet CoreLogic* core_logic;
 }
 @end
+
 @interface LiensDataSource: NSObject<NSTableViewDataSource, NSTableViewDelegate>
 {
     IBOutlet CoreLogic* core_logic;
