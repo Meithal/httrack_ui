@@ -450,7 +450,11 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
     if([notification.userInfo objectForKey:@"NSTableViewCurrentRowSelectionUserInfoKey"] == nil)
         return;
     
-    NSUInteger idx =((NSIndexSet*)notification.userInfo[@"NSTableViewCurrentRowSelectionUserInfoKey"]).firstIndex;
+    NSIndexSet* ids = (NSIndexSet*)notification.userInfo[@"NSTableViewCurrentRowSelectionUserInfoKey"];
+    if([ids count] < 1)
+        return;
+    
+    NSUInteger idx =(ids).firstIndex;
     
     MyDowloadableFile* orow = [((ProjectsOutlineView*)notification.object) itemAtRow:idx ];
     if([orow respondsToSelector:@selector(hd_path)]) { // fichier
