@@ -13,6 +13,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+extern NSString *preference_autocomplete_copied_sites;
+extern NSString *preference_default_save_folder;
+
+void sanitize_save_folder_user_settings(void);
+
 @interface NSString (NSStringEndsWith)
 -(BOOL)endsWithString:(NSString*)string;
 @end
@@ -49,6 +54,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)gracefulTerminate;
 -(MyLiens*)myLiens;
 -(MyBacking*)myBacking;
+-(void)setDefaultAutocomplete;
 @end
 
 @protocol CoreLogicDelegate<NSObject>

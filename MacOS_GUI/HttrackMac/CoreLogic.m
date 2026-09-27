@@ -14,8 +14,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-
+/// Notre domaine d'erreurs
 NSErrorDomain const MacHttrackErrors = @"com.github.meithal";
+
+/// Clés de préférences
+NSString *preference_autocomplete_copied_sites = @"httpack_autocomplete_copied_sites";
+NSString *preference_default_save_folder = @"httpack_default_save_folder";
+
 
 /// methodes enrichissant les types de base
 @implementation NSString (NSStringEndsWith)
@@ -23,6 +28,15 @@ NSErrorDomain const MacHttrackErrors = @"com.github.meithal";
     return [[self substringFromIndex:(self.length - string.length)] isEqualToString:string];
 }
 @end
+
+/// Permet de s'assurer que `preference_default_save_folder` soit jamais nil
+void sanitize_save_folder_user_settings(void) {
+    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+
+    if([defaults URLForKey:preference_default_save_folder] == nil) {
+        [defaults setURL:[NSURL URLWithString:@"Mirrored Websites/" relativeToURL:[NSFileManager.defaultManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask].firstObject] forKey:preference_default_save_folder];
+    }
+}
 
 #pragma mark -
 #pragma mark fonctions bridge httrack
@@ -286,9 +300,8 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
 #endif
     
     // On recupere le HOME sur mac
-    NSArray<NSURL *> * urls = [NSFileManager.defaultManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask];
-    NSURL * url = urls.firstObject;
-    url = [NSURL URLWithString:@"Mirrored Websites/" relativeToURL:url];
+    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+    NSURL * url = [defaults URLForKey:preference_default_save_folder];
 
     StringMemcpy(_httrack_opt->path_html, ([[url path] stringByAppendingString:@"/"]).UTF8String, [url path].length + 1);
     StringCopyS(_httrack_opt->path_log, _httrack_opt->path_html);
@@ -367,7 +380,6 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
         note.title = [NSString stringWithFormat:@"Téléchargement de %@ terminé.", url];
         [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification: note];
 
-
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             [_delegate coreLogicDownloadDidStop:self];
         }];
@@ -389,7 +401,8 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
 {
     NSMutableArray* arr = [[NSMutableArray alloc] init];
     
-    NSURL * url = [NSURL URLWithString:@"Mirrored Websites/" relativeToURL:[NSFileManager.defaultManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask].firstObject];
+    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+    NSURL * url = [defaults URLForKey:preference_default_save_folder];
     
     NSDirectoryEnumerator * dirEn = [NSFileManager.defaultManager enumeratorAtPath:[url path]];
     
@@ -410,7 +423,8 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
 }
 -(void)indexOfDownloadedSites:(MyDirectoryElements *) arbo
 {
-    NSURL * url = [NSURL URLWithString:@"Mirrored Websites/" relativeToURL:[NSFileManager.defaultManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask].firstObject];
+    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+    NSURL * url = [defaults URLForKey:preference_default_save_folder];
 
     for (NSString *dir in self.sitesOnHardDrive) {
         parseDirectoriesRecurse([ModelsApp addDirectory:dir toArborescene:arbo], [url URLByAppendingPathComponent:dir]);
@@ -444,7 +458,16 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
 - (nonnull MyBacking *)myBacking {
     return _my_backing;
 }
+-(void)setDefaultAutocomplete {
+    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+    NSArray* autocomp = [defaults arrayForKey:preference_autocomplete_copied_sites];
+    
+    NSMutableOrderedSet* ms = [NSMutableOrderedSet orderedSetWithArray:autocomp];
+    [ms addObjectsFromArray:self.sitesOnHardDrive];
+    
+    [defaults setObject:[ms array] forKey:preference_autocomplete_copied_sites];
 
+}
 @end
 
 NS_ASSUME_NONNULL_END

@@ -115,6 +115,8 @@ enum {
 @end
 
 @interface SettingsController: NSObject<NSTableViewDataSource, NSTableViewDelegate, NSWindowDelegate> {
+    IBOutlet NSTextField* _defaultSavePathTextField;
+    
     NSArray* _autocompletions;
     NSMutableArray* _changedAutocompletions;
     

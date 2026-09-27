@@ -3,8 +3,6 @@
 
 #import "AppDelegate.h"
 
-NSString *preference_autocomplete_copied_sites = @"autocomplete_copied_sites";
-
 @interface AppDelegate ()
 
 @property (strong) IBOutlet NSView *AppIcon;
@@ -13,7 +11,7 @@ NSString *preference_autocomplete_copied_sites = @"autocomplete_copied_sites";
 
 @implementation AppDelegate
 
-// MARK: Overrides
+// MARK: - Overrides
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
     // Insert code here to initialize your application
     
@@ -31,45 +29,31 @@ NSString *preference_autocomplete_copied_sites = @"autocomplete_copied_sites";
     [self.window.dockTile display];
     //_window.toolbarStyle = NSWindowToolbarStyleUnified;//
     
-    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
-    NSArray* autocomp = [defaults arrayForKey:preference_autocomplete_copied_sites];
-    
-    NSMutableOrderedSet* ms = [NSMutableOrderedSet orderedSetWithArray:autocomp];
-    [ms addObjectsFromArray:[self logic].sitesOnHardDrive];
-        
-    [defaults setObject:[ms array] forKey:preference_autocomplete_copied_sites];
-    
-    //NSLog(@"defaults %@", [defaults dictionaryRepresentation]);
-    //_aps = [[AppProvidedServices alloc] init];
+    sanitize_save_folder_user_settings();
+    [[self logic] setDefaultAutocomplete];
     
     [NSApp setServicesProvider:_aps];
-//    [NSApp setServicesProvider:self];
-    
     NSUpdateDynamicServices();
     
-    os_log_t log = os_log_create("com.meithal.httpack", "service");
-
-    os_log(log, "here toto delegate\n");
-    os_log_info(log, "here toto info delegate\n");
-    os_log_debug(log, "here toto debug delegate\n");
+    if(0) {
+        os_log_t log = os_log_create("com.meithal.httpack", "service");
+        
+        os_log(log, "here toto delegate\n");
+        os_log_info(log, "here toto info delegate\n");
+        os_log_debug(log, "here toto debug delegate\n");
+    }
 }
-
 - (void)applicationWillTerminate:(NSNotification *)aNotification {
     [_logic gracefulTerminate];
-    [_logic release];
-    
-    //[_aps release];
 }
-
 - (BOOL)applicationSupportsSecureRestorableState:(NSApplication *)app {
     return YES;
 }
-
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)theApplication
 {
     return YES;
 }
-// MARK: Our functions
+// MARK: - Our functions
 -(CoreLogic*)logic {
     return _logic;
 }

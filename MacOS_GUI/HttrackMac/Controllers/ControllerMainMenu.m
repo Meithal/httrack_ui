@@ -456,7 +456,8 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
     if([orow respondsToSelector:@selector(hd_path)]) { // fichier
         [((ProjectsOutlineView*)notification.object).mainController.contenuPreview mainChangePreview:orow.hd_path];
     } else { // repertoire
-        NSURL * url = [NSURL URLWithString:@"Mirrored Websites/" relativeToURL:[NSFileManager.defaultManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask].firstObject];
+        NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+        NSURL * url = [defaults URLForKey:preference_default_save_folder]; // TODO: it should become per-project, instead of global
         
         [[NSWorkspace sharedWorkspace] openURL:[url URLByAppendingPathComponent:orow.name]];
     }
@@ -575,6 +576,10 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
     [super dealloc];
 }
 -(void)updateState {
+    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+    NSURL * url = [defaults URLForKey:preference_default_save_folder];
+    [_defaultSavePathTextField setStringValue:[[url absoluteString] stringByRemovingPercentEncoding]];
+    
     [_saveAutocompleteButton setEnabled:![_autocompletions isEqualToArray:_changedAutocompletions]];
     [_deletaAllAutocompleteButton setEnabled:[_changedAutocompletions count] > 0];
     [_deleteRowAutocomplete setEnabled:[_autocompleteTable selectedRowIndexes].count > 0];
@@ -600,6 +605,7 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
         [defaults setValue:nil forKey:keys[i]];
     }
     [defaults synchronize];
+    sanitize_save_folder_user_settings();
     [self updateState];
 }
 -(IBAction)preferencesDeleteAutocomplete:(id)sender {
@@ -629,5 +635,24 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
     
     [self updateState];
 }
+-(IBAction)selectDefaultSaveFolder:(id)sender {
+    NSOpenPanel* op = [NSOpenPanel openPanel];
+    [op setCanChooseFiles:NO];
+    [op setCanChooseDirectories:YES];
+    [op setAllowsMultipleSelection:NO];
+    [op setAccessoryViewDisclosed:YES];
+
+    [op beginWithCompletionHandler:^(NSModalResponse result) {
+        if(result) {
+            NSLog(@"ok %@", [op URL]);
+            NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+            [defaults setURL:[op URL] forKey:preference_default_save_folder];
+            [defaults synchronize];
+            sanitize_save_folder_user_settings();
+            [self updateState];
+        }
+    }];
+}
+
 @end
 NS_ASSUME_NONNULL_END

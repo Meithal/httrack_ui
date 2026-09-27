@@ -121,9 +121,10 @@ Taches
 - [ ] ... Meme pour les gros téléchargements déjà lancés
 - [ ] Creer une fenetre separée pour lancer un nouveau telechargement ? Peut etre simpliste qui contient un simple textView et a l'aspect d'un crayon
 - [ ] Ajouter des settings
-- [ ] ... Le dossier où on veut faire le mirroir
-- [ ] ... Le liste des autocompletions
-- [ ] ...... Qu'on peut modifier
+- [x] ... Le dossier où on veut faire le mirroir
+- [ ] ...... Au redemarrage les sites deja copiés devraient continuer à s'afficher
+- [x] ... Le liste des autocompletions
+- [x] ...... Qu'on peut modifier
 - [x] ...... Qu'on peut prune
 - [ ] ... Le nombre de sockets paralleles
 - [ ] ... Si on veut activer le mode "telecharger le HTML avant le contenu image, video, etc." de httrack
