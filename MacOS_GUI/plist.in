@@ -31,7 +31,7 @@
           <key>NSMessage</key><string>downloadWebsite</string>
           <key>NSPortName</key><string>${PROJECT_NAME}</string>
           <key>NSMenuItem</key><dict><key>default</key><string>Download this website with ${PROJECT_NAME}...</string></dict>
-<!--          <key>NSSendFileTypes</key><array><string>public.url</string></array>-->
+          <key>NSSendFileTypes</key><array><string>public.url</string></array>
           <key>NSServiceDescription</key><string>Make a local copy of this website</string>
           <key>NSSendTypes</key>
           <array>

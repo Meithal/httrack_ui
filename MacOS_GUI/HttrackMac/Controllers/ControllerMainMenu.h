@@ -17,7 +17,7 @@ enum {
 /**
  Notre "controlleur" qui fait l'interface entre l'UI et la logique+données
  */
-@interface ControllerMainMenu : NSViewController<CoreLogicDelegate, NSDrawerDelegate, NSWindowDelegate>
+@interface ControllerMainMenu : NSObject<CoreLogicDelegate, NSDrawerDelegate, NSWindowDelegate>
 {
     //IBOutlet AppDelegate *_AppDelegate;
     IBOutlet CoreLogic* _logic;
@@ -111,6 +111,18 @@ enum {
 @interface LiensDataSource: NSObject<NSTableViewDataSource, NSTableViewDelegate>
 {
     IBOutlet CoreLogic* core_logic;
+}
+@end
+
+@interface SettingsController: NSObject<NSTableViewDataSource, NSTableViewDelegate, NSWindowDelegate> {
+    NSArray* _autocompletions;
+    NSMutableArray* _changedAutocompletions;
+    
+    IBOutlet NSButton* _deletaAllAutocompleteButton;
+    IBOutlet NSButton* _saveAutocompleteButton;
+    IBOutlet NSButton* _deleteRowAutocomplete;
+    IBOutlet NSButton* _undoAutocomplete;
+    IBOutlet NSTableView* _autocompleteTable;
 }
 @end
 

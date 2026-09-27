@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
     [_logic setLoopCallback:@selector(updateGlobalStats:) withObject:self];
     
     /// On crée le NSDrawer programmatiquement vu qu'on ne peut pas le créer via interface builder
-    CGSize size = self.view.frame.size;
+    CGSize size = _myParentWindow.contentView.frame.size;
     size.height /= 2;
     _drawerLiens = [[NSDrawer alloc] initWithContentSize:size preferredEdge:NSRectEdgeMinY];
     [_drawerLiens setParentWindow:self->_myParentWindow];
@@ -220,26 +220,11 @@ NS_ASSUME_NONNULL_BEGIN
     [self->_tableBacking reloadData];
     [self->_tableLiens reloadData];
 }
--(IBAction)preferencesResetAppPreferences:(id)sender {
-    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
-    NSArray* keys = [[defaults dictionaryRepresentation] allKeys];
-    for (int i = 0, ct = (int)keys.count; i < ct; i++) {
-        if([keys[i] isEqualTo:preference_autocomplete_copied_sites])
-            continue;
-        [defaults setValue:nil forKey:keys[i]];
-    }
-    [defaults synchronize];
-}
--(IBAction)preferencesDeleteAutocomplete:(id)sender {
-    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setValue:nil forKey:preference_autocomplete_copied_sites];
-    [defaults synchronize];
-}
 -(IBAction)generalStatsClick:(MyToolbarStatsButton*)sender {
     if(_httrackStatsPanel.isVisible) {
         [_httrackStatsPanel close];
     } else {
-        [self.view.window addChildWindow:_httrackStatsPanel ordered:NSWindowAbove];
+        [_myParentWindow addChildWindow:_httrackStatsPanel ordered:NSWindowAbove];
         [_httrackStatsPanel makeKeyAndOrderFront:sender];
     }
 }
@@ -487,6 +472,7 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
 @implementation ProjectsOutlineView
 -(void)awakeFromNib{
     [self reloadData];
+    
 }
 -(ControllerMainMenu*)mainController {
     return _mainController;
@@ -564,7 +550,84 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
     }
     return @"toto";
 }
-
 @end
 
+@implementation SettingsController
+-(void)awakeFromNib {
+//- (void) windowDidBecomeKey:(NSNotification *) notification{
+    if(@available(macOS 11.0, *)) {
+        [_deletaAllAutocompleteButton setHasDestructiveAction:YES];
+    }
+}
+-(void)windowDidChangeOcclusionState:(NSNotification *)notification {
+    if(((NSWindow*)notification.object).isVisible == NO)
+        return;
+    
+    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+    _autocompletions = [[defaults valueForKey:preference_autocomplete_copied_sites] copy];
+    _changedAutocompletions = [_autocompletions mutableCopy];
+    
+    [self updateState];
+}
+-(void)dealloc {
+    [_changedAutocompletions release];
+    
+    [super dealloc];
+}
+-(void)updateState {
+    [_saveAutocompleteButton setEnabled:![_autocompletions isEqualToArray:_changedAutocompletions]];
+    [_deletaAllAutocompleteButton setEnabled:[_changedAutocompletions count] > 0];
+    [_deleteRowAutocomplete setEnabled:[_autocompleteTable selectedRowIndexes].count > 0];
+    [_undoAutocomplete setEnabled:![_autocompletions isEqualToArray:_changedAutocompletions]];
+    
+    [_autocompleteTable reloadData];
+}
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
+    return [_changedAutocompletions count];
+}
+- (nullable id)tableView:(NSTableView *)tableView objectValueForTableColumn:(nullable NSTableColumn *)tableColumn row:(NSInteger)row {
+    return _changedAutocompletions[row];
+}
+- (void)tableViewSelectionDidChange:(NSNotification *)notification {
+    [self updateState];
+}
+-(IBAction)preferencesResetAppPreferences:(id)sender {
+    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+    NSArray* keys = [[defaults dictionaryRepresentation] allKeys];
+    for (int i = 0, ct = (int)keys.count; i < ct; i++) {
+        if([keys[i] isEqualTo:preference_autocomplete_copied_sites])
+            continue;
+        [defaults setValue:nil forKey:keys[i]];
+    }
+    [defaults synchronize];
+    [self updateState];
+}
+-(IBAction)preferencesDeleteAutocomplete:(id)sender {
+    [_changedAutocompletions removeAllObjects];
+    [self updateState];
+}
+-(IBAction)deleteRowAutocomplete:(id)sender {
+    NSIndexSet* is = [_autocompleteTable selectedRowIndexes];
+    [_changedAutocompletions removeObjectsAtIndexes:is];
+    [self updateState];
+}
+-(IBAction)saveAutocomplete:(id)sender {
+    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+    [defaults removeObjectForKey:preference_autocomplete_copied_sites];
+    
+    [_autocompletions release];
+    _autocompletions = [_changedAutocompletions copy];
+    
+    [defaults setValue:[_autocompletions copy] forKey:preference_autocomplete_copied_sites];
+    [defaults synchronize];
+    
+    [self updateState];
+}
+-(IBAction)undoAutocomplete:(id)sender {
+    [_changedAutocompletions release];
+    _changedAutocompletions = [_autocompletions mutableCopy];
+    
+    [self updateState];
+}
+@end
 NS_ASSUME_NONNULL_END
