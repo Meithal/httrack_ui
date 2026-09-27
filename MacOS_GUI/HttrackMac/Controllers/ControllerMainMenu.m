@@ -578,7 +578,7 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
 -(void)updateState {
     NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
     NSURL * url = [defaults URLForKey:preference_default_save_folder];
-    [_defaultSavePathTextField setStringValue:[[url absoluteString] stringByRemovingPercentEncoding]];
+    [_defaultSavePathTextField setStringValue:[url relativePath]];
     
     [_saveAutocompleteButton setEnabled:![_autocompletions isEqualToArray:_changedAutocompletions]];
     [_deletaAllAutocompleteButton setEnabled:[_changedAutocompletions count] > 0];
