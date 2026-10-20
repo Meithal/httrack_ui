@@ -816,7 +816,7 @@ DQ
                             <action selector="rotateSplitStats:" target="Nbn-6H-ZPH" id="Wm3-YD-8Pr"/>
                         </connections>
                     </button>
-                    <button toolTip="Detach statistics" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DB2-nk-Lcb">
+                    <button hidden="YES" toolTip="Detach statistics" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DB2-nk-Lcb">
                         <rect key="frame" x="671" y="4" width="26" height="23"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="bird" catalog="system" imagePosition="only" alignment="center" lineBreakMode="truncatingTail" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Xai-gv-OBJ">
@@ -1594,7 +1594,7 @@ DQ
             </connections>
         </customObject>
         <window title="Settings" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="owF-S0-tLr" customClass="NSPanel">
-            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" utility="YES"/>
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="182" y="123" width="344" height="433"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1800" height="1125"/>
@@ -1609,6 +1609,7 @@ DQ
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
+                        <color key="bezelColor" name="systemRedColor" catalog="System" colorSpace="catalog"/>
                         <connections>
                             <action selector="preferencesResetAppPreferences:" target="ZL6-Mo-9YU" id="WcU-x7-5sJ"/>
                         </connections>
@@ -1717,7 +1718,7 @@ DQ
                     <box fixedFrame="YES" borderType="line" title="Default save path" translatesAutoresizingMaskIntoConstraints="NO" id="dGk-ZG-3f0">
                         <rect key="frame" x="17" y="297" width="310" height="81"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                        <view key="contentView" id="x5g-Lt-yhk">
+                        <view key="contentView" wantsLayer="YES" id="x5g-Lt-yhk">
                             <rect key="frame" x="4" y="5" width="302" height="61"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>

@@ -43,17 +43,21 @@ NS_ASSUME_NONNULL_BEGIN
         if(state == NSDrawerClosedState || state == NSDrawerClosingState) {
             [_liensDrawerButton setState:NSControlStateValueOff];
             [_splitOrientationChanger setHidden:YES];
+            [_detachButton setHidden:YES];
         } else {
             [_liensDrawerButton setState:NSControlStateValueOn];
             [_splitOrientationChanger setHidden:NO];
+            [_detachButton setHidden:NO];
         }
     } else { /// le cas où on utilise le panel
         if(isDownloadsStatsPanelClosing) {
             [_liensDrawerButton setState:NSControlStateValueOff];
             [_splitOrientationChanger setHidden:YES];
+            [_detachButton setHidden:YES];
         } else {
             [_liensDrawerButton setState:NSControlStateValueOn];
             [_splitOrientationChanger setHidden:NO];
+            [_detachButton setHidden:NO];
         }
     }
 }
@@ -575,6 +579,7 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
     [self updateState];
 }
 -(void)dealloc {
+    [_autocompletions release];
     [_changedAutocompletions release];
     
     [super dealloc];
@@ -648,7 +653,6 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
 
     [op beginWithCompletionHandler:^(NSModalResponse result) {
         if(result) {
-            NSLog(@"ok %@", [op URL]);
             NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
             [defaults setURL:[op URL] forKey:preference_default_save_folder];
             [defaults synchronize];
@@ -656,6 +660,13 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
             [self updateState];
         }
     }];
+}
+@end
+
+@implementation ProgressCell
+
+-(void)awakeFromNib {
+    //self.controlView = [NSControl alloc]
 }
 
 @end

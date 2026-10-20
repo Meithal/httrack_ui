@@ -65,6 +65,7 @@ Taches
 - [ ] ...... Afficher un tooltip et un texte pour l'erreur en question.
 - [ ] ...... Maintenir un cache par site web pour ne pas perdre cette info au redemarrage
 - [x] ... Pouvoir détacher du NSDrawer ces statistiques avec un bouton dédié
+- [x] ...... N'afficher ce bouton que lorsque les statistiques sont visibles
 - [x] ... Pouvoir changer l'orientation du splitview
 - [ ] Tester Crackman.TTF si Crackman.ttf n'est pas trouvé
 - [ ] Avoir un bouton pour cacher sidebar <https://developer.apple.com/videos/play/wwdc2020/10104/?time=835> <https://stackoverflow.com/questions/54870957/nssplitviewcontroller-nssplitviewitem-support-in-xibs> On Utilisera un NSDrawer pour < big sur, et un NSSplitViewController pour apres
@@ -102,7 +103,7 @@ Taches
 - [ ] Pousser la retrompatibilité derrière big sur ? <https://github.com/devernay/xcodelegacy>
 - [ ] Permettre de verifier si les liens externes ne sont pas en fait des liens internes mais devenus morts suite a un changement de domaine. Ajouter une verification de type garde-fou pour les URL externes tres generiques.
 - [x] Ajouer un drop down d'urls deja entrées dans le passé
-- [ ] ... Pouvoir éditer cette liste
+- [x] ... Pouvoir éditer cette liste
 - [ ] ... Avoir une option incognito pour ne jamais enregistrer cette info
 - [ ] Afficher la date de modification du fichier depuis loop sback->lnk->send_too
 - [ ] ... Pouvoir trier les pages du site par ordre de modification
@@ -130,6 +131,7 @@ Taches
 - [ ] ... Si on veut activer le mode "telecharger le HTML avant le contenu image, video, etc." de httrack
 - [ ] ... Implementer nous meme un systeme qui privilegie le contenu léger ou bien le contenu lourd?
 - [x] ... Pour effacer tous les setting sauf les autocompletions
+- [x] ...... Lui mettre une couleur rouge pour souligner la destructivité
 - [ ] Avoir une vue simpliste avec juste une barre de progression
 - [ ] Pouvoir drag et drop une url (page web safari?) sur la fenetre, ou coller du texte
 - [ ] Si on veut telecharger tous les PDF d'une page, separer visiblement les liens d'une certine arborescence d'une autre, et mettre un bouton "telecharger tout d'une arborescence" dans le outliner.
