@@ -91,6 +91,10 @@ target_compile_definitions(httr_lib PUBLIC
     HTS_DO_NOT_REDEFINE_in_addr_t=1
     HAVE_STRNLEN=1
 )
+target_compile_options(httr_lib PUBLIC
+    -Wint-conversion
+    -Wshadow
+)
 
 if(HTTRACK_WANT_VERBOSE)
     target_compile_definitions(httr_lib PUBLIC

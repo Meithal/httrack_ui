@@ -73,6 +73,7 @@ Taches
 - [x] Sauvegarder le listing dans le dossier user plutot que l'endroit de l'executable.
 - [x] Avoir un listing de sites copiés
 - [x] ... Afficher l'avancement de chaque recopie
+- [ ] ...... Afficher la progression 
 - [x] ... Faire en sorte que ce listing se mette a jour en temps reel
 - [x] ... Le listing doit se faire sur un thread different
 - [ ] Avoir une icone a coté de chaque nom de site (favicon)
@@ -124,10 +125,11 @@ Taches
 - [ ] Ajouter des settings
 - [x] ... Le dossier où on veut faire le mirroir
 - [ ] ...... Au redemarrage les sites deja copiés devraient continuer à s'afficher
-- [x] ... Le liste des autocompletions
+- [x] ... La liste des autocompletions
 - [x] ...... Qu'on peut modifier
 - [x] ...... Qu'on peut prune
 - [ ] ... Le nombre de sockets paralleles
+- [ ] ...... Implémenter un systeme qui s'adapte au site web si il est incapable de tenir la charge.
 - [ ] ... Si on veut activer le mode "telecharger le HTML avant le contenu image, video, etc." de httrack
 - [ ] ... Implementer nous meme un systeme qui privilegie le contenu léger ou bien le contenu lourd?
 - [x] ... Pour effacer tous les setting sauf les autocompletions
@@ -162,6 +164,7 @@ Taches
 - [ ] Utiliser le pasteboard pour automatiquement commencer une copie, aussi un service et pouvoir drag@drop
 - [x] Ouvrir le dossier du site directement en cliquant dessus
 - [ ] Afficher une webview pour se connecter sur le site et recuperer les cookies pour scrapper avec un sessionid valide
+- [ ] Quand un dossier est supprimmé dans le finder, le répercuter dans la vue arborescente
 
 Plus tard
 ---

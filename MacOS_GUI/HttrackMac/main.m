@@ -29,6 +29,7 @@ int main(int argc, const char * argv[]) {
     printf("api min %d, api max %d\n", __MAC_OS_X_VERSION_MAX_ALLOWED,
            __MAC_OS_X_VERSION_MIN_REQUIRED);
     printf("is mutithreaded %d\n", [NSThread isMultiThreaded]);
+    //printf("has secure extesions %d\n", __STDC_LIB_EXT1__);
     
     //NSLog(@"GC %@\n", [NSGarbageCollector defaultCollector]);
     //NSLog(@"%@", NSAppKitVersionNumber);
