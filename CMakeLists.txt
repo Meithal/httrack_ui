@@ -146,7 +146,6 @@ if(APPLE)
 	target_sources(Httpack PRIVATE
         "${CMAKE_CURRENT_LIST_DIR}/TODO.md"
         "${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/plist.in"
-        "${CMAKE_CURRENT_LIST_DIR}/.gitignore"
     )
 	target_sources(Httpack PUBLIC
         "${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/TexturedFullScreen.png"
