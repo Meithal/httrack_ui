@@ -21,6 +21,11 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @implementation AppProvidedServices
+-(void)awakeFromNib {
+    /// Enregistre notre app comme service global dans le systeme
+    [NSApp setServicesProvider:self];
+    NSUpdateDynamicServices();
+}
 -(void)downloadWebsite:(NSPasteboard*)pb userData:(NSString*)userdata error:(NSString**)onError {
     
     [_cmm.httrSiteUrl setStringValue:[pb stringForType:NSStringPboardType]];

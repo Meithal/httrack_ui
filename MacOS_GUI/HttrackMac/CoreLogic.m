@@ -22,6 +22,7 @@ NSErrorDomain const MacHttrackErrors = @"com.github.meithal";
 NSString *preference_autocomplete_copied_sites = @"httpack_autocomplete_copied_sites";
 NSString *preference_default_save_folder = @"httpack_default_save_folder";
 
+static CoreLogic* s_logic;
 
 /// methodes enrichissant les types de base
 @implementation NSString (NSStringEndsWith)
@@ -47,41 +48,38 @@ static int __cdecl my_loop(t_hts_callbackarg * carg, httrackp * opt, lien_back *
     
     //printf("loop lien :%s \n");
     [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-        if(![[NSApp delegate] respondsToSelector:@selector(logic)]){
-            [NSException raise:@"Misfit object" format:@"bad configuration"];
+        assert(s_logic);
+        if(!s_logic)
             return;
-        }
-        
-        CoreLogic* logic = [((AppDelegate*)[NSApp delegate]) logic];
 
-        httrackp * opt = [logic httrack_opt];
+        //httrackp * opt = [logic httrack_opt];
         
         if(!opt)
             return;
 
-        if(opt->state.stop && [logic state] == CORELOGIC_STATE_STOPPED)
+        if(opt->state.stop && [s_logic state] == CORELOGIC_STATE_STOPPED)
             return;
 
-        enum CoreLogicState old_state = [logic state];
+        enum CoreLogicState old_state = [s_logic state];
         if(opt) {
             if(opt->state.stop) {
                 if(old_state != CORELOGIC_STATE_STOPPED)
-                    [[logic delegate] coreLogicDownloadDidStop:logic];
-                [logic setState:CORELOGIC_STATE_STOPPED];
+                    [[s_logic delegate] coreLogicDownloadDidStop:s_logic];
+                [s_logic setState:CORELOGIC_STATE_STOPPED];
             }
             else if(opt->state._hts_setpause) {
                 if(old_state != CORELOGIC_STATE_PAUSED)
-                    [[logic delegate] coreLogicDownloadDidPause:logic];
-                [logic setState:CORELOGIC_STATE_PAUSED];
+                    [[s_logic delegate] coreLogicDownloadDidPause:s_logic];
+                [s_logic setState:CORELOGIC_STATE_PAUSED];
             } else {
                 if(old_state != CORELOGIC_STATE_RUNNING)
-                    [[logic delegate] coreLogicDownloadWillStart:logic];
-                [logic setState:CORELOGIC_STATE_RUNNING];
+                    [[s_logic delegate] coreLogicDownloadWillStart:s_logic];
+                [s_logic setState:CORELOGIC_STATE_RUNNING];
             }
         }
         
-        if([logic loopCallback]) { // met a jour l'affichage des stats
-            [[logic objCallback] performSelector:[logic loopCallback] withObject:(id)stats];
+        if([s_logic loopCallback]) { // met a jour l'affichage des stats
+            [[s_logic objCallback] performSelector:[s_logic loopCallback] withObject:(id)stats];
         }
         
         /// met a jour les avancements
@@ -102,15 +100,16 @@ static int __cdecl my_loop(t_hts_callbackarg * carg, httrackp * opt, lien_back *
                 float ratio = (float)back[i].r.size / back[i].r.totalsize; /// division par 0 verifiee plus haut
                 NSArray<NSString*>* components = [[NSString stringWithUTF8String:(char*)back[i].url_sav+opt->path_log.length_] pathComponents];
                 
-                MyDowloadableFile* f = [ModelsApp addPathComponents:components toArborescence:[logic websites] atCompletePath:@(back[i].url_sav)];
-                changed = [[logic websites] updateAdvancement:f ratio:ratio];
+                MyDowloadableFile* f = [ModelsApp addPathComponents:components toArborescence:[s_logic websites] atCompletePath:@(back[i].url_sav)];
+                changed = [[s_logic websites] updateAdvancement:f ratio:ratio];
+                
             }
             if(changed)
-                [[logic delegate] coreLogicPageAdded:logic]; // sert juste a refresh le outlineView
+                [[s_logic delegate] coreLogicPageAdded:s_logic]; // sert juste a refresh le outlineView
             
-            [logic.myBacking updateBacking:back total:back_max];
-            [logic.myLiens updateLiens:*opt->liens total:opt->lien_tot];
-            [[logic delegate] coreLogicUpdateLinks:logic links:back total:back_max];
+            [s_logic.myBacking updateBacking:back total:back_max];
+            [s_logic.myLiens updateLiens:*opt->liens total:opt->lien_tot];
+            [[s_logic delegate] coreLogicUpdateLinks:s_logic links:back total:back_max];
 
         }
     }];
@@ -141,15 +140,14 @@ static void __cdecl my_filesave(t_hts_callbackarg * carg,
         return; /// on veut pas sauvegarder les fichiers d'intendance qui se trouvent a la racine
     
     [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-        CoreLogic* logic = [((AppDelegate*)[NSApp delegate]) logic];
 
-        httrackp * opt = [logic httrack_opt];
-        
-        MyDowloadableFile* f = [ModelsApp addPathComponents:components toArborescence:logic.websites atCompletePath:sfile];
-        
-        [[logic websites] updateAdvancement:f ratio:1];
+        assert(s_logic);
 
-        [[logic delegate] coreLogicPageAdded:logic];
+        MyDowloadableFile* f = [ModelsApp addPathComponents:components toArborescence:s_logic.websites atCompletePath:sfile ];
+        
+        [[s_logic websites] updateAdvancement:f ratio:1];
+
+        [[s_logic delegate] coreLogicPageAdded:s_logic];
     }];
 
     [[NSOperationQueue mainQueue] waitUntilAllOperationsAreFinished];
@@ -239,15 +237,22 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
     self = [super init];
     
     if (self) {
+        s_logic = self;
+
         _state = CORELOGIC_STATE_STOPPED;
         _my_liens = [[MyLiens alloc] init]; // init: s'assure que le pointeur interne est a NULL
         _my_backing = [[MyBacking alloc] init]; // init: s'assure que le pointeur interne est a NULL
+        
+        sanitize_save_folder_user_settings();
+        [self setDefaultAutocomplete];
     }
     
     return self;
 }
 - (void)dealloc
 {
+    [self stopMirror];
+    
     hts_free_opt(_httrack_opt);
     [_websites release];
     [_my_liens release];
@@ -449,9 +454,6 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
 }
 -(void)setLogLevel:(enum CoreLogicLogLevel)logLevel {
     _log_level = logLevel;
-}
--(void)gracefulTerminate {
-    [self stopMirror];
 }
 - (nonnull MyLiens *)myLiens {
     return _my_liens;

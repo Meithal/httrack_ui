@@ -43,6 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
     NSNumber* retires;
 };
 @end
+
 @interface MyLiens : NSObject {
     NSMutableArray<MyLinkBidge*>* _liensBridge;
 }
@@ -61,6 +62,7 @@ NS_ASSUME_NONNULL_BEGIN
     NSNumber* totalsize;
 }
 @end
+
 @interface MyBacking : NSObject {
     NSMutableArray<MyBackingBridge*>* _backing;
 }

@@ -31,11 +31,6 @@
     [self.window.dockTile display];
     //_window.toolbarStyle = NSWindowToolbarStyleUnified;//
     
-    sanitize_save_folder_user_settings();
-    [[self logic] setDefaultAutocomplete];
-    
-    [NSApp setServicesProvider:_aps];
-    NSUpdateDynamicServices();
     
     if(0) {
         os_log_t log = os_log_create("com.meithal.httpack", "service");
@@ -46,7 +41,7 @@
     }
 }
 - (void)applicationWillTerminate:(NSNotification *)aNotification {
-    [_logic gracefulTerminate];
+    
 }
 - (BOOL)applicationSupportsSecureRestorableState:(NSApplication *)app {
     return YES;
@@ -54,9 +49,5 @@
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)theApplication
 {
     return YES;
-}
-// MARK: - Our functions
--(CoreLogic*)logic {
-    return _logic;
 }
 @end

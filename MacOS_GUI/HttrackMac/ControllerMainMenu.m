@@ -1,12 +1,11 @@
 
-#import <Foundation/Foundation.h>
+#import <AppKit/AppKit.h>
 #import <WebKit/WebKit.h>
 
 #import "htscore.h"
 
 #import "ModelsApp.h"
 #import "CoreLogic.h"
-#import "AppDelegate.h"
 
 #import "ControllerMainMenu.h"
 
