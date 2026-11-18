@@ -1,8 +1,14 @@
-#import "../AppDelegate.h"
+
+#import <Foundation/Foundation.h>
+#import <WebKit/WebKit.h>
+
+#import "htscore.h"
+
+#import "ModelsApp.h"
+#import "CoreLogic.h"
+#import "AppDelegate.h"
 
 #import "ControllerMainMenu.h"
-
-#import <WebKit/WebKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -307,6 +313,8 @@ NS_ASSUME_NONNULL_BEGIN
     //[self complete:nil];
     BOOL res = [super becomeFirstResponder];
     if(res)
+        // FIXME: peut lancer NSXPCSpellServerTimeoutException "Spell server connection timeout sending suggestCompletionsForPartialWordRange"
+        // utiliser requestCheckingOfString:range:types:options:inSpellDocumentWithTag:completionHandler:
         [self.currentEditor complete:self];
     
     return res;

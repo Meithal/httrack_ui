@@ -1,9 +1,3 @@
-#import <Foundation/Foundation.h>
-#import <Cocoa/Cocoa.h>
-#import <WebKit/WebKit.h>
-
-#import "../CoreLogic.h"
-
 NS_ASSUME_NONNULL_BEGIN
 
 enum {

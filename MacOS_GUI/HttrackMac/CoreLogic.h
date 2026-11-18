@@ -5,11 +5,6 @@
 //  Created by ivo on 13/02/2026.
 //
 
-#import <Foundation/Foundation.h>
-
-#import "htscore.h"
-
-#import "Models/ModelsApp.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -24,6 +19,7 @@ void sanitize_save_folder_user_settings(void);
 
 @class CoreLogicDelegate;
 
+/** The core business logic of the app */
 @interface CoreLogic : NSObject {
     httrackp *_httrack_opt;
     CoreLogicDelegate * _delegate;

@@ -5,10 +5,6 @@
 //  Created by ivo on 13/02/2026.
 //
 
-#import <Foundation/Foundation.h>
-
-#import "htscore.h"
-
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol YTPavancement

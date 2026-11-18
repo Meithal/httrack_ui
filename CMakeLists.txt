@@ -63,6 +63,7 @@ if(NOT EXISTS "${LIBRESSL_ROOT_DIR}/ssl/VERSION")
 	COMMAND "./autogen.sh" WORKING_DIRECTORY "${LIBRESSL_ROOT_DIR}"
   )
 endif()
+
 set(LIBRESSL_TESTS OFF CACHE BOOL "Build LibreSSL tests" FORCE)
 add_subdirectory("${LIBRESSL_ROOT_DIR}" "${CMAKE_CURRENT_BINARY_DIR}/libssl")
 
@@ -98,13 +99,14 @@ target_compile_options(httr_lib PUBLIC
 
 if(HTTRACK_WANT_VERBOSE)
     target_compile_definitions(httr_lib PUBLIC
-        # HTTRACK_SKIP_GNU_BUILDTOOLS=1
-        DEBUG_ROBOTS=1
-        DEBUG=3
-        HDEBUG=2
-        BDEBUG=1
-        HTS_DEBUG_CLOSESOCK=1
-        DEBUGCA=1
+			#HTTRACK_SKIP_GNU_BUILDTOOLS=1
+			DEBUG_ROBOTS=1
+			DEBUG=3
+			HDEBUG=2
+			BDEBUG=1
+			HTS_DEBUG_CLOSESOCK=1
+			DEBUGCA=1
+			FTP_DEBUG=1
     )
 endif()
 
@@ -130,10 +132,10 @@ if(APPLE)
 		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/AppDelegate.m
 		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/main.m
 		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/Base.lproj/MainMenu.xib
-		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/Controllers/ControllerMainMenu.h
-		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/Controllers/ControllerMainMenu.m
-		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/Models/ModelsApp.h
-		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/Models/ModelsApp.m
+		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/ControllerMainMenu.h
+		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/ControllerMainMenu.m
+		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/ModelsApp.h
+		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/ModelsApp.m
 		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/CoreLogic.h
 		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/CoreLogic.m
 		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/AppProvidedServices.m
@@ -143,6 +145,7 @@ if(APPLE)
 	target_sources(Httpack PRIVATE
         "${CMAKE_CURRENT_LIST_DIR}/TODO.md"
         "${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/plist.in"
+        "${CMAKE_CURRENT_LIST_DIR}/.gitignore"
     )
 	target_sources(Httpack PUBLIC
         "${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/TexturedFullScreen.png"
@@ -173,7 +176,7 @@ if(APPLE)
 	)
 
 	######### TESTING ###########
-	#enable_testing()
+	enable_testing()
 	# cf https://stackoverflow.com/a/78355693/13577241
 	find_package(XCTest REQUIRED)
 

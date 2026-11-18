@@ -26,8 +26,7 @@ int main(int argc, const char * argv[]) {
         // Setup code that might create autoreleased objects goes here.
     }
     
-    printf("api min %d, api max %d\n", __MAC_OS_X_VERSION_MAX_ALLOWED,
-           __MAC_OS_X_VERSION_MIN_REQUIRED);
+    printf("api min %d, api max %d\n", __MAC_OS_X_VERSION_MIN_REQUIRED, __MAC_OS_X_VERSION_MAX_ALLOWED);
     printf("is mutithreaded %d\n", [NSThread isMultiThreaded]);
     //printf("has secure extesions %d\n", __STDC_LIB_EXT1__);
     

@@ -12,6 +12,9 @@ Ongoing
 - Garder le programme suffisamment intuitif pour n'avoir besoin ni de l'un ni de l'autre
 - Ameliorer le temps de demarrage
 - Lorsque le cache est corrompu, on a des erreurs bizarres, et sigbus
+- Garder tous nos include dans les unités de compilation, éviter les include cachés afin de mieux cerner les
+include circulaires et la "feature envy", creer un header spécial d'include si on a besoin d'exposer des
+fonctionnalités sous forme de librairie éventuellement.
 
 Bugs
 ---
@@ -73,7 +76,7 @@ Taches
 - [x] Sauvegarder le listing dans le dossier user plutot que l'endroit de l'executable.
 - [x] Avoir un listing de sites copiés
 - [x] ... Afficher l'avancement de chaque recopie
-- [ ] ...... Afficher la progression 
+- [ ] ...... Afficher la progression sur le dossier en fonction de ss enfants
 - [x] ... Faire en sorte que ce listing se mette a jour en temps reel
 - [x] ... Le listing doit se faire sur un thread different
 - [ ] Avoir une icone a coté de chaque nom de site (favicon)
@@ -102,6 +105,7 @@ Taches
 - [ ] Version téléphone. UIKit ? Catalyst ? SwiftUI pour version universelle ? Optionnel
 - [ ] App Clip ? Widget ?
 - [ ] Pousser la retrompatibilité derrière big sur ? <https://github.com/devernay/xcodelegacy>
+- [ ] ... Ajout dlcompat pour les versions anterieures a 2003 https://github.com/cooljeanius/dlcompat-20030629
 - [ ] Permettre de verifier si les liens externes ne sont pas en fait des liens internes mais devenus morts suite a un changement de domaine. Ajouter une verification de type garde-fou pour les URL externes tres generiques.
 - [x] Ajouer un drop down d'urls deja entrées dans le passé
 - [x] ... Pouvoir éditer cette liste
@@ -165,6 +169,7 @@ Taches
 - [x] Ouvrir le dossier du site directement en cliquant dessus
 - [ ] Afficher une webview pour se connecter sur le site et recuperer les cookies pour scrapper avec un sessionid valide
 - [ ] Quand un dossier est supprimmé dans le finder, le répercuter dans la vue arborescente
+- [ ] Retelecharger un site pour en faire un historique dans le temps
 
 Plus tard
 ---

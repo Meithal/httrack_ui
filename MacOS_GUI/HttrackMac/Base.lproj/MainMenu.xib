@@ -940,7 +940,7 @@ DQ
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" utility="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="97" y="139" width="386" height="537"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1800" height="1125"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1800" height="1131"/>
             <view key="contentView" id="qVG-01-0Xx">
                 <rect key="frame" x="0.0" y="0.0" width="386" height="537"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -1367,7 +1367,7 @@ DQ
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <clipView key="contentView" id="W7T-9o-eW8">
                                 <rect key="frame" x="1" y="1" width="403" height="370"/>
-                                <autoresizingMask key="autoresizingMask"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveName="autosaveLiens" rowHeight="24" headerView="0x6-1d-dlu" id="OZH-wE-EDx">
                                         <rect key="frame" x="0.0" y="0.0" width="457" height="342"/>
@@ -1376,7 +1376,7 @@ DQ
                                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                         <tableColumns>
-                                            <tableColumn identifier="TCIurl" width="64" minWidth="40" maxWidth="1000" id="8hh-R8-ELx">
+                                            <tableColumn identifier="TCIurl" width="64" minWidth="40" maxWidth="2000" id="8hh-R8-ELx">
                                                 <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Remote URL">
                                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                     <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
@@ -1388,7 +1388,7 @@ DQ
                                                 </textFieldCell>
                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                             </tableColumn>
-                                            <tableColumn identifier="TCIprecedent" width="64" minWidth="10" maxWidth="200" id="Fhg-Xo-qDb" userLabel="TCIprecedent">
+                                            <tableColumn identifier="TCIprecedent" width="64" minWidth="10" maxWidth="2000" id="Fhg-Xo-qDb" userLabel="TCIprecedent">
                                                 <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Referer index">
                                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1436,7 +1436,7 @@ DQ
                                                 </textFieldCell>
                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                             </tableColumn>
-                                            <tableColumn identifier="TCIredirection" width="40" minWidth="40" maxWidth="200" id="e0z-dL-42T">
+                                            <tableColumn identifier="TCIredirection" width="40" minWidth="40" maxWidth="2000" id="e0z-dL-42T">
                                                 <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Redirection">
                                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                     <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
@@ -1474,7 +1474,7 @@ DQ
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <clipView key="contentView" id="gai-NP-lcd">
                                 <rect key="frame" x="1" y="1" width="404" height="370"/>
-                                <autoresizingMask key="autoresizingMask"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveName="autosaveBacking" rowHeight="24" headerView="fGm-hB-NGK" id="fWS-uY-r4C">
                                         <rect key="frame" x="0.0" y="0.0" width="410" height="342"/>
@@ -1483,7 +1483,7 @@ DQ
                                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                         <tableColumns>
-                                            <tableColumn identifier="TCIurl" width="73" minWidth="40" maxWidth="1000" id="rgT-vr-Rpr">
+                                            <tableColumn identifier="TCIurl" width="73" minWidth="40" maxWidth="2000" id="rgT-vr-Rpr">
                                                 <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="right" title="Remote URL">
                                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                     <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
@@ -1529,7 +1529,7 @@ DQ
                                                 </textFieldCell>
                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                             </tableColumn>
-                                            <tableColumn identifier="TCIreferer" width="47" minWidth="10" maxWidth="320" id="jEg-wN-27j">
+                                            <tableColumn identifier="TCIreferer" width="47" minWidth="10" maxWidth="3200" id="jEg-wN-27j">
                                                 <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Referer">
                                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1597,7 +1597,7 @@ DQ
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="182" y="123" width="344" height="433"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1800" height="1125"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1800" height="1131"/>
             <view key="contentView" id="CjU-4k-gsc">
                 <rect key="frame" x="0.0" y="0.0" width="344" height="433"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -1756,7 +1756,7 @@ DQ
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="182" y="123" width="276" height="382"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1800" height="1125"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1800" height="1131"/>
             <view key="contentView" id="a1N-as-vWF">
                 <rect key="frame" x="0.0" y="0.0" width="276" height="382"/>
                 <autoresizingMask key="autoresizingMask"/>

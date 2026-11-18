@@ -1,6 +1,8 @@
 //#import <Availability.h>
 #import <os/log.h>
 
+#import <AppKit/AppKit.h>
+
 #import "AppDelegate.h"
 
 @interface AppDelegate ()
