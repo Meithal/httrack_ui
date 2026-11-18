@@ -4,17 +4,19 @@
 //
 //  Created by ivo on 13/02/2026.
 //
+#if defined(__clang__) /** we are using gcc only to check retrocomp, do not fill the error log with system headers incompatibilities */
+#include <Foundation/Foundation.h>
 
-#import <Foundation/Foundation.h>
+#endif
 
-#import "htscore.h"
+#include "htscore.h"
 
 #import "ModelsApp.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @implementation MyDowloadableFile
-+ (nonnull instancetype)createFromString:(nonnull NSString *)name atPath:(nonnull NSString *)path createdAt:(NSDate*)date{
++ (instancetype)createFromString:(NSString *)name atPath:(NSString *)path createdAt:(NSDate*)date{
     MyDowloadableFile * me =[[MyDowloadableFile alloc] init];
     me->_name = [name copy];
     me->_hd_path = [path copy];
@@ -37,7 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
         return _downloadAdvancement ;
     
     // si deja existant
-    if ([[NSFileManager defaultManager] fileExistsAtPath:self.hd_path])
+    if ([[NSFileManager defaultManager] fileExistsAtPath:[self hd_path]])
         _downloadAdvancement = 1;
     
     return _downloadAdvancement;
@@ -75,7 +77,7 @@ NS_ASSUME_NONNULL_BEGIN
         NSString stringWithFormat:@"%@, %@ (%d elements)",
         [super debugDescription],
         [self name],
-        (int)(self.directories.count + self.files.count)
+        (int)([self.directories count] + [self.files count])
     ];
 }
 - (NSString *) description {
@@ -85,10 +87,10 @@ NS_ASSUME_NONNULL_BEGIN
 -(const NSString*) name {
     return _name;
 }
--(const NSMutableArray<MyDirectoryElements *> *) directories {
+-(const TYPED_CONTAINER(NSMutableArray, MyDirectoryElements *) *) directories {
     return _directories;
 }
--(const NSMutableArray<MyDowloadableFile *> *) files {
+-(const TYPED_CONTAINER(NSMutableArray, MyDowloadableFile *) *) files {
     return _files;
 }
 -(const int)depth {
@@ -97,33 +99,34 @@ NS_ASSUME_NONNULL_BEGIN
 /// Utilities
 - (int) numberOfChildren
 {
-    int count = 0;
+    int count = 0, i;
     
-    count += self.files.count;
-    for(int i=0; i<self.directories.count; i++)
-        count += [[self.directories objectAtIndex:i] numberOfChildren];
+    count += [[self files] count];
+    for(i = 0; i<[[self directories] count]; i++)
+        count += [[[self directories] objectAtIndex:i] numberOfChildren];
     
     return count;
 }
 - (int) numberOfCompleted
 {
     int count = 0;
+    NSUInteger i, ct;
     
-    for (int i = 0, ct = (int)self.files.count; i <ct; i++) {
-        if([self.files objectAtIndex:i] .avancement >= 1)
+    for (i = 0, ct = [[self files] count]; i < ct; i++) {
+        if([[[self files] objectAtIndex:i] avancement] >= 1)
             count ++;
     }
-    for(int i=0; i<self.directories.count; i++)
-        count += [[self.directories objectAtIndex:i] numberOfCompleted];
+    for(i = 0; i<[[self directories] count]; i++)
+        count += [[[self directories] objectAtIndex:i] numberOfCompleted];
     
     return count;
 }
 -(float)avancement {
-    int total = self.numberOfChildren;
-    int completedFiles = self.numberOfCompleted;
+    int total = [self numberOfChildren];
+    int completedFiles = [self numberOfCompleted];
     return (float)completedFiles / total;
 }
-- (BOOL)updateAdvancement:(nonnull MyDowloadableFile*)file ratio:(float)ratio {
+- (BOOL)updateAdvancement:(MyDowloadableFile*)file ratio:(float)ratio {
     //NSLog(@"me: %@ path: %@ site: %@ ratio: %.2f\n", _name, path, site, ratio);
     float old = file->_downloadAdvancement;
     file->_downloadAdvancement = ratio;
@@ -150,15 +153,20 @@ NS_ASSUME_NONNULL_BEGIN
 }
 - (void)updateLiens:(lien_url*)liens total:(int)tot {
     int diff = tot - (int)[_liensBridge count];
-    for(int i = 0; i < diff ; i++) {
+    int i;
+    for(i = 0; i < diff ; i++) {
         MyLinkBidge* mlb = [[MyLinkBidge alloc] init];
-        mlb->remoteUrl = [[NSString stringWithFormat:@"%@%@", @(liens[_liensBridge.count].adr), @(liens[_liensBridge.count].fil)] copy];
-        mlb->status = [[NSString stringWithFormat:@"%@%@", @(liens[_liensBridge.count].former_adr), @(liens[_liensBridge.count].former_fil)] copy];
-        mlb->previous = [NSNumber numberWithInt:liens[_liensBridge.count].precedent];
-        mlb->passe = [NSNumber numberWithInt:liens[_liensBridge.count].pass2];
-        mlb->depth = [NSNumber numberWithInt:liens[_liensBridge.count].depth];
-        mlb->retires = [NSNumber numberWithInt:liens[_liensBridge.count].retry];
+        NSUInteger last = [_liensBridge count];
+        
+        mlb->remoteUrl = [[NSString stringWithFormat:@"%s%s", liens[last].adr, liens[last].fil] copy];
+        mlb->status = [[NSString stringWithFormat:@"%s%s", liens[last].former_adr, liens[last].former_fil] copy];
+        mlb->previous = [NSNumber numberWithInt:liens[last].precedent];
+        mlb->passe = [NSNumber numberWithInt:liens[last].pass2];
+        mlb->depth = [NSNumber numberWithInt:liens[last].depth];
+        mlb->retires = [NSNumber numberWithInt:liens[last].retry];
+        
         [_liensBridge addObject:mlb];
+
         [mlb release];
     }
     
@@ -166,7 +174,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(int)count {
     return (int)[_liensBridge count];
 }
--(NSArray<MyLinkBidge*>*)liens {
+-(TYPED_CONTAINER(NSArray,MyLinkBidge*)*)liens {
     return _liensBridge;
 }
 @end
@@ -188,24 +196,25 @@ NS_ASSUME_NONNULL_BEGIN
     
     [super dealloc];
 }
-- (void)updateBacking:(nonnull lien_back *)liens total:(int)tot {
+- (void)updateBacking:(lien_back *)liens total:(int)tot {
+    int i;
     if([_backing count] != tot) {
         [_backing removeAllObjects];
-        for(int i=0; i<tot; i++) {
+        for(i = 0; i < tot; i++) {
             MyBackingBridge * b = [[MyBackingBridge alloc] init];
             [_backing addObject:b];
             [b release];
         }
     }
     
-    for(int i = 0; i<tot; i++) {
+    for(i = 0; i < tot; i++) {
         MyBackingBridge* b = [_backing objectAtIndex:i];
         [b->remote release];
         [b->referer release];
         [b->local release];
         [b->status release];
         [b->progression release];
-        b->remote = [[NSString stringWithFormat:@"%@%@", @(liens[i].url_adr), @(liens[i].url_fil)] copy];
+        b->remote = [[NSString stringWithFormat:@"%s%s", liens[i].url_adr, liens[i].url_fil] copy];
         b->referer = [[NSString stringWithFormat:@"%s%s", liens[i].referer_adr, liens[i].referer_fil] copy];
         b->local = [[NSString stringWithFormat:@"%s", liens[i].url_sav] copy];
         b->status = [[NSNumber numberWithInt:liens[i].r.statuscode] copy];
@@ -213,34 +222,39 @@ NS_ASSUME_NONNULL_BEGIN
         b->totalsize = [[NSNumber numberWithLong: liens[i].r.totalsize] copy];
     }
 }
--(int)count {
-    return (int)[_backing count];
+-(NSUInteger)count {
+    return [_backing count];
 }
--(NSArray<MyBackingBridge*>*)backing {
-    return _backing;
+//-(TYPED_CONTAINER(NSArray,MyBackingBridge*)*)backing {
+//    return _backing;
+//}
+-(MyBackingBridge*)backAt:(NSUInteger)idx {
+    return [_backing objectAtIndex:idx];
 }
 @end
 
 @implementation ModelsApp
-+ (nonnull MyDowloadableFile*)addFile:(nonnull NSString *)file toArborescence:(nonnull MyDirectoryElements *)arbo sittingAtCompletePath:(NSString*)path createdAt:(NSDate*)date{
++ (MyDowloadableFile*)addFile:(NSString *)file toArborescence:(MyDirectoryElements *)arbo sittingAtCompletePath:(NSString*)path createdAt:(NSDate*)date{
     MyDowloadableFile*f =[MyDowloadableFile createFromString:file atPath:path createdAt:date];
-    [arbo.files addObject:f];
+    [[arbo files] addObject:f];
     
     return f;
 }
-+ (nonnull MyDirectoryElements *)addDirectory:(nonnull NSString *)dirname toArborescene:(nonnull MyDirectoryElements *)arbo {
-    MyDirectoryElements *n =[MyDirectoryElements createFromString:dirname atDepth:arbo.depth + 1];
-    [arbo.directories addObject:n];
++ (MyDirectoryElements *)addDirectory:(NSString *)dirname toArborescene:(MyDirectoryElements *)arbo {
+    MyDirectoryElements *n =[MyDirectoryElements createFromString:dirname atDepth:[arbo depth] + 1];
+    [[arbo directories] addObject:n];
     return n;
 }
-+(MyDowloadableFile*)addPathComponents:(NSArray<NSString*>*)comps toArborescence:(MyDirectoryElements *)arbo atCompletePath:(NSString*)complete_path createdAt:(NSDate*)date
++(MyDowloadableFile*)addPathComponents:(TYPED_CONTAINER(NSArray,NSString*)*)comps toArborescence:(MyDirectoryElements *)arbo atCompletePath:(NSString*)complete_path createdAt:(NSDate*)date
 {
     MyDirectoryElements * orig = arbo;
-    for(int i = 0; i < comps.count - 1; i++) {
+    int i;
+    for(i = 0; i < [comps count] - 1; i++) {
         NSString*s = [comps objectAtIndex:i];
-        for(int j =0; j < arbo.directories.count; j++) {
-            if([[arbo.directories objectAtIndex:j].name isEqualToString:s]) {
-                arbo = [arbo.directories objectAtIndex:j];
+        int j;
+        for(j =0; j < [[arbo directories] count]; j++) {
+            if([[[[arbo directories] objectAtIndex:j] name] isEqualToString:s]) {
+                arbo = [[arbo directories] objectAtIndex:j];
                 goto directory_found;
             }
         }
@@ -249,14 +263,14 @@ NS_ASSUME_NONNULL_BEGIN
         directory_found:;
     }
     MyDowloadableFile* f;
-    for(int i = 0; i < arbo.files.count ; i++) {
-        if([[arbo.files objectAtIndex:i].name isEqualToString:[comps objectAtIndex:comps.count - 1]]) {
-            f = [arbo.files objectAtIndex:i];
+    for(i = 0; i < [[arbo files] count] ; i++) {
+        if([[[[arbo files] objectAtIndex:i] name] isEqualToString:[comps objectAtIndex:[comps count] - 1]]) {
+            f = [[arbo files] objectAtIndex:i];
             goto file_found;
         }
     }
     /// file not found, we must create it
-    f = [ModelsApp addFile:[comps objectAtIndex:comps.count - 1] toArborescence:arbo sittingAtCompletePath:complete_path createdAt:date];
+    f = [ModelsApp addFile:[comps objectAtIndex:[comps count] - 1] toArborescence:arbo sittingAtCompletePath:complete_path createdAt:date];
     
     file_found:;
     

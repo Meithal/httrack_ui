@@ -5,7 +5,9 @@
 //  Created by ivo on 13/02/2026.
 //
 
+#if defined(__clang__)
 #import <Foundation/Foundation.h>
+#endif
 
 #import "htscore.h"
 
@@ -464,10 +466,10 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
 -(void)setLogLevel:(enum CoreLogicLogLevel)logLevel {
     _log_level = logLevel;
 }
-- (nonnull MyLiens *)myLiens {
+- (MyLiens *)myLiens {
     return _my_liens;
 }
-- (nonnull MyBacking *)myBacking {
+- (MyBacking *)myBacking {
     return _my_backing;
 }
 -(void)setDefaultAutocomplete {

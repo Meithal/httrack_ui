@@ -7,8 +7,10 @@
 
 #import <os/log.h>
 
+#if defined(__clang__)
 #import <AppKit/AppKit.h>
 #import <WebKit/WebKit.h>
+#endif
 
 #include "htscore.h"
 

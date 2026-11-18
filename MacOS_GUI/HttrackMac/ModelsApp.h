@@ -5,6 +5,16 @@
 //  Created by ivo on 13/02/2026.
 //
 
+#if __has_feature(objc_generics)
+# define TYPED_CONTAINER(container, type) container<type>
+#else
+# define TYPED_CONTAINER(container, type) container
+#endif
+
+#if defined(__GNUC__) && ((__GNUC__ >= 4) || ((__GNUC__ == 3) && (__GNUC_MINOR__ >= 1))) && !defined(RETRO_CHECK)
+# define HAS_UNAVAILABLE_ATTRIBUTE
+#endif
+
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol YTPavancement
@@ -19,9 +29,6 @@ NS_ASSUME_NONNULL_BEGIN
     @public
     float _downloadAdvancement; /** 0.0 - 1.0 */
 }
-//@property (copy) NSString * name; // without path component
-//@property (assign) NSDate * dateCreated;
-//@property (copy) NSString * hd_path; // complete absolute path
 +(instancetype) createFromString:(NSString *)name atPath:(NSString*)path createdAt:(NSDate*)date;
 /// Getters
 -(NSString *) name; // without path component
@@ -31,20 +38,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MyDirectoryElements : NSObject <YTPavancement> {
     const NSString* _name;
-    const NSMutableArray<MyDirectoryElements *> * _directories;
-    const NSMutableArray<MyDowloadableFile *> * _files;
+    const TYPED_CONTAINER(NSMutableArray,MyDirectoryElements *) * _directories;
+    const TYPED_CONTAINER(NSMutableArray,MyDowloadableFile *) * _files;
     int _depth;
 }
-//@property (copy) NSString* name;
-//@property (strong, atomic) NSMutableArray<MyDirectoryElements *> * directories;
-//@property (strong, atomic) NSMutableArray<MyDowloadableFile *> * files;
-//@property NSInteger depth;
+#if defined(HAS_UNAVAILABLE_ATTRIBUTE)
 +(instancetype)alloc UNAVAILABLE_ATTRIBUTE;
+#endif
 +(instancetype) createFromString:(NSString*)name atDepth:(int)depth;
 /// getters
 -(const NSString*) name;
--(const NSMutableArray<MyDirectoryElements *> *) directories;
--(const NSMutableArray<MyDowloadableFile *> *) files;
+-(const TYPED_CONTAINER(NSMutableArray,MyDirectoryElements *) *) directories;
+-(const TYPED_CONTAINER(NSMutableArray,MyDowloadableFile *) *) files;
 -(int) depth;
 /// utils
 - (NSString *) debugDescription;
@@ -65,11 +70,11 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface MyLiens : NSObject {
-    NSMutableArray<MyLinkBidge*>* _liensBridge;
+    TYPED_CONTAINER(NSMutableArray,MyLinkBidge*)* _liensBridge;
 }
 -(void)updateLiens:(lien_url*)liens total:(int)tot;  /// TODO: on ne devrait pas avoir a connaitre les details de la couche inferieure ici
 -(int)count;
--(NSArray<MyLinkBidge*>*)liens;
+-(TYPED_CONTAINER(NSArray, MyLinkBidge*)*)liens;
 @end
 
 @interface MyBackingBridge: NSObject {
@@ -84,18 +89,19 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface MyBacking : NSObject {
-    NSMutableArray<MyBackingBridge*>* _backing;
+    TYPED_CONTAINER(NSMutableArray, MyBackingBridge*)* _backing;
 }
 -(void)updateBacking:(lien_back*)backing total:(int)tot;
--(int)count;
--(NSArray<MyBackingBridge*>*)backing;
+-(NSUInteger)count;
+//-(TYPED_CONTAINER(NSArray, MyBackingBridge*)*)backing;
+-(MyBackingBridge*)backAt:(NSUInteger)idx;
 @end
 
 @interface ModelsApp : NSObject
 +(MyDirectoryElements *)addDirectory:(NSString *)dirname toArborescene:(MyDirectoryElements *)arbo;
 +(MyDowloadableFile *)addFile:(NSString*) file toArborescence:(MyDirectoryElements *)arbo sittingAtCompletePath:(NSString*) path createdAt:(NSDate*)date;
 /// ajoute une hierarchie de dossiers+fichier, en creant les dossiers intermediaires, cree le fichier ou le retourne
-+(MyDowloadableFile *)addPathComponents:(NSArray<NSString*>*)comps toArborescence:(MyDirectoryElements *)arbo atCompletePath:(NSString*)complete_path createdAt:(NSDate*)date;;
++(MyDowloadableFile *)addPathComponents:(TYPED_CONTAINER(NSArray,NSString*)*)comps toArborescence:(MyDirectoryElements *)arbo atCompletePath:(NSString*)complete_path createdAt:(NSDate*)date;;
 @end
 
 NS_ASSUME_NONNULL_END

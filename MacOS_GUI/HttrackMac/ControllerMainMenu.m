@@ -1,6 +1,7 @@
-
+#if defined(__clang__) /** we are using gcc only to check retrocomp, do not fill the error log with system headers incompatibilities */
 #import <AppKit/AppKit.h>
 #import <WebKit/WebKit.h>
+#endif
 
 #import "htscore.h"
 
@@ -221,10 +222,10 @@ NS_ASSUME_NONNULL_BEGIN
     [_playpausestopControl setEnabled:YES forSegment:HTR_CONTROL_STOP];
     [_playpausestopControl setEnabled:YES forSegment:HTR_CONTROL_PLAY];
 }
-- (void)coreLogicPageAdded:(nonnull CoreLogic *)sender {
+- (void)coreLogicPageAdded:(CoreLogic *)sender {
     [[self projectsOutlineView] reloadData];
 }
-- (void)coreLogicUpdateLinks:(nonnull CoreLogic *)sender links:(nonnull lien_back *)liens total:(int)tot { 
+- (void)coreLogicUpdateLinks:(CoreLogic *)sender links:(lien_back *)liens total:(int)tot { 
     
     [self->_tableBacking reloadData];
     [self->_tableLiens reloadData];
@@ -390,14 +391,14 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
 
 @implementation ProjectsDataSource
 #pragma mark NSOutlineViewDataSource
-- (BOOL)outlineView:(nonnull NSOutlineView *)outlineView isItemExpandable:(nonnull MyDirectoryElements *)item {
+- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(MyDirectoryElements *)item {
     if(item.class == MyDowloadableFile.class) // ou != MyDirectoryElements.class
         return NO;
     NSLevelIndicatorCell * c;
     return item.directories.count || item.files.count;
 }
 
-- (NSInteger)outlineView:(nonnull NSOutlineView *)outlineView numberOfChildrenOfItem:(nullable MyDirectoryElements *)item {
+- (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(nullable MyDirectoryElements *)item {
     if(item == nil)
         return _logic.websites.directories.count;
     else if (item.class == MyDowloadableFile.class)
@@ -406,7 +407,7 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
         return item.directories.count + item.files.count;
 }
 
-- (nullable id)outlineView:(nonnull NSOutlineView *)outlineView objectValueForTableColumn:(nullable NSTableColumn *)tableColumn byItem:(nullable MyDirectoryElements *)item {
+- (nullable id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(nullable NSTableColumn *)tableColumn byItem:(nullable MyDirectoryElements *)item {
     if(item == nil) return @"nil";
     
     if(item.class == MyDirectoryElements.class) {
@@ -436,7 +437,7 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
     }
 }
 
-- (nonnull id)outlineView:(nonnull NSOutlineView *)outlineView child:(NSInteger)index ofItem:(nullable MyDirectoryElements*)item {
+- (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(nullable MyDirectoryElements*)item {
     if(item == nil)
         return [_logic.websites.directories objectAtIndex:index];
     else {
@@ -550,19 +551,23 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
 {
     if(tableColumn == nil)
         return nil;
+    assert(row>=0);
+    if(row < 0)
+        return nil;
+    NSUInteger urow = row;
     
     if ([tableColumn.identifier isEqualTo:@"TCIurl"]) {
-        return [self->core_logic.myBacking.backing objectAtIndex:row]->remote;
+        return [self->core_logic.myBacking backAt:urow]->remote;
     } else if ([tableColumn.identifier isEqualTo:@"TCIlocal"]) {
-        return [self->core_logic.myBacking.backing objectAtIndex:row]->local;
+        return [self->core_logic.myBacking backAt:urow]->local;
     } else if ([tableColumn.identifier isEqualTo:@"Total size"]) {
-        return [self->core_logic.myBacking.backing objectAtIndex:row]->totalsize;
+        return [self->core_logic.myBacking backAt:urow]->totalsize;
     } else if ([tableColumn.identifier isEqualTo:@"TCIreferer"]) {
-        return [self->core_logic.myBacking.backing objectAtIndex:row]->referer;
+        return [self->core_logic.myBacking backAt:urow]->referer;
     } else if ([tableColumn.identifier isEqualTo:@"TCIstatus"]) {
-        return [self->core_logic.myBacking.backing objectAtIndex:row]->status;
+        return [self->core_logic.myBacking backAt:urow]->status;
     } else if ([tableColumn.identifier isEqualTo:@"Progression"]) {
-        return [self->core_logic.myBacking.backing objectAtIndex:row]->progression;
+        return [self->core_logic.myBacking backAt:urow]->progression;
     }
     return @"toto";
 }
