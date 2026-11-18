@@ -47,7 +47,6 @@ void sanitize_save_folder_user_settings(void);
 -(void)setState:(enum CoreLogicState)state;
 -(enum CoreLogicLogLevel) logLevel;
 -(void)setLogLevel:(enum CoreLogicLogLevel)logLevel;
--(void)gracefulTerminate;
 -(MyLiens*)myLiens;
 -(MyBacking*)myBacking;
 -(void)setDefaultAutocomplete;

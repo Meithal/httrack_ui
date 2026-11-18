@@ -100,9 +100,14 @@ static int __cdecl my_loop(t_hts_callbackarg * carg, httrackp * opt, lien_back *
                 float ratio = (float)back[i].r.size / back[i].r.totalsize; /// division par 0 verifiee plus haut
                 NSArray<NSString*>* components = [[NSString stringWithUTF8String:(char*)back[i].url_sav+opt->path_log.length_] pathComponents];
                 
-                MyDowloadableFile* f = [ModelsApp addPathComponents:components toArborescence:[s_logic websites] atCompletePath:@(back[i].url_sav)];
-                changed = [[s_logic websites] updateAdvancement:f ratio:ratio];
+                struct tm buffer;
+                struct tm *tm_s = convert_time_rfc822(&buffer, back[i].r.lastmodified);
+                time_t t = mktime(tm_s);
+                NSDate* nsd = [[NSDate alloc] initWithTimeIntervalSince1970:t];
                 
+                MyDowloadableFile* f = [ModelsApp addPathComponents:components toArborescence:[s_logic websites] atCompletePath:@(back[i].url_sav) createdAt:[nsd autorelease]];
+                
+                changed = [[s_logic websites] updateAdvancement:f ratio:ratio];
             }
             if(changed)
                 [[s_logic delegate] coreLogicPageAdded:s_logic]; // sert juste a refresh le outlineView
@@ -142,8 +147,10 @@ static void __cdecl my_filesave(t_hts_callbackarg * carg,
     [[NSOperationQueue mainQueue] addOperationWithBlock:^{
 
         assert(s_logic);
+        NSError*error;
+        NSDate* createdAt = [[[NSFileManager defaultManager] attributesOfItemAtPath:[NSString stringWithCString:file encoding:NSUTF8StringEncoding] error:&error] valueForKey:NSFileCreationDate];
 
-        MyDowloadableFile* f = [ModelsApp addPathComponents:components toArborescence:s_logic.websites atCompletePath:sfile ];
+        MyDowloadableFile* f = [ModelsApp addPathComponents:components toArborescence:s_logic.websites atCompletePath:sfile createdAt:createdAt];
         
         [[s_logic websites] updateAdvancement:f ratio:1];
 
@@ -216,7 +223,9 @@ void parseDirectoriesRecurse(MyDirectoryElements * dir, NSURL * adress)
             if(isDir) {
                 parseDirectoriesRecurse([ModelsApp addDirectory:file toArborescene:dir], [adress URLByAppendingPathComponent:file]);
             } else {
-                [ModelsApp addFile:file toArborescence:dir sittingAtCompletePath:[[adress path] stringByAppendingPathComponent:file]];
+                NSError*error;
+                NSDate* createdAt = [[[NSFileManager defaultManager] attributesOfItemAtPath:[adress path] error:&error] valueForKey:NSFileCreationDate];
+                [ModelsApp addFile:file toArborescence:dir sittingAtCompletePath:[[adress path] stringByAppendingPathComponent:file] createdAt:createdAt];
             }
         }
     }
@@ -336,7 +345,7 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
 -(MyDirectoryElements *) websites
 {
     if(_websites == nil) {
-        _websites = [[MyDirectoryElements createFromString:@"racine"] retain];
+        _websites = [MyDirectoryElements createFromString:@"racine" atDepth:0];
         [self indexOfDownloadedSites:_websites];
     }
     

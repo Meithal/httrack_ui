@@ -320,7 +320,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 - (void)controlTextDidChange:(NSNotification *)notification
 {
-    NSTextView *textView = notification.userInfo[@"NSFieldEditor"];
+    NSTextView *textView = [notification.userInfo objectForKey:@"NSFieldEditor"];
     
     // prevent calling "complete" too often
     if(!_completePosting) {
@@ -361,8 +361,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) splitView:(NSSplitView *) splitView
 resizeSubviewsWithOldSize:(NSSize) oldSize
 {
-    NSView* left = splitView.subviews[0];
-    NSView* right = splitView.subviews[1];
+    NSView* left = [splitView.subviews objectAtIndex:0];
+    NSView* right = [splitView.subviews objectAtIndex:1];
     
     CGFloat fixedWidth = left.frame.size.width;
     CGFloat dividerWidth = splitView.dividerThickness;
@@ -438,12 +438,12 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
 
 - (nonnull id)outlineView:(nonnull NSOutlineView *)outlineView child:(NSInteger)index ofItem:(nullable MyDirectoryElements*)item {
     if(item == nil)
-        return _logic.websites.directories[index];
+        return [_logic.websites.directories objectAtIndex:index];
     else {
         if(index < item.directories.count)
-            return item.directories[index];
+            return [item.directories objectAtIndex:index];
         else
-            return item.files[index - item.directories.count];
+            return [item.files objectAtIndex:index - item.directories.count];
     }
 }
 
@@ -461,7 +461,7 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
     if([notification.userInfo objectForKey:@"NSTableViewCurrentRowSelectionUserInfoKey"] == nil)
         return;
     
-    NSIndexSet* ids = (NSIndexSet*)notification.userInfo[@"NSTableViewCurrentRowSelectionUserInfoKey"];
+    NSIndexSet* ids = (NSIndexSet*)[notification.userInfo objectForKey: @"NSTableViewCurrentRowSelectionUserInfoKey"];
     if([ids count] < 1)
         return;
     
@@ -607,7 +607,7 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
     return [_changedAutocompletions count];
 }
 - (nullable id)tableView:(NSTableView *)tableView objectValueForTableColumn:(nullable NSTableColumn *)tableColumn row:(NSInteger)row {
-    return _changedAutocompletions[row];
+    return [_changedAutocompletions objectAtIndex:row];
 }
 - (void)tableViewSelectionDidChange:(NSNotification *)notification {
     [self updateState];
@@ -616,9 +616,9 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
     NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
     NSArray* keys = [[defaults dictionaryRepresentation] allKeys];
     for (int i = 0, ct = (int)keys.count; i < ct; i++) {
-        if([keys[i] isEqualTo:preference_autocomplete_copied_sites])
+        if([[keys objectAtIndex:i] isEqualTo:preference_autocomplete_copied_sites])
             continue;
-        [defaults setValue:nil forKey:keys[i]];
+        [defaults setValue:nil forKey:[keys objectAtIndex:i]];
     }
     [defaults synchronize];
     sanitize_save_folder_user_settings();

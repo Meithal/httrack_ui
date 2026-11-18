@@ -14,14 +14,23 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @implementation MyDowloadableFile
-+ (nonnull instancetype)createFromString:(nonnull NSString *)name
-atPath:(nonnull NSString *)path {
++ (nonnull instancetype)createFromString:(nonnull NSString *)name atPath:(nonnull NSString *)path createdAt:(NSDate*)date{
     MyDowloadableFile * me =[[MyDowloadableFile alloc] init];
-    me.name = name;
-    me.hd_path = path;
+    me->_name = [name copy];
+    me->_hd_path = [path copy];
+    me->_dateCreated = [date retain];
+    
     me->_downloadAdvancement = -1;
     return [me autorelease];
 }
+-(void) dealloc {
+    [_name release];
+    [_hd_path release];
+    [_dateCreated release];
+    
+    [super dealloc];
+}
+
 -(float)avancement {
     // si progression en direct
     if(_downloadAdvancement != -1)
@@ -33,9 +42,34 @@ atPath:(nonnull NSString *)path {
     
     return _downloadAdvancement;
 }
+- (NSString *)hd_path {
+    return _hd_path;
+}
+- (NSString *)name {
+    return _name;
+}
+- (NSDate *)dateCreated {
+    return _dateCreated;
+}
 @end
 
 @implementation MyDirectoryElements
++(instancetype) createFromString:(NSString *) name atDepth:(int)depth {
+    MyDirectoryElements * me =[[MyDirectoryElements alloc] init];
+    me->_name = [name copy];
+    me->_directories = [[NSMutableArray alloc] init];
+    me->_files = [[NSMutableArray alloc] init];
+    me->_depth = depth;
+    return me;
+}
+-(void)dealloc {
+    [_name dealloc];
+    [_files dealloc];
+    [_directories dealloc];
+    
+    [super dealloc];
+}
+/// Helpers
 - (NSString *) debugDescription {
     return [
         NSString stringWithFormat:@"%@, %@ (%d elements)",
@@ -47,20 +81,27 @@ atPath:(nonnull NSString *)path {
 - (NSString *) description {
     return [self debugDescription];
 }
-+(instancetype) createFromString:(NSString *) name {
-    MyDirectoryElements * me =[[MyDirectoryElements alloc] init];
-    me.name = name;
-    me.directories = [[NSMutableArray alloc] init];
-    me.files = [[NSMutableArray alloc] init];
-    return [me autorelease];
+/// Getters
+-(const NSString*) name {
+    return _name;
 }
+-(const NSMutableArray<MyDirectoryElements *> *) directories {
+    return _directories;
+}
+-(const NSMutableArray<MyDowloadableFile *> *) files {
+    return _files;
+}
+-(const int)depth {
+    return _depth;
+}
+/// Utilities
 - (int) numberOfChildren
 {
     int count = 0;
     
     count += self.files.count;
     for(int i=0; i<self.directories.count; i++)
-        count += [self.directories[i] numberOfChildren];
+        count += [[self.directories objectAtIndex:i] numberOfChildren];
     
     return count;
 }
@@ -69,11 +110,11 @@ atPath:(nonnull NSString *)path {
     int count = 0;
     
     for (int i = 0, ct = (int)self.files.count; i <ct; i++) {
-        if(self.files[i].avancement >= 1)
+        if([self.files objectAtIndex:i] .avancement >= 1)
             count ++;
     }
     for(int i=0; i<self.directories.count; i++)
-        count += [self.directories[i] numberOfCompleted];
+        count += [[self.directories objectAtIndex:i] numberOfCompleted];
     
     return count;
 }
@@ -147,7 +188,7 @@ atPath:(nonnull NSString *)path {
     
     [super dealloc];
 }
-- (void)updateBacking:(nonnull lien_back *)backing total:(int)tot {
+- (void)updateBacking:(nonnull lien_back *)liens total:(int)tot {
     if([_backing count] != tot) {
         [_backing removeAllObjects];
         for(int i=0; i<tot; i++) {
@@ -156,18 +197,20 @@ atPath:(nonnull NSString *)path {
             [b release];
         }
     }
+    
     for(int i = 0; i<tot; i++) {
-        [_backing[i]->remote release];
-        [_backing[i]->referer release];
-        [_backing[i]->local release];
-        [_backing[i]->status release];
-        [_backing[i]->progression release];
-        _backing[i]->remote = [[NSString stringWithFormat:@"%@%@", @(backing[i].url_adr), @(backing[i].url_fil)] copy];
-        _backing[i]->referer = [[NSString stringWithFormat:@"%s%s", backing[i].referer_adr, backing[i].referer_fil] copy];
-        _backing[i]->local = [[NSString stringWithFormat:@"%s", backing[i].url_sav] copy];
-        _backing[i]->status = [[NSNumber numberWithInt:backing[i].r.statuscode] copy];
-        _backing[i]->progression = [[NSNumber numberWithFloat: backing[i].r.totalsize ? (float)backing[i].r.size / backing[i].r.totalsize : 0] copy];
-        _backing[i]->totalsize = [[NSNumber numberWithLong: backing[i].r.totalsize] copy];
+        MyBackingBridge* b = [_backing objectAtIndex:i];
+        [b->remote release];
+        [b->referer release];
+        [b->local release];
+        [b->status release];
+        [b->progression release];
+        b->remote = [[NSString stringWithFormat:@"%@%@", @(liens[i].url_adr), @(liens[i].url_fil)] copy];
+        b->referer = [[NSString stringWithFormat:@"%s%s", liens[i].referer_adr, liens[i].referer_fil] copy];
+        b->local = [[NSString stringWithFormat:@"%s", liens[i].url_sav] copy];
+        b->status = [[NSNumber numberWithInt:liens[i].r.statuscode] copy];
+        b->progression = [[NSNumber numberWithFloat: liens[i].r.totalsize ? (float)liens[i].r.size / liens[i].r.totalsize : 0] copy];
+        b->totalsize = [[NSNumber numberWithLong: liens[i].r.totalsize] copy];
     }
 }
 -(int)count {
@@ -179,32 +222,25 @@ atPath:(nonnull NSString *)path {
 @end
 
 @implementation ModelsApp
-+(MyDirectoryElements *)allocArborescence
-{
-    MyDirectoryElements * dir = [[MyDirectoryElements alloc] init];
-    dir.depth = 0;
-    return dir;
-}
-+ (nonnull MyDowloadableFile*)addFile:(nonnull NSString *)file toArborescence:(nonnull MyDirectoryElements *)arbo sittingAtCompletePath:(NSString*) path {
-    MyDowloadableFile*f =[MyDowloadableFile createFromString:file atPath:path];
++ (nonnull MyDowloadableFile*)addFile:(nonnull NSString *)file toArborescence:(nonnull MyDirectoryElements *)arbo sittingAtCompletePath:(NSString*)path createdAt:(NSDate*)date{
+    MyDowloadableFile*f =[MyDowloadableFile createFromString:file atPath:path createdAt:date];
     [arbo.files addObject:f];
     
     return f;
 }
 + (nonnull MyDirectoryElements *)addDirectory:(nonnull NSString *)dirname toArborescene:(nonnull MyDirectoryElements *)arbo {
-    MyDirectoryElements *n =[MyDirectoryElements createFromString:dirname];
-    n.depth = arbo.depth + 1;
+    MyDirectoryElements *n =[MyDirectoryElements createFromString:dirname atDepth:arbo.depth + 1];
     [arbo.directories addObject:n];
     return n;
 }
-+(MyDowloadableFile*)addPathComponents:(NSArray<NSString*>*)comps toArborescence:(MyDirectoryElements *)arbo atCompletePath:(NSString*)complete_path
++(MyDowloadableFile*)addPathComponents:(NSArray<NSString*>*)comps toArborescence:(MyDirectoryElements *)arbo atCompletePath:(NSString*)complete_path createdAt:(NSDate*)date
 {
     MyDirectoryElements * orig = arbo;
     for(int i = 0; i < comps.count - 1; i++) {
-        NSString*s = comps[i];
-        for(int i =0; i < arbo.directories.count; i++) {
-            if([arbo.directories[i].name isEqualToString:s]) {
-                arbo = arbo.directories[i];
+        NSString*s = [comps objectAtIndex:i];
+        for(int j =0; j < arbo.directories.count; j++) {
+            if([[arbo.directories objectAtIndex:j].name isEqualToString:s]) {
+                arbo = [arbo.directories objectAtIndex:j];
                 goto directory_found;
             }
         }
@@ -214,13 +250,14 @@ atPath:(nonnull NSString *)path {
     }
     MyDowloadableFile* f;
     for(int i = 0; i < arbo.files.count ; i++) {
-        if([arbo.files[i].name isEqualToString:comps[comps.count - 1]]) {
-            f = arbo.files[i];
+        if([[arbo.files objectAtIndex:i].name isEqualToString:[comps objectAtIndex:comps.count - 1]]) {
+            f = [arbo.files objectAtIndex:i];
             goto file_found;
         }
     }
-    f = [ModelsApp addFile:comps[comps.count - 1] toArborescence:arbo sittingAtCompletePath:complete_path];
     /// file not found, we must create it
+    f = [ModelsApp addFile:[comps objectAtIndex:comps.count - 1] toArborescence:arbo sittingAtCompletePath:complete_path createdAt:date];
+    
     file_found:;
     
     return f;

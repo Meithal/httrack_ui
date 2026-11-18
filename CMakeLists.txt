@@ -49,6 +49,7 @@ list(TRANSFORM HTTRACK_HEADERS PREPEND "${SRC_ROOT}/")
 
 add_library(httr_lib STATIC ${HTTRACK_SOURCES})
 target_sources(httr_lib PRIVATE ${HTTRACK_HEADERS})
+set_property(TARGET httr_lib PROPERTY C_STANDARD 90)
 
 target_include_directories(httr_lib PUBLIC 
 	"${SRC_ROOT}/coucal"
@@ -174,6 +175,12 @@ if(APPLE)
             XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER ${MACOSX_BUNDLE_GUI_IDENTIFIER}
 		    MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/plist.in
 	)
+ 
+    if(0) # permet d'eprouver la retrocompatibilité, mais entre en conflit avec headers systeme
+        target_compile_options(Httpack PRIVATE
+            -fobjc-abi-version=1  # sur gcc on peut meme mettre 0 pour desactiver Objective C 2
+        )
+    endif()
 
 	######### TESTING ###########
 	enable_testing()
