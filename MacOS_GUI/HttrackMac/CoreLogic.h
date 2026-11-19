@@ -17,12 +17,20 @@ void sanitize_save_folder_user_settings(void);
 -(BOOL)endsWithString:(NSString*)string;
 @end
 
-@class CoreLogicDelegate;
+@class CoreLogic;
+
+@protocol CoreLogicDelegate<NSObject>
+-(void)coreLogicDownloadWillStart:(CoreLogic*)sender;
+-(void)coreLogicDownloadDidStop:(CoreLogic*)sender;
+-(void)coreLogicDownloadDidPause:(CoreLogic*)sender;
+-(void)coreLogicPageAdded:(CoreLogic*)sender;
+-(void)coreLogicUpdateLinks:(CoreLogic *)sender links:(lien_back*)liens total:(int)tot;
+@end
 
 /** The core business logic of the app */
 @interface CoreLogic : NSObject {
     httrackp *_httrack_opt;
-    CoreLogicDelegate * _delegate;
+    NSObject<CoreLogicDelegate> * _delegate;
     id _objCallback;
     SEL _loopCallback;
     enum CoreLogicState {CORELOGIC_STATE_STOPPED,CORELOGIC_STATE_RUNNING, CORELOGIC_STATE_PAUSED} _state;
@@ -33,10 +41,10 @@ void sanitize_save_folder_user_settings(void);
 }
 -(MyDirectoryElements *) websites;
 -(void)dowloadSite:(NSString*) url onError:(void (^)(NSString *, NSErrorDomain, NSInteger)) onError;
--(NSArray<NSString*>*)sitesOnHardDrive;
+-(TYPED_CONTAINER(NSArray,NSString*)*)sitesOnHardDrive;
 -(void)indexOfDownloadedSites:(MyDirectoryElements *) arbo;
--(void)setDelegate:(nullable id)newDelegate;
--(CoreLogicDelegate*)delegate;
+-(void)setDelegate:(nullable NSObject<CoreLogicDelegate>*)newDelegate;
+-(NSObject<CoreLogicDelegate>*)delegate;
 -(void)setLoopCallback:(nullable SEL) callback withObject: (nullable id) obj;
 -(SEL)loopCallback;
 -(id)objCallback;
@@ -52,12 +60,6 @@ void sanitize_save_folder_user_settings(void);
 -(void)setDefaultAutocomplete;
 @end
 
-@protocol CoreLogicDelegate<NSObject>
--(void)coreLogicDownloadWillStart:(CoreLogic*)sender;
--(void)coreLogicDownloadDidStop:(CoreLogic*)sender;
--(void)coreLogicDownloadDidPause:(CoreLogic*)sender;
--(void)coreLogicPageAdded:(CoreLogic*)sender;
--(void)coreLogicUpdateLinks:(CoreLogic *)sender links:(lien_back*)liens total:(int)tot;
-@end
+
 
 NS_ASSUME_NONNULL_END

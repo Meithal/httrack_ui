@@ -14,6 +14,7 @@
 
 #include "htscore.h"
 
+#import "retro_comp.h"
 #import "ModelsApp.h"
 #import "CoreLogic.h"
 #import "ControllerMainMenu.h"

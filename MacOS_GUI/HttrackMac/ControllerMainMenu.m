@@ -5,6 +5,7 @@
 
 #import "htscore.h"
 
+#import "retro_comp.h"
 #import "ModelsApp.h"
 #import "CoreLogic.h"
 
@@ -201,7 +202,7 @@ NS_ASSUME_NONNULL_BEGIN
 
     [formatter release];
 }
--(void)coreLogicDownloadWillStart:(CoreLogicDelegate *)sender {
+-(void)coreLogicDownloadWillStart:(NSObject<CoreLogicDelegate> *)sender {
     
     [_downloadButton setEnabled:NO];
     [_playpausestopControl setSelectedSegment:HTR_CONTROL_PLAY];

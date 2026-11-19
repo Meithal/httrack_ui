@@ -4,13 +4,15 @@
 //
 //  Created by ivo on 13/02/2026.
 //
+#include <printf.h>
 
-#if defined(__clang__)
+#if defined(__clang__) /** we are using gcc only to check compatibility with objective-c v1, do not fill the error log with system headers incompatibilities */
 #import <Foundation/Foundation.h>
 #endif
 
 #import "htscore.h"
 
+#import "retro_comp.h"
 #import "ModelsApp.h"
 
 #import "CoreLogic.h"
@@ -38,7 +40,11 @@ void sanitize_save_folder_user_settings(void) {
     NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
 
     if([defaults URLForKey:preference_default_save_folder] == nil) {
-        [defaults setURL:[NSURL URLWithString:@"Mirrored Websites/" relativeToURL:[NSFileManager.defaultManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask].firstObject] forKey:preference_default_save_folder];
+        [defaults
+         setURL:[NSURL URLWithString:@"Mirrored Websites/"
+                relativeToURL:[[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] firstObject]
+         ]
+         forKey:preference_default_save_folder];
     }
 }
 
@@ -96,7 +102,7 @@ static int __cdecl my_loop(t_hts_callbackarg * carg, httrackp * opt, lien_back *
                 if(strlen(back[i].url_sav) < opt->path_log.length_)
                     continue; /// on ne met pas a jour les fichiers qui ne seront pas sauvegardés sur le disque
                 
-                if([[@(back[i].url_sav) pathExtension] isEqualToString:@"delayed"])
+                if([[[NSString stringWithUTF8String:back[i].url_sav] pathExtension] isEqualToString:@"delayed"])
                     continue;
 
                 float ratio = (float)back[i].r.size / back[i].r.totalsize; /// division par 0 verifiee plus haut
@@ -107,7 +113,7 @@ static int __cdecl my_loop(t_hts_callbackarg * carg, httrackp * opt, lien_back *
                 time_t t = mktime(tm_s);
                 NSDate* nsd = [[NSDate alloc] initWithTimeIntervalSince1970:t];
                 
-                MyDowloadableFile* f = [ModelsApp addPathComponents:components toArborescence:[s_logic websites] atCompletePath:@(back[i].url_sav) createdAt:[nsd autorelease]];
+                MyDowloadableFile* f = [ModelsApp addPathComponents:components toArborescence:[s_logic websites] atCompletePath:[NSString stringWithUTF8String:back[i].url_sav] createdAt:[nsd autorelease]];
                 
                 changed = [[s_logic websites] updateAdvancement:f ratio:ratio];
             }
@@ -140,10 +146,10 @@ static void __cdecl my_filesave(t_hts_callbackarg * carg,
     if(0)
     printf("TOTO my_filesave %s\n", file);
     
-    NSArray<NSString*>* components = [[NSString stringWithUTF8String:(char*)file+opt->path_log.length_] pathComponents];
+    TYPED_CONTAINER(NSArray,NSString*)* components = [[NSString stringWithUTF8String:(char*)file+opt->path_log.length_] pathComponents];
     NSString *sfile = [NSString stringWithUTF8String:file];
     
-    if(components.count < 2)
+    if([components count] < 2)
         return; /// on veut pas sauvegarder les fichiers d'intendance qui se trouvent a la racine
     
     [[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -214,13 +220,13 @@ A eviter car ca contient des meta fichiers de httrack.
 void parseDirectoriesRecurse(MyDirectoryElements * dir, NSURL * adress);
 void parseDirectoriesRecurse(MyDirectoryElements * dir, NSURL * adress)
 {
-    NSDirectoryEnumerator * dirEn = [NSFileManager.defaultManager enumeratorAtPath:[adress path]];
+    NSDirectoryEnumerator * dirEn = [[NSFileManager defaultManager] enumeratorAtPath:[adress path]];
     
     NSString * file;
     while ((file = [dirEn nextObject])) {
         [dirEn skipDescendants];
         BOOL isDir = NO;
-        if([NSFileManager.defaultManager fileExistsAtPath:[[adress path] stringByAppendingPathComponent:file] isDirectory:&isDir])
+        if([[NSFileManager defaultManager] fileExistsAtPath:[[adress path] stringByAppendingPathComponent:file] isDirectory:&isDir])
         {
             if(isDir) {
                 parseDirectoriesRecurse([ModelsApp addDirectory:file toArborescene:dir], [adress URLByAppendingPathComponent:file]);
@@ -271,10 +277,10 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
     
     [super dealloc];
 }
--(void)setDelegate:(nullable CoreLogicDelegate*)newDelegate {
+-(void)setDelegate:(nullable NSObject<CoreLogicDelegate>*)newDelegate {
     _delegate = newDelegate;
 }
--(CoreLogicDelegate*)delegate {
+-(NSObject<CoreLogicDelegate>*)delegate {
     return _delegate;
 }
 -(void)setLoopCallback:(nullable SEL) callback withObject:(nullable id) obj {
@@ -320,7 +326,7 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
     NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
     NSURL * url = [defaults URLForKey:preference_default_save_folder];
 
-    StringMemcpy(_httrack_opt->path_html, ([[url path] stringByAppendingString:@"/"]).UTF8String, [url path].length + 1);
+    StringMemcpy(_httrack_opt->path_html, [([[url path] stringByAppendingString:@"/"]) UTF8String], [[url path] length] + 1);
     StringCopyS(_httrack_opt->path_log, _httrack_opt->path_html);
     StringCopyN(_httrack_opt->path_html_utf8, StringBuff(_httrack_opt->path_html),
                       StringLength(_httrack_opt->path_html));
@@ -340,7 +346,8 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
     //cache_back cache;
     //cache_init(&cache, _httrack_opt);
 
-    for(int i = 0; i < _httrack_opt->lien_tot; i++) {
+    int i;
+    for(i = 0; i < _httrack_opt->lien_tot; i++) {
         printf("%s\n", _httrack_opt->liens[i]->sav);
     }
 }
@@ -414,22 +421,22 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
     //[operation autorelease];
     [queue autorelease];
 }
--(NSArray<NSString*>*)sitesOnHardDrive
+-(TYPED_CONTAINER(NSArray,NSString*)*)sitesOnHardDrive
 {
     NSMutableArray* arr = [[NSMutableArray alloc] init];
     
     NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
     NSURL * url = [defaults URLForKey:preference_default_save_folder];
     
-    NSDirectoryEnumerator * dirEn = [NSFileManager.defaultManager enumeratorAtPath:[url path]];
+    NSDirectoryEnumerator * dirEn = [[NSFileManager defaultManager] enumeratorAtPath:[url path]];
     
     NSString * file;
     while ((file = [dirEn nextObject])) {
         [dirEn skipDescendants];
         BOOL isDir = NO;
-        if([NSFileManager.defaultManager fileExistsAtPath:[[url path] stringByAppendingPathComponent:file] isDirectory:&isDir] && isDir)
+        if([[NSFileManager defaultManager] fileExistsAtPath:[[url path] stringByAppendingPathComponent:file] isDirectory:&isDir] && isDir)
         {
-            if([NSFileManager.defaultManager fileExistsAtPath:[[[url path] stringByAppendingPathComponent:file] stringByAppendingPathComponent:@"index.html"]]) {
+            if([[NSFileManager defaultManager] fileExistsAtPath:[[[url path] stringByAppendingPathComponent:file] stringByAppendingPathComponent:@"index.html"]]) {
                 
                 [arr addObject:file];
             }
@@ -442,7 +449,7 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
 {
     NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
     NSURL * url = [defaults URLForKey:preference_default_save_folder];
-
+    
     for (NSString *dir in self.sitesOnHardDrive) {
         parseDirectoriesRecurse([ModelsApp addDirectory:dir toArborescene:arbo], [url URLByAppendingPathComponent:dir]);
     }

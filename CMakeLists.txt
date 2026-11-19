@@ -140,7 +140,8 @@ if(APPLE)
 		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/CoreLogic.h
 		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/CoreLogic.m
 		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/AppProvidedServices.m
-		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/AppProvidedServices.h
+        ${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/AppProvidedServices.h
+		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/retro_comp.h
 	)
 
 	target_sources(Httpack PRIVATE

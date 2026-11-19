@@ -11,7 +11,8 @@
 
 #include "htscore.h"
 
-#import "ModelsApp.h"
+#import "retro_comp.h"
+#include "ModelsApp.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

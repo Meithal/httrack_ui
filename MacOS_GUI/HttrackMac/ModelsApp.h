@@ -5,12 +5,6 @@
 //  Created by ivo on 13/02/2026.
 //
 
-#if __has_feature(objc_generics)
-# define TYPED_CONTAINER(container, type) container<type>
-#else
-# define TYPED_CONTAINER(container, type) container
-#endif
-
 #if defined(__GNUC__) && ((__GNUC__ >= 4) || ((__GNUC__ == 3) && (__GNUC_MINOR__ >= 1))) && !defined(RETRO_CHECK)
 # define HAS_UNAVAILABLE_ATTRIBUTE
 #endif
