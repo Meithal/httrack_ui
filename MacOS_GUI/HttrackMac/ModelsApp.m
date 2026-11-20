@@ -175,8 +175,11 @@ NS_ASSUME_NONNULL_BEGIN
 -(int)count {
     return (int)[_liensBridge count];
 }
--(TYPED_CONTAINER(NSArray,MyLinkBidge*)*)liens {
-    return _liensBridge;
+//-(TYPED_CONTAINER(NSArray,MyLinkBidge*)*)liens {
+//    return _liensBridge;
+//}
+-(MyLinkBidge*)lienAt:(NSUInteger)at {
+    return [_liensBridge objectAtIndex:at];
 }
 @end
 

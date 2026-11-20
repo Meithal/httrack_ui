@@ -42,23 +42,24 @@ set(HTTRACK_HEADERS
 	minizip/crypt.h minizip/ioapi.h minizip/mztools.h minizip/unzip.h minizip/zip.h
 )
 
-set(SRC_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/httrack/src)
+set(HTTRACK_SRC_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/httrack/src)
 
-list(TRANSFORM HTTRACK_SOURCES PREPEND "${SRC_ROOT}/")
-list(TRANSFORM HTTRACK_HEADERS PREPEND "${SRC_ROOT}/")
+list(TRANSFORM HTTRACK_SOURCES PREPEND "${HTTRACK_SRC_ROOT}/")
+list(TRANSFORM HTTRACK_HEADERS PREPEND "${HTTRACK_SRC_ROOT}/")
 
 add_library(httr_lib STATIC ${HTTRACK_SOURCES})
 target_sources(httr_lib PRIVATE ${HTTRACK_HEADERS})
 set_property(TARGET httr_lib PROPERTY C_STANDARD 90)
 
 target_include_directories(httr_lib PUBLIC 
-	"${SRC_ROOT}/coucal"
-	"${SRC_ROOT}"
+	"${HTTRACK_SRC_ROOT}/coucal"
+	"${HTTRACK_SRC_ROOT}"
 )
 
 
 set(LIBRESSL_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/httrack/portable")
 
+# TODO: ne fonctionne qu'avec les projets neufs, pas avec ceux deja existants
 if(NOT EXISTS "${LIBRESSL_ROOT_DIR}/ssl/VERSION")
   execute_process(
 	COMMAND "./autogen.sh" WORKING_DIRECTORY "${LIBRESSL_ROOT_DIR}"
@@ -75,9 +76,7 @@ target_link_libraries(httr_lib PUBLIC
 	# LibreSSL::Crypto 
 	# LibreSSL::SSL # doesnt provide SSL_library_init & alii for some reason
 	# LibreSSL::TLS
-	crypto
-	ssl
-	tls
+	crypto ssl tls
 )
 
 find_package(ZLIB REQUIRED)
@@ -112,11 +111,10 @@ if(HTTRACK_WANT_VERBOSE)
 endif()
 
 add_executable(httr
-	"${SRC_ROOT}/httrack.c"
-	"${SRC_ROOT}/httrack.h"
+	"${HTTRACK_SRC_ROOT}/httrack.c"
+	"${HTTRACK_SRC_ROOT}/httrack.h"
 )
-target_link_libraries(httr PUBLIC httr_lib)
-
+target_link_libraries(httr PRIVATE httr_lib)
 
 if(APPLE)
     ### set the lowest xcode 26 handles
@@ -126,34 +124,37 @@ if(APPLE)
 
 	set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.github.meithal.httpack")
 
+    set(HTTPACK_SOURCES
+        ${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/AppDelegate.h
+        ${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/AppDelegate.m
+        ${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/main.m
+        ${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/Base.lproj/MainMenu.xib
+        ${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/ControllerMainMenu.h
+        ${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/ControllerMainMenu.m
+        ${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/ModelsApp.h
+        ${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/ModelsApp.m
+        ${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/CoreLogic.h
+        ${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/CoreLogic.m
+        ${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/AppProvidedServices.m
+        ${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/AppProvidedServices.h
+        ${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/retro_comp.h
+    )
 	add_executable(
 		Httpack
 		MACOSX_BUNDLE
-		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/AppDelegate.h
-		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/AppDelegate.m
-		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/main.m
-		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/Base.lproj/MainMenu.xib
-		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/ControllerMainMenu.h
-		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/ControllerMainMenu.m
-		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/ModelsApp.h
-		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/ModelsApp.m
-		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/CoreLogic.h
-		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/CoreLogic.m
-		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/AppProvidedServices.m
-        ${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/AppProvidedServices.h
-		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/retro_comp.h
+        "${HTTPACK_SOURCES}"
 	)
-
+ 
 	target_sources(Httpack PRIVATE
         "${CMAKE_CURRENT_LIST_DIR}/TODO.md"
         "${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/plist.in"
     )
-	target_sources(Httpack PUBLIC
+	target_sources(Httpack PRIVATE
         "${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/TexturedFullScreen.png"
     )
 
 	target_link_libraries(Httpack PRIVATE httr_lib "-framework AppKit -framework WebKit -framework Metal")
-	target_include_directories(Httpack PRIVATE "${SRC_ROOT}")
+	target_include_directories(Httpack PRIVATE "${HTTRACK_SRC_ROOT}")
     target_compile_definitions(Httpack PRIVATE HTS_INTERNAL_BYTECODE HTTRACK_WANT_VERBOSE=${HTTRACK_WANT_VERBOSE})
     
 	set_source_files_properties(
@@ -176,12 +177,24 @@ if(APPLE)
 		    MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/plist.in
 	)
  
+    ######### RETROCOMPATIBILITY ########
     if(0) # permet d'eprouver la retrocompatibilité, mais entre en conflit avec headers systeme
         target_compile_options(Httpack PRIVATE
             -fobjc-abi-version=1  # sur gcc on peut meme mettre 0 pour desactiver Objective C 2
         )
     endif()
-
+    
+    add_executable(
+        Httpack_retrocompatibility
+        "${HTTPACK_SOURCES}"
+        ${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/stubs_gcc.h
+        ${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/stubs_gcc.h
+        ${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/retro_test.sh
+    )
+    target_link_libraries(Httpack_retrocompatibility PRIVATE httr_lib)
+    target_include_directories(Httpack_retrocompatibility PRIVATE "${HTTRACK_SRC_ROOT}")
+    target_compile_definitions(Httpack_retrocompatibility PRIVATE HTS_INTERNAL_BYTECODE)
+    
 	######### TESTING ###########
 	enable_testing()
 	# cf https://stackoverflow.com/a/78355693/13577241

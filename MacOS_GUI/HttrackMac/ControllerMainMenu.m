@@ -316,7 +316,7 @@ NS_ASSUME_NONNULL_BEGIN
     if(res)
         // FIXME: peut lancer NSXPCSpellServerTimeoutException "Spell server connection timeout sending suggestCompletionsForPartialWordRange"
         // utiliser requestCheckingOfString:range:types:options:inSpellDocumentWithTag:completionHandler:
-        [self.currentEditor complete:self];
+        [[self currentEditor] complete:self];
     
     return res;
 }
@@ -336,20 +336,20 @@ NS_ASSUME_NONNULL_BEGIN
     //[self setDelegate:self]; // cause autocompletion incontrolable
     NSSearchFieldCell * cell = [self cell];
     if(@available(macOS 11.0, *)) {
-        [cell.searchButtonCell setImage: [NSImage imageWithSystemSymbolName:@"tray.and.arrow.down" accessibilityDescription:@"The URL to download"]];
+        [[cell searchButtonCell] setImage: [NSImage imageWithSystemSymbolName:@"tray.and.arrow.down" accessibilityDescription:@"The URL to download"]];
     }
     if(@available(macOS 14.0, *)) { // autocompletion de type URL disponible a partir de Sonoma
         [self setContentType:NSTextContentTypeURL];
     }
     //[self complete:self];
 }
-- (NSArray<NSString *> *)textView:(NSTextView *)textView completions:(NSArray<NSString *> *)words forPartialWordRange:(NSRange)charRange indexOfSelectedItem:(nullable NSInteger *)index
+- (TYPED_CONTAINER(NSArray,NSString *) *)textView:(NSTextView *)textView completions:(TYPED_CONTAINER(NSArray,NSString *) *)words forPartialWordRange:(NSRange)charRange indexOfSelectedItem:(nullable NSInteger *)index
 {
-    if([textView.string isEqual: @""]) /// autocompletion uniquement quand on vient de cliquer sur le champ
+    if([[textView string] isEqualToString: @""]) /// autocompletion uniquement quand on vient de cliquer sur le champ
         return [[NSUserDefaults standardUserDefaults] valueForKey:preference_autocomplete_copied_sites];
     return nil;
 }
-- (NSArray<NSString *> *)recentSearches {
+- (TYPED_CONTAINER(NSArray,NSString *) *)recentSearches {
     return [_logic.sitesOnHardDrive copy];
 }
 @end
@@ -363,16 +363,16 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) splitView:(NSSplitView *) splitView
 resizeSubviewsWithOldSize:(NSSize) oldSize
 {
-    NSView* left = [splitView.subviews objectAtIndex:0];
-    NSView* right = [splitView.subviews objectAtIndex:1];
+    NSView* left = [[splitView subviews] objectAtIndex:0];
+    NSView* right = [[splitView subviews] objectAtIndex:1];
     
     CGFloat fixedWidth = left.frame.size.width;
-    CGFloat dividerWidth = splitView.dividerThickness;
+    CGFloat dividerWidth = [splitView dividerThickness];
     
-    left.frame = NSMakeRect(0, 0, fixedWidth, splitView.frame.size.height);
+    [left setFrame:NSMakeRect(0, 0, fixedWidth, splitView.frame.size.height)];
     
     CGFloat remainder = splitView.frame.size.width - fixedWidth - dividerWidth;
-    right.frame = NSMakeRect(fixedWidth + dividerWidth, 0, remainder, splitView.frame.size.height);
+    [right setFrame:NSMakeRect(fixedWidth + dividerWidth, 0, remainder, splitView.frame.size.height)];
 }
 
 - (CGFloat) splitView:(NSSplitView *) splitView
@@ -386,7 +386,7 @@ constrainMinCoordinate:(CGFloat) proposedMinimumPosition
 constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
           ofSubviewAt:(NSInteger) dividerIndex
 {
-    return splitView.frame.size.width - 200;
+    return [splitView frame].size.width - 200;
 }
 @end
 
@@ -412,11 +412,11 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
     if(item == nil) return @"nil";
     
     if(item.class == MyDirectoryElements.class) {
-        if([tableColumn.identifier isEqual:@"PageName"])
+        if([tableColumn.identifier isEqualToString:@"PageName"])
             return item.name;
-        else if(([tableColumn.identifier isEqual:@"Avancement"]))
-            return @(item.avancement);
-        else if([tableColumn.identifier isEqual:@"Icone"]) {
+        else if(([tableColumn.identifier isEqualToString:@"Avancement"]))
+            return [NSNumber numberWithFloat:item.avancement];
+        else if([tableColumn.identifier isEqualToString:@"Icone"]) {
             NSImage * im = [NSImage imageNamed:NSImageNameFolder];
             
             return im;
@@ -424,11 +424,11 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
         else raise(42);
     } else if (item.class == MyDowloadableFile.class) {
         MyDowloadableFile * item_cast = (MyDowloadableFile*)item;
-        if([tableColumn.identifier isEqual:@"PageName"])
+        if([tableColumn.identifier isEqualToString:@"PageName"])
             return item_cast.name;
-        else if([tableColumn.identifier isEqual:@"Avancement"])
-            return @(item_cast.avancement);
-        else if([tableColumn.identifier isEqual:@"Icone"]) {
+        else if([tableColumn.identifier isEqualToString:@"Avancement"])
+            return  [NSNumber numberWithFloat:item_cast.avancement];
+        else if([tableColumn.identifier isEqualToString:@"Icone"]) {
             NSImage * im = [[NSImage alloc] initByReferencingFile:item_cast.hd_path];
             NSLevelIndicatorCell*c;
             [im autorelease];
@@ -442,10 +442,10 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
     if(item == nil)
         return [_logic.websites.directories objectAtIndex:index];
     else {
-        if(index < item.directories.count)
-            return [item.directories objectAtIndex:index];
+        if(index < [[item directories] count])
+            return [[item directories] objectAtIndex:index];
         else
-            return [item.files objectAtIndex:index - item.directories.count];
+            return [[item files] objectAtIndex:index - [[item directories] count]];
     }
 }
 
@@ -453,25 +453,25 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
 - (BOOL) outlineView:(NSOutlineView *) outlineView
          isGroupItem:(MyDirectoryElements *) item
 {
-    if(item.class != MyDirectoryElements.class)
+    if([item class] != [MyDirectoryElements class])
         return NO;
     return item.depth < 2;
 }
 
 - (void) outlineViewSelectionDidChange:(NSNotification *) notification
 {
-    if([notification.userInfo objectForKey:@"NSTableViewCurrentRowSelectionUserInfoKey"] == nil)
+    if([[notification userInfo] objectForKey:@"NSTableViewCurrentRowSelectionUserInfoKey"] == nil)
         return;
     
-    NSIndexSet* ids = (NSIndexSet*)[notification.userInfo objectForKey: @"NSTableViewCurrentRowSelectionUserInfoKey"];
+    NSIndexSet* ids = (NSIndexSet*)[[notification userInfo] objectForKey: @"NSTableViewCurrentRowSelectionUserInfoKey"];
     if([ids count] < 1)
         return;
     
-    NSUInteger idx =(ids).firstIndex;
+    NSUInteger idx =[ids firstIndex];
     
     MyDowloadableFile* orow = [((ProjectsOutlineView*)notification.object) itemAtRow:idx ];
     if([orow respondsToSelector:@selector(hd_path)]) { // fichier
-        [((ProjectsOutlineView*)notification.object).mainController.contenuPreview mainChangePreview:orow.hd_path];
+        [((ProjectsOutlineView*)[notification object]).mainController.contenuPreview mainChangePreview:orow.hd_path];
     } else { // repertoire
         NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
         NSURL * url = [defaults URLForKey:preference_default_save_folder]; // TODO: it should become per-project, instead of global
@@ -501,7 +501,7 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
 @implementation MyToolbarStatsButton
 - (void)windowWillClose:(NSNotification *)notification {
     [(NSButton*)[self view] setState:NSControlStateValueOff];
-    [self toolbar].selectedItemIdentifier = nil;
+    [[self toolbar] setSelectedItemIdentifier:nil];
 }
 @end
 
@@ -521,17 +521,17 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
         return nil;
 
     if ([tableColumn.identifier isEqualTo:@"TCIurl"]) {
-        return [self->core_logic.myLiens.liens objectAtIndex:row]->remoteUrl;
+        return [self->core_logic.myLiens lienAt:row]->remoteUrl;
     } else if ([tableColumn.identifier isEqualTo:@"TCIredirection"]) {
-        return [self->core_logic.myLiens.liens objectAtIndex:row]->status;
+        return [self->core_logic.myLiens lienAt:row]->status;
     } else if ([tableColumn.identifier isEqualTo:@"TCIprecedent"]) {
-        return [self->core_logic.myLiens.liens objectAtIndex:row]->previous;
+        return [self->core_logic.myLiens lienAt:row]->previous;
     } else if ([tableColumn.identifier isEqualTo:@"TCIprofondeur"]) {
-        return [self->core_logic.myLiens.liens objectAtIndex:row]->depth;
+        return [self->core_logic.myLiens lienAt:row]->depth;
     } else if ([tableColumn.identifier isEqualTo:@"TCIsecondepasse"]) {
-        return [self->core_logic.myLiens.liens objectAtIndex:row]->passe;
+        return [self->core_logic.myLiens lienAt:row]->passe;
     } else if ([tableColumn.identifier isEqualTo:@"TCIretries"]) {
-        return [self->core_logic.myLiens.liens objectAtIndex:row]->retires;
+        return [self->core_logic.myLiens lienAt:row]->retires;
     }
 
     return @"toto";
@@ -557,17 +557,17 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
         return nil;
     NSUInteger urow = row;
     
-    if ([tableColumn.identifier isEqualTo:@"TCIurl"]) {
+    if ([[tableColumn identifier] isEqualTo:@"TCIurl"]) {
         return [self->core_logic.myBacking backAt:urow]->remote;
-    } else if ([tableColumn.identifier isEqualTo:@"TCIlocal"]) {
+    } else if ([[tableColumn identifier] isEqualTo:@"TCIlocal"]) {
         return [self->core_logic.myBacking backAt:urow]->local;
-    } else if ([tableColumn.identifier isEqualTo:@"Total size"]) {
+    } else if ([[tableColumn identifier] isEqualTo:@"Total size"]) {
         return [self->core_logic.myBacking backAt:urow]->totalsize;
-    } else if ([tableColumn.identifier isEqualTo:@"TCIreferer"]) {
+    } else if ([[tableColumn identifier] isEqualTo:@"TCIreferer"]) {
         return [self->core_logic.myBacking backAt:urow]->referer;
-    } else if ([tableColumn.identifier isEqualTo:@"TCIstatus"]) {
+    } else if ([[tableColumn identifier] isEqualTo:@"TCIstatus"]) {
         return [self->core_logic.myBacking backAt:urow]->status;
-    } else if ([tableColumn.identifier isEqualTo:@"Progression"]) {
+    } else if ([[tableColumn identifier] isEqualTo:@"Progression"]) {
         return [self->core_logic.myBacking backAt:urow]->progression;
     }
     return @"toto";
@@ -582,7 +582,7 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
     }
 }
 -(void)windowDidChangeOcclusionState:(NSNotification *)notification {
-    if(((NSWindow*)notification.object).isVisible == NO)
+    if([((NSWindow*)[notification object]) isVisible] == NO)
         return;
     
     NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
@@ -604,7 +604,7 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
     
     [_saveAutocompleteButton setEnabled:![_autocompletions isEqualToArray:_changedAutocompletions]];
     [_deletaAllAutocompleteButton setEnabled:[_changedAutocompletions count] > 0];
-    [_deleteRowAutocomplete setEnabled:[_autocompleteTable selectedRowIndexes].count > 0];
+    [_deleteRowAutocomplete setEnabled:[[_autocompleteTable selectedRowIndexes] count] > 0];
     [_undoAutocomplete setEnabled:![_autocompletions isEqualToArray:_changedAutocompletions]];
     
     [_autocompleteTable reloadData];
@@ -621,7 +621,8 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
 -(IBAction)preferencesResetAppPreferences:(id)sender {
     NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
     NSArray* keys = [[defaults dictionaryRepresentation] allKeys];
-    for (int i = 0, ct = (int)keys.count; i < ct; i++) {
+    int i, ct;
+    for (i = 0, ct = (int)[keys count]; i < ct; i++) {
         if([[keys objectAtIndex:i] isEqualTo:preference_autocomplete_copied_sites])
             continue;
         [defaults setValue:nil forKey:[keys objectAtIndex:i]];
@@ -678,9 +679,9 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
 
 @implementation ProgressCell
 
--(void)awakeFromNib {
+//-(void)awakeFromNib {
     //self.controlView = [NSControl alloc]
-}
+//}
 
 @end
 NS_ASSUME_NONNULL_END

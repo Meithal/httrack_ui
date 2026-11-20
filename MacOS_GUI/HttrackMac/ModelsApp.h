@@ -68,7 +68,8 @@ NS_ASSUME_NONNULL_BEGIN
 }
 -(void)updateLiens:(lien_url*)liens total:(int)tot;  /// TODO: on ne devrait pas avoir a connaitre les details de la couche inferieure ici
 -(int)count;
--(TYPED_CONTAINER(NSArray, MyLinkBidge*)*)liens;
+//-(TYPED_CONTAINER(NSArray, MyLinkBidge*)*)liens;
+-(MyLinkBidge*)lienAt:(NSUInteger)at;
 @end
 
 @interface MyBackingBridge: NSObject {

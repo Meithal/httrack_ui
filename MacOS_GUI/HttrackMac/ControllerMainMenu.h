@@ -120,6 +120,7 @@ enum {
     IBOutlet NSButton* _undoAutocomplete;
     IBOutlet NSTableView* _autocompleteTable;
 }
+-(void)updateState;
 @end
 
 @interface ProgressCell : NSCell
