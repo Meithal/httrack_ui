@@ -16,6 +16,7 @@ enum {
     //IBOutlet AppDelegate *_AppDelegate;
     IBOutlet CoreLogic* _logic;
     IBOutlet NSWindow* _myParentWindow;
+    
     enum APP_STYLE {
         APP_STYLE_TIGER,
         APP_STYLE_BIG_SUR,

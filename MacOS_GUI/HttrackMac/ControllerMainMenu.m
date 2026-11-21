@@ -433,6 +433,18 @@ static NSToolbarItem* g_sep;
 @end
 
 @implementation MySearchInputField
+-(void)awakeFromNib
+{
+    //[self setDelegate:self]; // cause autocompletion incontrolable
+    NSSearchFieldCell * cell = [self cell];
+    if(@available(macOS 11.0, *)) {
+        [[cell searchButtonCell] setImage: [NSImage imageWithSystemSymbolName:@"tray.and.arrow.down" accessibilityDescription:@"The URL to download"]];
+    }
+    if(@available(macOS 14.0, *)) { // autocompletion de type URL disponible a partir de Sonoma
+        [self setContentType:NSTextContentTypeURL];
+    }
+    //[self complete:self];
+}
 - (BOOL)becomeFirstResponder {
     //[self complete:nil];
     BOOL res = [super becomeFirstResponder];
@@ -454,18 +466,6 @@ static NSToolbarItem* g_sep;
         _completePosting = NO;
     }
 }
--(void)awakeFromNib
-{
-    //[self setDelegate:self]; // cause autocompletion incontrolable
-    NSSearchFieldCell * cell = [self cell];
-    if(@available(macOS 11.0, *)) {
-        [[cell searchButtonCell] setImage: [NSImage imageWithSystemSymbolName:@"tray.and.arrow.down" accessibilityDescription:@"The URL to download"]];
-    }
-    if(@available(macOS 14.0, *)) { // autocompletion de type URL disponible a partir de Sonoma
-        [self setContentType:NSTextContentTypeURL];
-    }
-    //[self complete:self];
-}
 - (TYPED_CONTAINER(NSArray,NSString *) *)textView:(NSTextView *)textView completions:(TYPED_CONTAINER(NSArray,NSString *) *)words forPartialWordRange:(NSRange)charRange indexOfSelectedItem:(nullable NSInteger *)index
 {
     if([[textView string] isEqualToString: @""]) /// autocompletion uniquement quand on vient de cliquer sur le champ
@@ -474,42 +474,6 @@ static NSToolbarItem* g_sep;
 }
 - (TYPED_CONTAINER(NSArray,NSString *) *)recentSearches {
     return [_logic.sitesOnHardDrive copy];
-}
-@end
-
-@interface MainSplitViewDelegate : NSObject<NSSplitViewDelegate>
-{}
-@end
-
-#pragma mark MainSplitViewDelegate
-@implementation MainSplitViewDelegate
-- (void) splitView:(NSSplitView *) splitView
-resizeSubviewsWithOldSize:(NSSize) oldSize
-{
-    NSView* left = [[splitView subviews] objectAtIndex:0];
-    NSView* right = [[splitView subviews] objectAtIndex:1];
-    
-    CGFloat fixedWidth = left.frame.size.width;
-    CGFloat dividerWidth = [splitView dividerThickness];
-    
-    [left setFrame:NSMakeRect(0, 0, fixedWidth, splitView.frame.size.height)];
-    
-    CGFloat remainder = splitView.frame.size.width - fixedWidth - dividerWidth;
-    [right setFrame:NSMakeRect(fixedWidth + dividerWidth, 0, remainder, splitView.frame.size.height)];
-}
-
-- (CGFloat) splitView:(NSSplitView *) splitView
-constrainMinCoordinate:(CGFloat) proposedMinimumPosition
-          ofSubviewAt:(NSInteger) dividerIndex
-{
-    
-    return 200;
-}
-- (CGFloat) splitView:(NSSplitView *) splitView
-constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
-          ofSubviewAt:(NSInteger) dividerIndex
-{
-    return [splitView frame].size.width - 200;
 }
 @end
 

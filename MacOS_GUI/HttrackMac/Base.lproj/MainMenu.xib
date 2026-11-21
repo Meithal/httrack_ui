@@ -665,20 +665,20 @@
             <point key="canvasLocation" x="276" y="-243"/>
         </menu>
         <window title="Mac HTTP mirror" subtitle="Website archiver" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="QvC-M9-y7g">
-            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" texturedBackground="YES" fullSizeContentView="YES"/>
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="657" y="426" width="536" height="322"/>
+            <rect key="contentRect" x="657" y="426" width="745" height="377"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1800" height="1131"/>
             <view key="contentView" wantsLayer="YES" id="EiT-Mj-1SZ">
-                <rect key="frame" x="0.0" y="0.0" width="536" height="322"/>
+                <rect key="frame" x="0.0" y="0.0" width="745" height="377"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <customView clipsToBounds="NO" id="L3y-5D-Mzt" customClass="MonContenuPreview">
-                        <rect key="frame" x="0.0" y="32" width="536" height="290"/>
+                        <rect key="frame" x="0.0" y="32" width="745" height="345"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     </customView>
                     <button tag="1234" verticalHuggingPriority="750" id="5Ii-9n-Rqw">
-                        <rect key="frame" x="419" y="-5" width="104" height="39"/>
+                        <rect key="frame" x="628" y="-5" width="104" height="39"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="push" title="Download" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="CUC-uB-izS">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -692,7 +692,7 @@ DQ
                         </connections>
                     </button>
                     <button toolTip="Show parsing state" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3WW-2a-D9f" userLabel="Open Drawer Links">
-                        <rect key="frame" x="393" y="4" width="26" height="23"/>
+                        <rect key="frame" x="602" y="4" width="26" height="23"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="info.circle" catalog="system" imagePosition="only" alignment="center" lineBreakMode="truncatingTail" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="4a6-Q6-CWp">
                             <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
@@ -703,7 +703,7 @@ DQ
                         </connections>
                     </button>
                     <button hidden="YES" toolTip="Change the orientation of the statistics separator" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BgU-dC-CVk" userLabel="Rotate Drawer Links Split">
-                        <rect key="frame" x="361" y="4" width="26" height="23"/>
+                        <rect key="frame" x="570" y="4" width="26" height="23"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="rotate.right.fill" catalog="system" imagePosition="only" alignment="center" lineBreakMode="truncatingTail" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="8Nd-hP-W8h">
                             <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
@@ -714,7 +714,7 @@ DQ
                         </connections>
                     </button>
                     <button hidden="YES" toolTip="Detach statistics" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DB2-nk-Lcb" userLabel="Detach Drawer Links">
-                        <rect key="frame" x="329" y="4" width="26" height="23"/>
+                        <rect key="frame" x="538" y="4" width="26" height="23"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="bird" catalog="system" imagePosition="only" alignment="center" lineBreakMode="truncatingTail" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Xai-gv-OBJ">
                             <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
@@ -726,7 +726,7 @@ DQ
                     </button>
                 </subviews>
             </view>
-            <toolbar key="toolbar" implicitIdentifier="89E57C56-516B-4FD9-ACF6-3089F1500223" autosavesConfiguration="NO" showsBaselineSeparator="NO" displayMode="iconOnly" sizeMode="regular" id="34P-3C-a7p">
+            <toolbar key="toolbar" implicitIdentifier="89E57C56-516B-4FD9-ACF6-3089F1500223" centeredItem="Aka-G2-Lya" autosavesConfiguration="NO" showsBaselineSeparator="NO" displayMode="iconOnly" sizeMode="regular" id="34P-3C-a7p">
                 <allowedToolbarItems>
                     <toolbarItem implicitItemIdentifier="NSToolbarShowColorsItem" id="h1O-xQ-r4q"/>
                     <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="HpB-6i-Uuh"/>
@@ -754,6 +754,7 @@ DQ
                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                             </searchFieldCell>
                             <connections>
+                                <outlet property="_logic" destination="YmQ-IQ-Bgp" id="dTU-rz-SiX"/>
                                 <outlet property="delegate" destination="lcu-If-avr" id="dQh-j2-sgy"/>
                             </connections>
                         </searchField>
@@ -782,6 +783,7 @@ DQ
                     <toolbarItem reference="IRy-Mn-bjF"/>
                     <toolbarItem reference="HpB-6i-Uuh"/>
                     <toolbarItem reference="Aka-G2-Lya"/>
+                    <toolbarItem reference="HpB-6i-Uuh"/>
                     <toolbarItem reference="gGH-d2-S7a"/>
                 </defaultToolbarItems>
                 <connections>
@@ -793,7 +795,7 @@ DQ
                 <outlet property="delegate" destination="Voe-Tx-rLC" id="top-28-M4D"/>
                 <outlet property="initialFirstResponder" destination="9g4-Du-4T3" id="Xak-do-Nwo"/>
             </connections>
-            <point key="canvasLocation" x="317" y="3"/>
+            <point key="canvasLocation" x="421.5" y="23.5"/>
         </window>
         <customObject id="Nbn-6H-ZPH" customClass="ControllerMainMenu">
             <connections>
@@ -1274,7 +1276,7 @@ DQ
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <clipView key="contentView" id="W7T-9o-eW8">
                                 <rect key="frame" x="1" y="1" width="403" height="337"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <autoresizingMask key="autoresizingMask"/>
                                 <subviews>
                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveName="autosaveLiens" rowHeight="24" headerView="0x6-1d-dlu" id="OZH-wE-EDx">
                                         <rect key="frame" x="0.0" y="0.0" width="457" height="309"/>
@@ -1381,7 +1383,7 @@ DQ
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <clipView key="contentView" id="gai-NP-lcd">
                                 <rect key="frame" x="1" y="1" width="404" height="337"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <autoresizingMask key="autoresizingMask"/>
                                 <subviews>
                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveName="autosaveBacking" rowHeight="24" headerView="fGm-hB-NGK" id="fWS-uY-r4C">
                                         <rect key="frame" x="0.0" y="0.0" width="410" height="309"/>
@@ -1509,7 +1511,7 @@ DQ
                 <rect key="frame" x="0.0" y="0.0" width="342" height="517"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <button toolTip="Reset window positions, table column sizes, splitter positions, etc." verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kkJ-Yt-EiA">
+                    <button toolTip="Reset all you setting except your autocompletions." verticalHuggingPriority="750" fixedFrame="YES" id="kkJ-Yt-EiA">
                         <rect key="frame" x="13" y="470" width="316" height="32"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="push" title="Restore initial preferences" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="h29-Fq-m9i">
@@ -1733,7 +1735,7 @@ DQ
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <clipView key="contentView" drawsBackground="NO" id="ce6-tH-sD8">
                 <rect key="frame" x="0.0" y="0.0" width="278" height="326"/>
-                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="none" multipleSelection="NO" autosaveName="MainProjectListing" rowHeight="24" rowSizeStyle="systemDefault" indentationPerLevel="13" autosaveExpandedItems="YES" outlineTableColumn="eEH-ST-yrq" id="508-O8-Dav" customClass="ProjectsOutlineView">
                         <rect key="frame" x="0.0" y="0.0" width="278" height="326"/>
