@@ -80,6 +80,8 @@ static NSToolbarItem* g_sep;
 
     /// Instantie le projects outline dans un drawer
     if(app_style == APP_STYLE_TIGER) {
+        ///
+        [_myParentWindow setStyleMask:[_myParentWindow styleMask] & ~NSWindowStyleMaskFullSizeContentView];
 
         CGSize pdsize = _projectsOutlineScrollView.frame.size;
         _drawerProjets = [[NSDrawer alloc] initWithContentSize:pdsize preferredEdge:NSRectEdgeMinX];
@@ -87,44 +89,51 @@ static NSToolbarItem* g_sep;
         [_drawerProjets setMinContentSize:CGSizeMake(pdsize.width/2, pdsize.height)];
         [_drawerProjets setContentView:_projectsOutlineScrollView];
         [_drawerProjets open];
+        if(@available(macOS 15.0, *)) {
+            [_toolbar removeItemWithItemIdentifier:IDENTIFIER_toolbar_main_separator];
+        } else {
+            int idx = 0;
+            for(NSToolbarItem *item in [_toolbar items]) {
+                if([item itemIdentifier] == IDENTIFIER_toolbar_main_separator) {
+                    [_toolbar removeItemAtIndex:idx];
+                    break;
+                }
+                idx++;
+            }
+        }
         if(_mainSplitViewController) {
-//            [_sidebarvc release];
-//            
-//            [[[_contenuPreview window] contentView] addSubview:_contenuPreview];
-//            [_centervc release];
-            
+            [_myParentWindow setContentView:[_contenuPreview superview]];
             [_myParentWindow setContentViewController:nil];
-//            [_mainSplitViewController release];
-//            _mainSplitViewController = nil;
+            while([[_mainSplitViewController splitViewItems] count]) {
+                NSSplitViewItem* svi = [[_mainSplitViewController splitViewItems] firstObject];
+                [_mainSplitViewController removeSplitViewItem:svi];
+            }
         }
     } else if (app_style == APP_STYLE_BIG_SUR) {
         /// Instantie un SplitViewController si on le supporte
         if(@available(macOS 11.0, *)) {
-            [_drawerProjets open];
+            [_drawerProjets close];
+            [_myParentWindow setStyleMask:[_myParentWindow styleMask] | NSWindowStyleMaskFullSizeContentView];
             
             if(_mainSplitViewController == nil) {
                 _mainSplitViewController = [[NSSplitViewController alloc] init];
                 
                 _sidebarvc = [[NSViewController alloc] init];
-                [_sidebarvc setView:_projectsOutlineScrollView];
-                
-                NSSplitViewItem* sidebarsvi = [NSSplitViewItem sidebarWithViewController:_sidebarvc];
                 
                 _centervc = [[NSViewController alloc] init];
-                [_centervc setView:_contenuPreview];
-                
-                NSSplitViewItem* centervcsvi = [NSSplitViewItem contentListWithViewController:_centervc];
-                
-                [_mainSplitViewController addSplitViewItem:sidebarsvi];
-                [_mainSplitViewController addSplitViewItem:centervcsvi];
                 
                 //[root addSubview:mainSplitViewController];
                 
-                g_sep = [[NSTrackingSeparatorToolbarItem trackingSeparatorToolbarItemWithIdentifier:@"main_separator" splitView:[_mainSplitViewController splitView] dividerIndex:0] retain];
+                g_sep = [[NSTrackingSeparatorToolbarItem trackingSeparatorToolbarItemWithIdentifier:IDENTIFIER_toolbar_main_separator splitView:[_mainSplitViewController splitView] dividerIndex:0] retain];
                 
-                [_toolbar insertItemWithItemIdentifier:@"main_separator" atIndex:1];
+                [_toolbar insertItemWithItemIdentifier:IDENTIFIER_toolbar_main_separator atIndex:1];
             }
-            
+            [_sidebarvc setView:_projectsOutlineScrollView];
+            NSSplitViewItem* sidebarsvi = [NSSplitViewItem sidebarWithViewController:_sidebarvc];
+            [_centervc setView:[_contenuPreview superview]];
+            NSSplitViewItem* centervcsvi = [NSSplitViewItem contentListWithViewController:_centervc];
+            [_mainSplitViewController addSplitViewItem:sidebarsvi];
+            [_mainSplitViewController addSplitViewItem:centervcsvi];
             [_myParentWindow setContentViewController:_mainSplitViewController];
         } else {
             assert(0 && "should never happen");
@@ -133,7 +142,7 @@ static NSToolbarItem* g_sep;
 }
 #pragma mark drawer des projets
 -(IBAction)toggleDrawerProjects:(id)sender {
-    if(_mainSplitViewController) {
+    if(_mainSplitViewController && [_myParentWindow contentViewController]) {
         [_mainSplitViewController toggleSidebar:sender];
     } else {
         [_drawerProjets toggle:sender];
@@ -812,7 +821,7 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
     [_defaults setInteger:APP_STYLE_TIGER forKey:PREFERENCE_app_style];
     [_defaults synchronize];
     [self updateState];
-    //[_cmm changeMainAppearance]; buggué pour l'instant
+    [_cmm changeMainAppearance]; // buggué pour l'instant
 }
 -(IBAction)setBigsur:(id)sender {
     if(@available(macOS 11.0, *)) {
@@ -820,7 +829,7 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
         [_defaults synchronize];
     }
     [self updateState];
-    //[_cmm changeMainAppearance];
+    [_cmm changeMainAppearance];
 }
 @end
 

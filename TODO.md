@@ -173,7 +173,10 @@ Taches
 - [x] ... Deplacer le projet outlines dans un drawer
 - [x] ... Implementer SplitViewController pour les versions plus recentes
 - [x] ... Mettre une option pour alterner entre les deux
-- [ ] ... Faire que l'affichage se mette à jour en temps réel
+- [x] ... Faire que l'affichage se mette à jour en temps réel
+- [ ] ... Mettre les stats dans un panneau inspecteur sur big sur, ainsi que les diverses stats
+- [ ] ... Recuperer les boutons
+- [ ] ... Pouvoir aussi detacher le projects drawer
 - [ ] Implementer NStreecontroller pour moderniser notre outline
 
 Plus tard
