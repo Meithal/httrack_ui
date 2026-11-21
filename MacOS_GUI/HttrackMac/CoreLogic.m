@@ -23,8 +23,9 @@ NS_ASSUME_NONNULL_BEGIN
 NSErrorDomain const MacHttrackErrors = @"com.github.meithal";
 
 /// Clés de préférences
-NSString *preference_autocomplete_copied_sites = @"httpack_autocomplete_copied_sites";
-NSString *preference_default_save_folder = @"httpack_default_save_folder";
+NSString *PREFERENCE_autocomplete_copied_sites = @"httpack_autocomplete_copied_sites";
+NSString *PREFERENCE_default_save_folder = @"httpack_default_save_folder";
+NSString *PREFERENCE_app_style = @"httpack_app_style";
 
 static CoreLogic* s_logic;
 
@@ -39,12 +40,12 @@ static CoreLogic* s_logic;
 void sanitize_save_folder_user_settings(void) {
     NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
 
-    if([defaults URLForKey:preference_default_save_folder] == nil) {
+    if([defaults URLForKey:PREFERENCE_default_save_folder] == nil) {
         [defaults
          setURL:[NSURL URLWithString:@"Mirrored Websites/"
                 relativeToURL:[[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] firstObject]
          ]
-         forKey:preference_default_save_folder];
+         forKey:PREFERENCE_default_save_folder];
     }
 }
 
@@ -324,7 +325,7 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
     
     // On recupere le HOME sur mac
     NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
-    NSURL * url = [defaults URLForKey:preference_default_save_folder];
+    NSURL * url = [defaults URLForKey:PREFERENCE_default_save_folder];
 
     StringMemcpy(_httrack_opt->path_html, [([[url path] stringByAppendingString:@"/"]) UTF8String], [[url path] length] + 1);
     StringCopyS(_httrack_opt->path_log, _httrack_opt->path_html);
@@ -426,7 +427,7 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
     NSMutableArray* arr = [[NSMutableArray alloc] init];
     
     NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
-    NSURL * url = [defaults URLForKey:preference_default_save_folder];
+    NSURL * url = [defaults URLForKey:PREFERENCE_default_save_folder];
     
     NSDirectoryEnumerator * dirEn = [[NSFileManager defaultManager] enumeratorAtPath:[url path]];
     
@@ -448,7 +449,7 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
 -(void)indexOfDownloadedSites:(MyDirectoryElements *) arbo
 {
     NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
-    NSURL * url = [defaults URLForKey:preference_default_save_folder];
+    NSURL * url = [defaults URLForKey:PREFERENCE_default_save_folder];
     
     for (NSString *dir in self.sitesOnHardDrive) {
         parseDirectoriesRecurse([ModelsApp addDirectory:dir toArborescene:arbo], [url URLByAppendingPathComponent:dir]);
@@ -481,12 +482,12 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
 }
 -(void)setDefaultAutocomplete {
     NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
-    NSArray* autocomp = [defaults arrayForKey:preference_autocomplete_copied_sites];
+    NSArray* autocomp = [defaults arrayForKey:PREFERENCE_autocomplete_copied_sites];
     
     NSMutableOrderedSet* ms = [NSMutableOrderedSet orderedSetWithArray:autocomp];
     [ms addObjectsFromArray:self.sitesOnHardDrive];
     
-    [defaults setObject:[ms array] forKey:preference_autocomplete_copied_sites];
+    [defaults setObject:[ms array] forKey:PREFERENCE_autocomplete_copied_sites];
 
 }
 @end

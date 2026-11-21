@@ -16,12 +16,20 @@ enum {
     //IBOutlet AppDelegate *_AppDelegate;
     IBOutlet CoreLogic* _logic;
     IBOutlet NSWindow* _myParentWindow;
+    enum APP_STYLE {
+        APP_STYLE_TIGER,
+        APP_STYLE_BIG_SUR,
+    } _style;
 
     /// La partie gauche avec le listing des projets
     IBOutlet NSScrollView* _projectsOutlineScrollView;
     IBOutlet ProjectsOutlineView * _projectsOutlineView;
     NSDrawer *_drawerProjets;
-    
+    /// La gestion du panel projets via NSSplitViewController
+    NSSplitViewController* _mainSplitViewController;
+    NSViewController* _sidebarvc;
+    NSViewController* _centervc;
+    IBOutlet NSToolbar* _toolbar;
     
     /// Le bouton de dowload en bas a droite (redondant?)
     IBOutlet NSButton* _downloadButton;
@@ -81,6 +89,7 @@ enum {
 -(ProjectsOutlineView*)projectsOutlineView;
 -(MonContenuPreview*) contenuPreview;
 -(void)changeWindowSubtitle:(NSString*)newSubtitle;
+-(void)changeMainAppearance;
 /// Getters
 -(NSTextField *)httrSiteUrl;
 @end
@@ -123,11 +132,19 @@ enum {
 }
 @end
 
+
 @interface SettingsController: NSObject<NSTableViewDataSource, NSTableViewDelegate, NSWindowDelegate> {
+    NSUserDefaults *_defaults;
+    
+    IBOutlet ControllerMainMenu* _cmm;
+    
     IBOutlet NSTextField* _defaultSavePathTextField;
     
     NSArray* _autocompletions;
     NSMutableArray* _changedAutocompletions;
+    
+    IBOutlet NSButton* _radioTiger;
+    IBOutlet NSButton* _radioBigSur;
     
     IBOutlet NSButton* _deletaAllAutocompleteButton;
     IBOutlet NSButton* _saveAutocompleteButton;
@@ -139,6 +156,10 @@ enum {
 @end
 
 @interface ProgressCell : NSCell
+
+@end
+
+@interface MainToolbarDelegate: NSObject <NSToolbarDelegate>
 
 @end
 NS_ASSUME_NONNULL_END

@@ -171,8 +171,10 @@ Taches
 - [ ] Séparer l'app en deux, une HttrackMac et une WebLibrarian
 - [ ] Se débarasser du MainSplitView pour adopter soit un drawer, soit un NSSplitViewController
 - [x] ... Deplacer le projet outlines dans un drawer
-- [ ] ... Implementer SplitViewController pour les versions plus recentes
-- [ ] ... Mettre une option pour alterner entre les deux
+- [x] ... Implementer SplitViewController pour les versions plus recentes
+- [x] ... Mettre une option pour alterner entre les deux
+- [ ] ... Faire que l'affichage se mette à jour en temps réel
+- [ ] Implementer NStreecontroller pour moderniser notre outline
 
 Plus tard
 ---

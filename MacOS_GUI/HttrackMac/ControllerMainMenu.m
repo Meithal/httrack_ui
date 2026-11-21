@@ -13,17 +13,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+static NSToolbarIdentifier IDENTIFIER_toolbar_main_separator = @"main_separator";
+static NSToolbarItem* g_sep;
+
 @implementation ControllerMainMenu
 -(void) awakeFromNib {
     [_logic setDelegate:self];
     [_logic setLoopCallback:@selector(updateGlobalStats:) withObject:self];
     
-    CGSize pdsize = _projectsOutlineScrollView.frame.size;
-    _drawerProjets = [[NSDrawer alloc] initWithContentSize:pdsize preferredEdge:NSRectEdgeMinX];
-    [_drawerProjets setParentWindow:_myParentWindow];
-    [_drawerProjets setContentView:_projectsOutlineScrollView];
-    [_drawerProjets setMinContentSize:CGSizeMake(pdsize.width/2, pdsize.height)];
-    [_drawerProjets open];
+    [self changeMainAppearance];
     
     /// On crée le NSDrawer programmatiquement vu qu'on ne peut pas le créer via interface builder
     CGSize size = _myParentWindow.contentView.frame.size;
@@ -48,8 +46,12 @@ NS_ASSUME_NONNULL_BEGIN
 -(void) dealloc {
     [_logic setDelegate:nil];
     [_logic setLoopCallback:nil withObject:nil];
-    [_drawerLiens dealloc];
-    [_drawerProjets dealloc];
+    [_drawerLiens release];
+    [_drawerProjets release];
+    
+    [_sidebarvc release];
+    [_centervc release];
+    [_mainSplitViewController release];
     
     [super dealloc];
 }
@@ -57,9 +59,85 @@ NS_ASSUME_NONNULL_BEGIN
 -(NSTextField *)httrSiteUrl {
     return _httrSiteUrl;
 }
+#pragma mark Apparence globale de l'App
+-(void)changeMainAppearance {
+    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+    id style = [defaults valueForKey:PREFERENCE_app_style];
+    enum APP_STYLE app_style = APP_STYLE_TIGER;
+    if(style == nil) { /// premier demarrage
+        if(@available(macOS 11.0, *)) {
+            app_style = APP_STYLE_BIG_SUR;
+        }
+    } else {
+        app_style = [style intValue];
+        // securité en cas de retrogradation de machine
+        if(@available(macOS 11.0, *)) {
+            
+        } else {
+            app_style = APP_STYLE_TIGER;
+        }
+    }
+
+    /// Instantie le projects outline dans un drawer
+    if(app_style == APP_STYLE_TIGER) {
+
+        CGSize pdsize = _projectsOutlineScrollView.frame.size;
+        _drawerProjets = [[NSDrawer alloc] initWithContentSize:pdsize preferredEdge:NSRectEdgeMinX];
+        [_drawerProjets setParentWindow:_myParentWindow];
+        [_drawerProjets setMinContentSize:CGSizeMake(pdsize.width/2, pdsize.height)];
+        [_drawerProjets setContentView:_projectsOutlineScrollView];
+        [_drawerProjets open];
+        if(_mainSplitViewController) {
+//            [_sidebarvc release];
+//            
+//            [[[_contenuPreview window] contentView] addSubview:_contenuPreview];
+//            [_centervc release];
+            
+            [_myParentWindow setContentViewController:nil];
+//            [_mainSplitViewController release];
+//            _mainSplitViewController = nil;
+        }
+    } else if (app_style == APP_STYLE_BIG_SUR) {
+        /// Instantie un SplitViewController si on le supporte
+        if(@available(macOS 11.0, *)) {
+            [_drawerProjets open];
+            
+            if(_mainSplitViewController == nil) {
+                _mainSplitViewController = [[NSSplitViewController alloc] init];
+                
+                _sidebarvc = [[NSViewController alloc] init];
+                [_sidebarvc setView:_projectsOutlineScrollView];
+                
+                NSSplitViewItem* sidebarsvi = [NSSplitViewItem sidebarWithViewController:_sidebarvc];
+                
+                _centervc = [[NSViewController alloc] init];
+                [_centervc setView:_contenuPreview];
+                
+                NSSplitViewItem* centervcsvi = [NSSplitViewItem contentListWithViewController:_centervc];
+                
+                [_mainSplitViewController addSplitViewItem:sidebarsvi];
+                [_mainSplitViewController addSplitViewItem:centervcsvi];
+                
+                //[root addSubview:mainSplitViewController];
+                
+                g_sep = [[NSTrackingSeparatorToolbarItem trackingSeparatorToolbarItemWithIdentifier:@"main_separator" splitView:[_mainSplitViewController splitView] dividerIndex:0] retain];
+                
+                [_toolbar insertItemWithItemIdentifier:@"main_separator" atIndex:1];
+            }
+            
+            [_myParentWindow setContentViewController:_mainSplitViewController];
+        } else {
+            assert(0 && "should never happen");
+        }
+    }
+}
 #pragma mark drawer des projets
 -(IBAction)toggleDrawerProjects:(id)sender {
-    [_drawerProjets toggle:sender];
+    if(_mainSplitViewController) {
+        [_mainSplitViewController toggleSidebar:sender];
+    } else {
+        [_drawerProjets toggle:sender];
+    }
 }
 #pragma mark section du drawer du bas
 -(void)updateState {
@@ -281,7 +359,6 @@ NS_ASSUME_NONNULL_BEGIN
 }
 -(void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
-    //return;
     
     if(_fond) {
         NSRectClip(self.bounds);
@@ -383,7 +460,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (TYPED_CONTAINER(NSArray,NSString *) *)textView:(NSTextView *)textView completions:(TYPED_CONTAINER(NSArray,NSString *) *)words forPartialWordRange:(NSRange)charRange indexOfSelectedItem:(nullable NSInteger *)index
 {
     if([[textView string] isEqualToString: @""]) /// autocompletion uniquement quand on vient de cliquer sur le champ
-        return [[NSUserDefaults standardUserDefaults] valueForKey:preference_autocomplete_copied_sites];
+        return [[NSUserDefaults standardUserDefaults] valueForKey:PREFERENCE_autocomplete_copied_sites];
     return nil;
 }
 - (TYPED_CONTAINER(NSArray,NSString *) *)recentSearches {
@@ -511,7 +588,7 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
         [((ProjectsOutlineView*)[notification object]).mainController.contenuPreview mainChangePreview:orow.hd_path];
     } else { // repertoire
         NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
-        NSURL * url = [defaults URLForKey:preference_default_save_folder]; // TODO: it should become per-project, instead of global
+        NSURL * url = [defaults URLForKey:PREFERENCE_default_save_folder]; // TODO: it should become per-project, instead of global
         
         [[NSWorkspace sharedWorkspace] openURL:[url URLByAppendingPathComponent:orow.name]];
     }
@@ -613,17 +690,22 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
 
 @implementation SettingsController
 -(void)awakeFromNib {
-//- (void) windowDidBecomeKey:(NSNotification *) notification{
+
+    _defaults = [[NSUserDefaults standardUserDefaults] retain];
     if(@available(macOS 11.0, *)) {
         [_deletaAllAutocompleteButton setHasDestructiveAction:YES];
+    } else {
+        [_radioBigSur setTitle:[NSString stringWithFormat:@"%@ - available from Big Sur", [_radioBigSur title]]];
+        [_radioBigSur setEnabled:NO];
+        [_radioBigSur sizeToFit];
     }
+    [self updateState];
 }
 -(void)windowDidChangeOcclusionState:(NSNotification *)notification {
     if([((NSWindow*)[notification object]) isVisible] == NO)
         return;
     
-    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
-    _autocompletions = [[defaults valueForKey:preference_autocomplete_copied_sites] copy];
+    _autocompletions = [[_defaults valueForKey:PREFERENCE_autocomplete_copied_sites] copy];
     _changedAutocompletions = [_autocompletions mutableCopy];
     
     [self updateState];
@@ -631,12 +713,12 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
 -(void)dealloc {
     [_autocompletions release];
     [_changedAutocompletions release];
+    [_defaults release];
     
     [super dealloc];
 }
 -(void)updateState {
-    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
-    NSURL * url = [defaults URLForKey:preference_default_save_folder];
+    NSURL * url = [_defaults URLForKey:PREFERENCE_default_save_folder];
     [_defaultSavePathTextField setStringValue:[url relativePath]];
     
     [_saveAutocompleteButton setEnabled:![_autocompletions isEqualToArray:_changedAutocompletions]];
@@ -645,6 +727,21 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
     [_undoAutocomplete setEnabled:![_autocompletions isEqualToArray:_changedAutocompletions]];
     
     [_autocompleteTable reloadData];
+    
+    /// Ici ce n'est pas trop grave si rien n'est defini pour cette preference can nil est converti vers 0
+    enum APP_STYLE style = (int)[_defaults integerForKey:PREFERENCE_app_style];
+    switch (style) {
+        case APP_STYLE_TIGER:
+            [_radioTiger setState:YES];
+            [_radioBigSur setState:NO];
+            break;
+        case APP_STYLE_BIG_SUR:
+            [_radioTiger setState:NO];
+            [_radioBigSur setState:YES];
+            break;
+        default:
+            break;
+    }
 }
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
     return [_changedAutocompletions count];
@@ -656,15 +753,14 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
     [self updateState];
 }
 -(IBAction)preferencesResetAppPreferences:(id)sender {
-    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
-    NSArray* keys = [[defaults dictionaryRepresentation] allKeys];
+    NSArray* keys = [[_defaults dictionaryRepresentation] allKeys];
     int i, ct;
     for (i = 0, ct = (int)[keys count]; i < ct; i++) {
-        if([[keys objectAtIndex:i] isEqualTo:preference_autocomplete_copied_sites])
+        if([[keys objectAtIndex:i] isEqualTo:PREFERENCE_autocomplete_copied_sites])
             continue;
-        [defaults setValue:nil forKey:[keys objectAtIndex:i]];
+        [_defaults setValue:nil forKey:[keys objectAtIndex:i]];
     }
-    [defaults synchronize];
+    [_defaults synchronize];
     sanitize_save_folder_user_settings();
     [self updateState];
 }
@@ -678,14 +774,13 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
     [self updateState];
 }
 -(IBAction)saveAutocomplete:(id)sender {
-    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
-    [defaults removeObjectForKey:preference_autocomplete_copied_sites];
+    [_defaults removeObjectForKey:PREFERENCE_autocomplete_copied_sites];
     
     [_autocompletions release];
     _autocompletions = [_changedAutocompletions copy];
     
-    [defaults setValue:[_autocompletions copy] forKey:preference_autocomplete_copied_sites];
-    [defaults synchronize];
+    [_defaults setValue:[_autocompletions copy] forKey:PREFERENCE_autocomplete_copied_sites];
+    [_defaults synchronize];
     
     [self updateState];
 }
@@ -702,15 +797,30 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
     [op setAllowsMultipleSelection:NO];
     [op setAccessoryViewDisclosed:YES];
 
+    __block id weakself = self;
     [op beginWithCompletionHandler:^(NSModalResponse result) {
         if(result) {
             NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
-            [defaults setURL:[op URL] forKey:preference_default_save_folder];
+            [defaults setURL:[op URL] forKey:PREFERENCE_default_save_folder];
             [defaults synchronize];
             sanitize_save_folder_user_settings();
-            [self updateState];
+            [weakself updateState];
         }
     }];
+}
+-(IBAction)setTiger:(id)sender {
+    [_defaults setInteger:APP_STYLE_TIGER forKey:PREFERENCE_app_style];
+    [_defaults synchronize];
+    [self updateState];
+    //[_cmm changeMainAppearance]; buggué pour l'instant
+}
+-(IBAction)setBigsur:(id)sender {
+    if(@available(macOS 11.0, *)) {
+        [_defaults setInteger:APP_STYLE_BIG_SUR forKey:PREFERENCE_app_style];
+        [_defaults synchronize];
+    }
+    [self updateState];
+    //[_cmm changeMainAppearance];
 }
 @end
 
@@ -719,6 +829,21 @@ constrainMaxCoordinate:(CGFloat) proposedMinimumPosition
 //-(void)awakeFromNib {
     //self.controlView = [NSControl alloc]
 //}
+
+@end
+
+@implementation MainToolbarDelegate
+-(void)awakeFromNib {
+    
+}
+- (nullable NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSToolbarItemIdentifier)itemIdentifier willBeInsertedIntoToolbar:(BOOL)flag {
+    if([itemIdentifier isEqualTo:IDENTIFIER_toolbar_main_separator]) {
+        if(g_sep)
+            return g_sep;
+    }
+    
+    return nil;
+}
 
 @end
 NS_ASSUME_NONNULL_END

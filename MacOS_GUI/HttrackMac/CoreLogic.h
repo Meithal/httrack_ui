@@ -8,8 +8,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-extern NSString *preference_autocomplete_copied_sites;
-extern NSString *preference_default_save_folder;
+extern NSString *PREFERENCE_autocomplete_copied_sites;
+extern NSString *PREFERENCE_default_save_folder;
+extern NSString *PREFERENCE_app_style;
 
 void sanitize_save_folder_user_settings(void);
 
