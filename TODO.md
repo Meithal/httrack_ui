@@ -170,6 +170,8 @@ Taches
 - [ ] Retelecharger un site pour en faire un historique dans le temps
 - [ ] Séparer l'app en deux, une HttrackMac et une WebLibrarian
 - [ ] Se débarasser du MainSplitView pour adopter soit un drawer, soit un NSSplitViewController
+- [x] ... Deplacer le projet outlines dans un drawer
+- [ ] ... Implementer SplitViewController pour les versions plus recentes
 - [ ] ... Mettre une option pour alterner entre les deux
 
 Plus tard

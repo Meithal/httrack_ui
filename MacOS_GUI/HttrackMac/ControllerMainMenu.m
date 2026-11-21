@@ -18,23 +18,30 @@ NS_ASSUME_NONNULL_BEGIN
     [_logic setDelegate:self];
     [_logic setLoopCallback:@selector(updateGlobalStats:) withObject:self];
     
+    CGSize pdsize = _projectsOutlineScrollView.frame.size;
+    _drawerProjets = [[NSDrawer alloc] initWithContentSize:pdsize preferredEdge:NSRectEdgeMinX];
+    [_drawerProjets setParentWindow:_myParentWindow];
+    [_drawerProjets setContentView:_projectsOutlineScrollView];
+    [_drawerProjets setMinContentSize:CGSizeMake(pdsize.width/2, pdsize.height)];
+    [_drawerProjets open];
+    
     /// On crée le NSDrawer programmatiquement vu qu'on ne peut pas le créer via interface builder
     CGSize size = _myParentWindow.contentView.frame.size;
     size.height /= 2;
     _drawerLiens = [[NSDrawer alloc] initWithContentSize:size preferredEdge:NSRectEdgeMinY];
-    [_drawerLiens setParentWindow:self->_myParentWindow];
+    [_drawerLiens setParentWindow:_myParentWindow];
     //[self->_myParentWindow addChildWindow:_drawerLiens ordered:NSWindowBelow];
     [_drawerLiens setMinContentSize:size];
     size.height *= 2;
     [_drawerLiens setMaxContentSize:size];
     
-    [self->_drawerContentView setFrameSize:_drawerLiens.contentView.frame.size];
-    [self->_drawerContentView setAutoresizingMask:_drawerLiens.contentView.autoresizingMask];
+    [self->_viewDrawerLiens setFrameSize:_drawerLiens.contentView.frame.size];
+    [self->_viewDrawerLiens setAutoresizingMask:_drawerLiens.contentView.autoresizingMask];
 
-    [self->_drawerContentView setNeedsLayout:YES];
-    [self->_drawerContentView setNeedsDisplay:YES];
-    [self->_drawerContentView resizeSubviewsWithOldSize:_drawerLiens.contentView.frame.size];
-    [_drawerLiens setContentView:self->_drawerContentView];
+    [self->_viewDrawerLiens setNeedsLayout:YES];
+    [self->_viewDrawerLiens setNeedsDisplay:YES];
+    [self->_viewDrawerLiens resizeSubviewsWithOldSize:_drawerLiens.contentView.frame.size];
+    [_drawerLiens setContentView:self->_viewDrawerLiens];
     
     [_drawerLiens setDelegate:self];
 }
@@ -42,12 +49,19 @@ NS_ASSUME_NONNULL_BEGIN
     [_logic setDelegate:nil];
     [_logic setLoopCallback:nil withObject:nil];
     [_drawerLiens dealloc];
+    [_drawerProjets dealloc];
+    
     [super dealloc];
 }
 #pragma mark getters de template
 -(NSTextField *)httrSiteUrl {
     return _httrSiteUrl;
 }
+#pragma mark drawer des projets
+-(IBAction)toggleDrawerProjects:(id)sender {
+    [_drawerProjets toggle:sender];
+}
+#pragma mark section du drawer du bas
 -(void)updateState {
     /// le cas où on utilise le drawer
     if(_drawerLiens.contentView.subviews.count > 0) {
@@ -238,6 +252,7 @@ NS_ASSUME_NONNULL_BEGIN
     
     [self->_tableBacking reloadData];
     [self->_tableLiens reloadData];
+    [self->_stepperSockets setMaxValue:tot];
 }
 -(IBAction)generalStatsClick:(MyToolbarStatsButton*)sender {
     if(_httrackStatsPanel.isVisible) {
@@ -247,15 +262,31 @@ NS_ASSUME_NONNULL_BEGIN
         [_httrackStatsPanel makeKeyAndOrderFront:sender];
     }
 }
+-(IBAction)nbSocketsStepper:(id)sender {
+    
+}
 @end
 
 @implementation MonContenuPreview
--(void)drawRect:(NSRect)dirtyRect {
-    [super drawRect:dirtyRect];
-    
+-(void)awakeFromNib {
     NSImage* back = [NSImage imageNamed:@"TexturedFullScreen"];
     if(back) {
-        [[NSColor colorWithPatternImage:back] setFill];
+        _fond = [[NSColor colorWithPatternImage:back] retain];
+    }
+}
+-(void)dealloc {
+    [_fond release];
+    
+    [super dealloc];
+}
+-(void)drawRect:(NSRect)dirtyRect {
+    [super drawRect:dirtyRect];
+    //return;
+    
+    if(_fond) {
+        NSRectClip(self.bounds);
+        
+        [_fond setFill];
         
         NSRectFill(dirtyRect);
     }

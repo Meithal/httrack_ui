@@ -16,8 +16,14 @@ enum {
     //IBOutlet AppDelegate *_AppDelegate;
     IBOutlet CoreLogic* _logic;
     IBOutlet NSWindow* _myParentWindow;
-        
+
+    /// La partie gauche avec le listing des projets
+    IBOutlet NSScrollView* _projectsOutlineScrollView;
     IBOutlet ProjectsOutlineView * _projectsOutlineView;
+    NSDrawer *_drawerProjets;
+    
+    
+    /// Le bouton de dowload en bas a droite (redondant?)
     IBOutlet NSButton* _downloadButton;
     /// Les meme boutons mais dans la toolbar
     IBOutlet NSSegmentedControl* _playpausestopControl;
