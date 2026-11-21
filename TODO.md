@@ -61,7 +61,7 @@ Taches
 - [ ] Avoir un feedback des pages copiées
 - [ ] ... Chercher le listing des pages dans httrack plutot que lister l'arborescence
 - [x] ... Afficher une barre d'avancement de telechargement
-- [x] ... afficher immediatement un site dans l'arbo quand on commence un téléchargement
+- [x] ... Afficher immediatement un site dans l'arbo quand on commence un téléchargement
 - [ ] ... Afficher en rouge les 404, 50x
 - [ ] ...... Afficher un tooltip et un texte pour l'erreur en question.
 - [ ] ...... Maintenir un cache par site web pour ne pas perdre cette info au redemarrage
@@ -178,6 +178,11 @@ Taches
 - [ ] ... Recuperer les boutons
 - [ ] ... Pouvoir aussi detacher le projects drawer
 - [ ] Implementer NStreecontroller pour moderniser notre outline
+- [ ] Dans le listing projet ne pas afficher l'icone, afficher l'avancement uniquement lorsq'il n'est pas a 100%
+- [ ] Pouvoir drag & dropper toute une liste de sites dans l'outline
+- [ ] ... Immediatement telecharger le favicon
+- [ ] ... Enlever ceux que httrack ne juge pas comme etant des sites web
+- [ ] Le bouton bleu lance tous les telechargements en meme temps
 
 Plus tard
 ---
