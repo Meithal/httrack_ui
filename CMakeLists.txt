@@ -191,10 +191,17 @@ if(APPLE)
         ${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/stubs_gcc.h
         ${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/retro_test.sh
     )
-    target_link_libraries(Httpack_retrocompatibility PRIVATE httr_lib)
-    target_include_directories(Httpack_retrocompatibility PRIVATE "${HTTRACK_SRC_ROOT}")
-    target_compile_definitions(Httpack_retrocompatibility PRIVATE HTS_INTERNAL_BYTECODE)
+    set_target_properties(Httpack_retrocompatibility PROPERTIES LINKER_LANGUAGE C)
     
+    add_custom_command(TARGET Httpack_retrocompatibility PRE_BUILD
+        COMMAND bash -c '/opt/homebrew/bin/gcc-16 -objc-verion=objc1 -include stubs_gcc.h -DRETRO_CHECK=1  -DHTS_DO_NOT_REDEFINE_in_addr_t=1 -DHAVE_STRNLEN=1 -I. -I./httrack/src -I./httrack/src/coucal -I./httrack/portable/include *.m'
+        WORKING_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/"
+    )
+    target_compile_definitions(Httpack_retrocompatibility PRIVATE RETROCHECK=1  HTS_DO_NOT_REDEFINE_in_addr_t=1 HAVE_STRNLEN=1)
+    #target_compile_options(Httpack_retrocompatibility PRIVATE "-include stubs_gcc.h")
+    target_precompile_headers(Httpack_retrocompatibility PUBLIC
+        "${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/stubs_gcc.h"
+    )
 	######### TESTING ###########
 	enable_testing()
 	# cf https://stackoverflow.com/a/78355693/13577241

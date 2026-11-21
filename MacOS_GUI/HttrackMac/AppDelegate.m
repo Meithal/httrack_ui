@@ -1,23 +1,20 @@
 //#import <Availability.h>
-#if defined(__clang__) /** vérifie XCode 8 */
-#define HAS_XCODE8
-#else
-#define ON_GCC
-#endif
+#import "retro_comp.h"
 
-#if defined(HAS_XCODE8)
+#if defined(HAS_XCODE8) && !defined(ON_GCC)
 #import <os/log.h>
 #endif
 
 #if !defined(ON_GCC)
 #import <AppKit/AppKit.h>
 #else
-#error ???
+//#error ???
 #endif
 
 #import "AppDelegate.h"
 
 @interface AppDelegate () {
+    IBOutlet NSWindow *_window;
     IBOutlet NSView *_AppIcon;
 }
 
@@ -44,7 +41,6 @@
 //    [self.window.dockTile setShowsApplicationBadge:YES];
 //    [self.window.dockTile display];
     //_window.toolbarStyle = NSWindowToolbarStyleUnified;//
-    
     
     if(0) {
 #if defined(HAS_XCODE8)

@@ -336,4 +336,8 @@ typedef int NSAutoresizingMaskOptions;
 -(NSCell*)searchButtonCell;
 @end
 
+@interface NSApplication: NSObject {}
+@end
 
+@protocol NSApplicationDelegate
+@end

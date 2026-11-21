@@ -44,8 +44,13 @@ NS_ASSUME_NONNULL_BEGIN
     [_drawerLiens dealloc];
     [super dealloc];
 }
+#pragma mark getters de template
+-(NSTextField *)httrSiteUrl {
+    return _httrSiteUrl;
+}
 -(void)updateState {
-    if(_drawerLiens.contentView.subviews.count > 0) { /// le cas où on utilise le drawer`
+    /// le cas où on utilise le drawer
+    if(_drawerLiens.contentView.subviews.count > 0) {
         NSDrawerState state = [_drawerLiens state];
         if(state == NSDrawerClosedState || state == NSDrawerClosingState) {
             [_liensDrawerButton setState:NSControlStateValueOff];
@@ -57,7 +62,7 @@ NS_ASSUME_NONNULL_BEGIN
             [_detachButton setHidden:NO];
         }
     } else { /// le cas où on utilise le panel
-        if(isDownloadsStatsPanelClosing) {
+        if(_isDownloadsStatsPanelClosing) {
             [_liensDrawerButton setState:NSControlStateValueOff];
             [_splitOrientationChanger setHidden:YES];
             [_detachButton setHidden:YES];
@@ -75,12 +80,13 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)drawerDidClose:(NSNotification *)notification {
     [self updateState];
 }
+/// delegate quand les stats sont dans une fenetre détachée
 - (void)windowWillClose:(NSNotification *)notification {
-    isDownloadsStatsPanelClosing = YES;
+    _isDownloadsStatsPanelClosing = YES;
     [self updateState];
 }
 -(void)windowDidBecomeKey:(NSNotification *)notification {
-    isDownloadsStatsPanelClosing = NO;
+    _isDownloadsStatsPanelClosing = NO;
     [self updateState];
 }
 -(IBAction)toggleLinksDrawer:(id)sender {
@@ -102,17 +108,19 @@ NS_ASSUME_NONNULL_BEGIN
 -(IBAction)rotateSplitStats:(id)sender {
     [_splitLiens setVertical:![_splitLiens isVertical]];
 }
+#pragma mark fenetre des stats
 -(IBAction)detachStats:(id)sender {
     if(_drawerLiens.contentView.subviews.count > 0) {
-        [_downloadStatsPanel setContentView:_drawerContentView];
+        [_downloadStatsPanel setContentView:_viewDrawerLiens];
         [_downloadStatsPanel makeKeyAndOrderFront:self];
         [_drawerLiens close];
     } else {
-        [_drawerLiens setContentView:_drawerContentView];
+        [_drawerLiens setContentView:_viewDrawerLiens];
         [_downloadStatsPanel performClose:self];
         [_drawerLiens open];
     }
 }
+#pragma mark reste
 -(ProjectsOutlineView*)projectsOutlineView {
     return _projectsOutlineView;
 }
@@ -142,10 +150,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (IBAction)httrDowloadButton:(NSButton *)sender {
 //    NSLog(@"Push %@", [self.httrSiteUrl stringValue]);
     
-    [self changeWindowSubtitle:[self.httrSiteUrl stringValue]];
+    [self changeWindowSubtitle:[[self httrSiteUrl] stringValue]];
     //[self.coreLogic indexOfDownloadedSites];
     [_logic
-     dowloadSite:[self.httrSiteUrl stringValue]
+     dowloadSite:[[self httrSiteUrl] stringValue]
      onError:^(NSString *description, NSErrorDomain domain, NSInteger code) {
         [self warnUser:description domain:domain code:code];
     }];
@@ -253,7 +261,6 @@ NS_ASSUME_NONNULL_BEGIN
     }
 }
 -(void)mainChangePreview:(NSString*)chemin {
-    
     if(0) { /// a garder en tete pour comment envoyer des notifications plus tard
         //NSBeginCriticalAlertSheet(@"hello", @"ok?", @"nvm", @"what", [NSApp mainWindow], nil, nil, nil, NULL, @"Un truc s'est mal passé");
         NSAlert * na = [[NSAlert alloc] init];
@@ -262,7 +269,6 @@ NS_ASSUME_NONNULL_BEGIN
 
         NSString* s = @("foo");
         [NSColor underPageBackgroundColor];
-        
     }
 
     for (NSView* v in [self subviews]) {

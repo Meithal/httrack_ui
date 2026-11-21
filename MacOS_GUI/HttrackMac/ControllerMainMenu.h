@@ -19,7 +19,9 @@ enum {
         
     IBOutlet ProjectsOutlineView * _projectsOutlineView;
     IBOutlet NSButton* _downloadButton;
+    /// Les meme boutons mais dans la toolbar
     IBOutlet NSSegmentedControl* _playpausestopControl;
+    IBOutlet NSTextField *_httrSiteUrl;
     
     IBOutlet NSTextField* _httrTotalRecvLabel;
     IBOutlet NSTextField* _httrTotalBytesWrittenLabel;
@@ -49,7 +51,7 @@ enum {
     
     ///Le drawer qui affiche les stats de téléchargement
     NSDrawer * _drawerLiens;
-    IBOutlet NSView * _drawerContentView;
+    IBOutlet NSView * _viewDrawerLiens;
     IBOutlet NSButton* _liensDrawerButton;
     IBOutlet NSTableView* _tableBacking;
     IBOutlet NSTableView* _tableLiens;
@@ -59,19 +61,23 @@ enum {
     
     ///Le panel alternatif pour les stats de téléchargement
     IBOutlet NSPanel* _downloadStatsPanel;
-    BOOL isDownloadsStatsPanelClosing;
+    BOOL _isDownloadsStatsPanelClosing;
     
     /// panel de statistiques generales
     IBOutlet NSPanel* _httrackStatsPanel;
+    
+    /// boutons barre du bas
+    IBOutlet NSTextField* _nbSockets;
+    IBOutlet NSStepper* _stepperSockets;
 }
-@property (assign) IBOutlet NSTextField *httrSiteUrl;
 -(void)updateGlobalStats:(hts_stat_struct *) stats;
 -(void)updateState;
 -(ProjectsOutlineView*)projectsOutlineView;
 -(MonContenuPreview*) contenuPreview;
 -(void)changeWindowSubtitle:(NSString*)newSubtitle;
+/// Getters
+-(NSTextField *)httrSiteUrl;
 @end
-
 
 @interface ProjectsDataSource: NSObject<NSOutlineViewDataSource, NSOutlineViewDelegate>
 {
@@ -88,6 +94,7 @@ enum {
 @end
 
 @interface MonContenuPreview: NSView<WKUIDelegate> {
+    NSColor* _fond;
 }
 -(void)mainChangePreview:(NSString*)chemin;
 @end
@@ -96,12 +103,14 @@ enum {
 }
 @end
 
+/// Les stats de httrack (backing)
 @interface BackingDataSource: NSObject<NSTableViewDataSource, NSTableViewDelegate>
 {
     IBOutlet CoreLogic* core_logic;
 }
 @end
 
+/// Les stats de httrack (juste les liens, sans http, networking)
 @interface LiensDataSource: NSObject<NSTableViewDataSource, NSTableViewDelegate>
 {
     IBOutlet CoreLogic* core_logic;

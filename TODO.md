@@ -28,10 +28,8 @@ Bugs
 - [ ] le robots.txt de perdu.com n'est pas téléchargé
 - [x] Mettre un téléchargement en pause on ne peut pas appuyer sur play si on a arreté un téléchargement avant.
 - [x] Télécharger "livre-c.gitlab.io" dit url invalide, rajouter https:// avant lance le téléchargement, cliquer sur arreter dit "URL" invalide et affiche https://livre-c.gitlab.io dans le listing
-- [x] Reessayer de lancer un téléchargement dit url nvalide en boucle
-ensuite...
-- [ ] Taper livre-c.gitlab.io ne télécharge rien au lieu de
-https://livre-c.gitlab.io
+- [x] Reessayer de lancer un téléchargement dit url nvalide en boucle ensuite...
+- [ ] Taper livre-c.gitlab.io ne télécharge rien au lieu de https://livre-c.gitlab.io
 - [x] Sur grabag.free.fr on peut pas dérouler un dossier tant qu'un téléchargement est en cours (fix : trop de reloadData)
 - [ ] Demarrer un telechargement d'un autre site quand un autre est en pause semble faire planter, desactiver le textfield ?
 - [ ] Sur theoldnet.com, un fichier html.tmp s'affiche comme complété alors qu'il n'est pas encore téléchargé
@@ -170,6 +168,9 @@ Taches
 - [ ] Afficher une webview pour se connecter sur le site et recuperer les cookies pour scrapper avec un sessionid valide
 - [ ] Quand un dossier est supprimmé dans le finder, le répercuter dans la vue arborescente
 - [ ] Retelecharger un site pour en faire un historique dans le temps
+- [ ] Séparer l'app en deux, une HttrackMac et une WebLibrarian
+- [ ] Se débarasser du MainSplitView pour adopter soit un drawer, soit un NSSplitViewController
+- [ ] ... Mettre une option pour alterner entre les deux
 
 Plus tard
 ---
