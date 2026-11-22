@@ -21,8 +21,9 @@ set(HTTRACK_SOURCES
 	htsname.c htsrobots.c htstools.c htswizard.c 
 	htsalias.c htsthread.c htsindex.c htsbauth.c 
 	htsmd5.c htszlib.c htswrap.c htsconcat.c 
-	htsmodules.c htscharset.c punycode.c htsencoding.c 
-	md5.c 
+	htsmodules.c htscharset.c punycode.c htsencoding.c
+    htspure.c
+	md5.c
 	minizip/ioapi.c minizip/mztools.c minizip/unzip.c minizip/zip.c
 )
 
@@ -38,6 +39,7 @@ set(HTTRACK_HEADERS
 	htsstrings.h htsarrays.h httrack-library.h
 	htscharset.h punycode.h htsencoding.h
 	htsentities.h htsentities.sh htsbasiccharsets.sh htscodepages.h 
+	htspure.h
 	md5.h coucal/murmurhash3.h 
 	minizip/crypt.h minizip/ioapi.h minizip/mztools.h minizip/unzip.h minizip/zip.h
 )
@@ -202,6 +204,8 @@ if(APPLE)
             "${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMac/stubs_gcc.h"
         )
     endif()
+    
+    
 	######### TESTING ###########
 	enable_testing()
 	# cf https://stackoverflow.com/a/78355693/13577241
@@ -209,14 +213,25 @@ if(APPLE)
 
 	xctest_add_bundle(UnitTests Httpack
     	${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMacTests/HttrackMacTests.m
+    	${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMacTests/HttrackTests.m
+		${CMAKE_CURRENT_LIST_DIR}/httrack/src/htspure.c
 	)
+	target_include_directories(UnitTests PRIVATE 
+		${CMAKE_CURRENT_LIST_DIR}/httrack/src
+	)
+	target_compile_definitions(
+		UnitTests PRIVATE 
+		HTS_TESTING_PURE
+		NDEBUG=1  # assert is useful but we want to check in runtime
+	)
+
 	set_target_properties(UnitTests 
 		PROPERTIES 
 		XCODE_ATTRIBUTE_TEST_HOST ""
 		# XCODE_ATTRIBUTE_TEST_TARGET_NAME Httpack
 		XCODE_PRODUCT_TYPE com.apple.product-type.bundle.unit-test
 	)
-
+	
 	xctest_add_bundle(UITests Httpack
 		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMacUITests/HttrackMacUITests.m
 		${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMacUITests/HttrackMacUITestsLaunchTests.m
@@ -225,8 +240,8 @@ if(APPLE)
 		UITests 
 		 PROPERTIES 
 	      XCODE_ATTRIBUTE_TEST_HOST ""
-		  # XCODE_ATTRIBUTE_BUNDLE_LOADER ""
-		  # XCODE_ATTRIBUTE_TEST_TARGET_NAME Httpack
+		#   XCODE_ATTRIBUTE_BUNDLE_LOADER ""
+		#   XCODE_ATTRIBUTE_TEST_TARGET_NAME Httpack
 		  XCODE_PRODUCT_TYPE com.apple.product-type.bundle.ui-testing
 	)
  

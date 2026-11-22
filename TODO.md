@@ -77,7 +77,7 @@ Taches
 - [ ] ...... Afficher la progression sur le dossier en fonction de ss enfants
 - [x] ... Faire en sorte que ce listing se mette a jour en temps reel
 - [x] ... Le listing doit se faire sur un thread different
-- [ ] Avoir une icone a coté de chaque nom de site (favicon)
+- [~] Avoir une icone a coté de chaque nom de site (favicon)
 - [ ] ... Mettre une option pour desactiver cette option
 - [ ] Avoir un apercu de chaque item
 - [x] ... image pour image
@@ -202,6 +202,10 @@ dans une status bar <https://developer.apple.com/library/archive/documentation/C
 - [ ] Imprimer le site recopié, regrouper les pages en use seule vue ?
 images séparées ? Version webview allégée (focus lecture).
 - [ ] Implementer restoreState pour retablir l'application apres fermeture : <https://developer.apple.com/fr/videos/play/wwdc2026/289>
+
+Quant a Httrack
+---
+- [ ] Eliminer strcpybuff() et tout le systeme autour, utiliser ssprintf partout.
 
 Doc utilisées
 ---
