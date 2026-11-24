@@ -214,7 +214,9 @@ if(APPLE)
 	xctest_add_bundle(UnitTests Httpack
     	${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMacTests/HttrackMacTests.m
     	${CMAKE_CURRENT_LIST_DIR}/MacOS_GUI/HttrackMacTests/HttrackTests.m
-		${CMAKE_CURRENT_LIST_DIR}/httrack/src/htspure.c
+        ${CMAKE_CURRENT_LIST_DIR}/httrack/src/htspure.c
+        ${CMAKE_CURRENT_LIST_DIR}/httrack/src/htscharset.c
+		${CMAKE_CURRENT_LIST_DIR}/httrack/src/punycode.c
 	)
 	target_include_directories(UnitTests PRIVATE 
 		${CMAKE_CURRENT_LIST_DIR}/httrack/src
@@ -222,8 +224,10 @@ if(APPLE)
 	target_compile_definitions(
 		UnitTests PRIVATE 
 		HTS_TESTING_PURE
+        HTS_TESTING_CHARSETS
 		NDEBUG=1  # assert is useful but we want to check in runtime
 	)
+    target_link_libraries(UnitTests PRIVATE iconv)
 
 	set_target_properties(UnitTests 
 		PROPERTIES 

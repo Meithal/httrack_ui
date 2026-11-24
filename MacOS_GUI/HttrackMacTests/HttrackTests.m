@@ -1,6 +1,7 @@
 #import <XCTest/XCTest.h>
 
 #import "htspure.h"
+#import "htscharset.h"
 
 @interface HttrackTests : XCTestCase
 
@@ -20,6 +21,10 @@
     // This is an example of a functional test case.
     // Use XCTAssert and related functions to verify your tests produce the correct results.
     XCTAssert(hts_testing_pure() == 0);
+}
+
+- (void)testCharset {
+    XCTAssert(hts_testing_charsets() == 0);
 }
 
 - (void)testPerformanceExample {
