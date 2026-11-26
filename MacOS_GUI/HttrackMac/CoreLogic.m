@@ -51,7 +51,8 @@ void sanitize_save_folder_user_settings(void) {
 
 #pragma mark -
 #pragma mark fonctions bridge httrack
-static int __cdecl my_loop(t_hts_callbackarg * carg, httrackp * opt, lien_back * back, int back_max, int back_index, int lien_n, int lien_tot, int stat_time, hts_stat_struct * stats) {
+static int __cdecl my_loop(t_hts_callbackarg * carg, httrackp * opt, lien_back * back,
+                           int back_max, int back_index, int lien_n, int lien_tot, int stat_time, hts_stat_struct * stats) {
     // appelé à chaque boucle de HTTrack, permet d'arreter un telechargement
     // si besoin
     
@@ -116,7 +117,7 @@ static int __cdecl my_loop(t_hts_callbackarg * carg, httrackp * opt, lien_back *
                 
                 MyDowloadableFile* f = [ModelsApp addPathComponents:components toArborescence:[s_logic websites] atCompletePath:[NSString stringWithUTF8String:back[i].url_sav] createdAt:[nsd autorelease]];
                 
-                changed = [[s_logic websites] updateAdvancement:f ratio:ratio];
+                changed = [f updateAdvancement:ratio];
             }
             if(changed)
                 [[s_logic delegate] coreLogicPageAdded:s_logic]; // sert juste a refresh le outlineView
@@ -140,8 +141,7 @@ static int __cdecl my_loop(t_hts_callbackarg * carg, httrackp * opt, lien_back *
     return 1;
 }
 
-static void __cdecl my_filesave(t_hts_callbackarg * carg,
-                               httrackp * opt, const char *file) {
+static void __cdecl my_filesave(t_hts_callbackarg * carg, httrackp * opt, const char *file) {
     // Appellé après avoir sauvegardé un fichier
     
     if(0)
@@ -161,7 +161,7 @@ static void __cdecl my_filesave(t_hts_callbackarg * carg,
 
         MyDowloadableFile* f = [ModelsApp addPathComponents:components toArborescence:s_logic.websites atCompletePath:sfile createdAt:createdAt];
         
-        [[s_logic websites] updateAdvancement:f ratio:1];
+        [f updateAdvancement:1];
 
         [[s_logic delegate] coreLogicPageAdded:s_logic];
     }];
@@ -173,11 +173,8 @@ static void __cdecl my_filesave(t_hts_callbackarg * carg,
     }
 }
 
-static void __cdecl my_filesave2(
-     t_hts_callbackarg * carg,
-     httrackp * opt, const char *adr,
-     const char *file, const char *sav,
-     int is_new, int is_modified, int not_updated) {
+static void my_filesave2(t_hts_callbackarg * carg, httrackp * opt, const char *adr,
+     const char *file, const char *sav, int is_new, int is_modified, int not_updated) {
     // Appellé avant de sauvegarder un fichier
     
     //printf("TOTO my_filesave2 adr: %s file: %s sav: %s is new %d is modified %d not updated %d\n", adr, file, sav, is_new, is_modified, not_updated);
@@ -188,8 +185,7 @@ static void __cdecl my_filesave2(
     }
 }
 
-static int __cdecl my_end(
-    t_hts_callbackarg * carg, httrackp * opt) {
+static int my_end(t_hts_callbackarg * carg, httrackp * opt) {
     if(0) printf("TOTO my_end\n");
     /* call parent functions if multiple callbacks are chained. you can skip this part, if you don't want previous callbacks to be called. */
     if (CALLBACKARG_PREV_FUN(carg, end) != NULL) {
@@ -200,8 +196,7 @@ static int __cdecl my_end(
     return 1;
 }
 
-static int __cdecl my_linkdetected(t_hts_callbackarg * carg,
-                                           httrackp * opt, char *link) {
+static int my_linkdetected(t_hts_callbackarg * carg, httrackp * opt, char *link) {
     if(0) printf("TOTO my_linkdetected %s\n", link);
     
     if (CALLBACKARG_PREV_FUN(carg, linkdetected) != NULL) {
@@ -209,6 +204,46 @@ static int __cdecl my_linkdetected(t_hts_callbackarg * carg,
       return CALLBACKARG_PREV_FUN(carg, linkdetected)(CALLBACKARG_PREV_CARG(carg), opt, link);
     }
 
+    return 1;
+}
+
+/** A la fin du telechargement d'un  lien, certains telechargements finissent avant d'arriver dans la loop, ce qui affiche des téléchargements incomplets. */
+static int my_xfrstatus(t_hts_callbackarg * carg, httrackp * opt, lien_back* back) {
+    
+    BOOL changed = NO;
+    if(back->r.soc == INVALID_SOCKET)
+        goto end;
+    if(back->r.totalsize <= 0)
+        goto end;
+    
+    if(strlen(back->url_sav) < opt->path_log.length_)
+        goto end; /// on ne met pas a jour les fichiers qui ne seront pas sauvegardés sur le disque
+    
+    if([[[NSString stringWithUTF8String:back->url_sav] pathExtension] isEqualToString:@"delayed"])
+        goto end;
+
+    float ratio = (float)back->r.size / back->r.totalsize; /// division par 0 verifiee plus haut
+    NSArray<NSString*>* components = [[NSString stringWithUTF8String:(char*)back->url_sav+opt->path_log.length_] pathComponents];
+    
+    struct tm buffer;
+    struct tm *tm_s = convert_time_rfc822(&buffer, back->r.lastmodified);
+    time_t t = mktime(tm_s);
+    NSDate* nsd = [[NSDate alloc] initWithTimeIntervalSince1970:t];
+    
+    MyDowloadableFile* f = [ModelsApp addPathComponents:components toArborescence:[s_logic websites] atCompletePath:[NSString stringWithUTF8String:back->url_sav] createdAt:[nsd autorelease]];
+    
+    changed = [f updateAdvancement:ratio];
+    if(changed)
+        [[s_logic delegate] coreLogicPageAdded:s_logic]; // sert juste a refresh le outlineView
+    
+    [s_logic.myBacking updateOneBacking:back];
+    [s_logic.myLiens updateLiens:*opt->liens total:opt->lien_tot];
+    [[s_logic delegate] coreLogicUpdateLinks:s_logic links:back total:-1];
+
+end:
+    if(CALLBACKARG_PREV_FUN(carg, xfrstatus))
+        return CALLBACKARG_PREV_FUN(carg, xfrstatus)(CALLBACKARG_PREV_CARG(carg), opt, back);
+    
     return 1;
 }
 
@@ -329,8 +364,7 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
 
     StringMemcpy(_httrack_opt->path_html, [([[url path] stringByAppendingString:@"/"]) UTF8String], [[url path] length] + 1);
     StringCopyS(_httrack_opt->path_log, _httrack_opt->path_html);
-    StringCopyN(_httrack_opt->path_html_utf8, StringBuff(_httrack_opt->path_html),
-                      StringLength(_httrack_opt->path_html));
+    StringCopyN(_httrack_opt->path_html_utf8, StringBuff(_httrack_opt->path_html), StringLength(_httrack_opt->path_html));
     
 //    htswrap_add(_httrack_opt, "loop", my_loop);
 //    htswrap_add(_httrack_opt, "save-file", my_filesave);
@@ -343,6 +377,7 @@ void buildDirTreeFromHttrack(MyDirectoryElements * dir, NSURL * adress) {
     CHAIN_FUNCTION(_httrack_opt, filesave2, my_filesave2, NULL);
     CHAIN_FUNCTION(_httrack_opt, end, my_end, NULL);
     CHAIN_FUNCTION(_httrack_opt, linkdetected, my_linkdetected, NULL);
+    CHAIN_FUNCTION(_httrack_opt, xfrstatus, my_xfrstatus, NULL);
     
     //cache_back cache;
     //cache_init(&cache, _httrack_opt);

@@ -54,6 +54,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSDate *)dateCreated {
     return _dateCreated;
 }
+- (BOOL)updateAdvancement:(float)ratio {
+    //NSLog(@"me: %@ path: %@ site: %@ ratio: %.2f\n", _name, path, site, ratio);
+    float old = _downloadAdvancement;
+    _downloadAdvancement = ratio;
+    return old != ratio;
+}
 @end
 
 @implementation MyDirectoryElements
@@ -108,30 +114,25 @@ NS_ASSUME_NONNULL_BEGIN
     
     return count;
 }
-- (int) numberOfCompleted
+- (float) completionAdvancement
 {
-    int count = 0;
+    float completion = 0;
     NSUInteger i, ct;
     
     for (i = 0, ct = [[self files] count]; i < ct; i++) {
-        if([[[self files] objectAtIndex:i] avancement] >= 1)
-            count ++;
+        completion += [[[self files] objectAtIndex:i] avancement];
     }
     for(i = 0; i<[[self directories] count]; i++)
-        count += [[[self directories] objectAtIndex:i] numberOfCompleted];
+        completion += [[[self directories] objectAtIndex:i] completionAdvancement];
     
-    return count;
+    return completion;
 }
 -(float)avancement {
+    float completedFiles = [self completionAdvancement];
     int total = [self numberOfChildren];
-    int completedFiles = [self numberOfCompleted];
+    if(total <= 0)
+        return 1.0;
     return (float)completedFiles / total;
-}
-- (BOOL)updateAdvancement:(MyDowloadableFile*)file ratio:(float)ratio {
-    //NSLog(@"me: %@ path: %@ site: %@ ratio: %.2f\n", _name, path, site, ratio);
-    float old = file->_downloadAdvancement;
-    file->_downloadAdvancement = ratio;
-    return old != ratio;
 }
 @end
 
@@ -200,6 +201,22 @@ NS_ASSUME_NONNULL_BEGIN
     
     [super dealloc];
 }
+
+-(int)updateOneBacking:(lien_back*)lien {
+    NSString*local = [NSString stringWithFormat:@"%s", lien->url_sav];
+    BOOL found;
+    //todo: make it a hash
+    for(NSUInteger i, ct = [_backing count]; i < ct; i++) {
+        if([_backing[i]->local isEqualToString:local]) {
+            _backing[i]->status = lien->r.statuscode;
+            _backing[i]->progression = lien->r.totalsize ? (float)lien->r.size / lien->r.totalsize : 0;
+            _backing[i]->totalsize = lien->r.totalsize;
+            return (int)i;
+        }
+    }
+    return -1;
+}
+
 - (void)updateBacking:(lien_back *)liens total:(int)tot {
     int i;
     if([_backing count] != tot) {
@@ -216,14 +233,12 @@ NS_ASSUME_NONNULL_BEGIN
         [b->remote release];
         [b->referer release];
         [b->local release];
-        [b->status release];
-        [b->progression release];
         b->remote = [[NSString stringWithFormat:@"%s%s", liens[i].url_adr, liens[i].url_fil] copy];
         b->referer = [[NSString stringWithFormat:@"%s%s", liens[i].referer_adr, liens[i].referer_fil] copy];
         b->local = [[NSString stringWithFormat:@"%s", liens[i].url_sav] copy];
-        b->status = [[NSNumber numberWithInt:liens[i].r.statuscode] copy];
-        b->progression = [[NSNumber numberWithFloat: liens[i].r.totalsize ? (float)liens[i].r.size / liens[i].r.totalsize : 0] copy];
-        b->totalsize = [[NSNumber numberWithLong: liens[i].r.totalsize] copy];
+        b->status = liens[i].r.statuscode;
+        b->progression = liens[i].r.totalsize ? (float)liens[i].r.size / liens[i].r.totalsize : 0;
+        b->totalsize = liens[i].r.totalsize;
     }
 }
 -(NSUInteger)count {

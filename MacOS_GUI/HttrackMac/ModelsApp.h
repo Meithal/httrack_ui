@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
     NSDate * _dateCreated;
     NSString * _hd_path; // complete absolute path
     
-    @public
+    int _tailleComplete;
     float _downloadAdvancement; /** 0.0 - 1.0 */
 }
 +(instancetype) createFromString:(NSString *)name atPath:(NSString*)path createdAt:(NSDate*)date;
@@ -28,6 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(NSString *) name; // without path component
 -(NSDate *) dateCreated;
 -(NSString *) hd_path; // complete absolute path
+- (BOOL)updateAdvancement:(float)ratio;
 @end
 
 @interface MyDirectoryElements : NSObject <YTPavancement> {
@@ -48,8 +49,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// utils
 - (NSString *) debugDescription;
 - (int) numberOfChildren;
-- (int) numberOfCompleted;
--(BOOL) updateAdvancement:(MyDowloadableFile*)file ratio:(float)ratio;
+- (float) completionAdvancement;
 @end
 
 @interface MyLinkBidge: NSObject {
@@ -77,18 +77,18 @@ NS_ASSUME_NONNULL_BEGIN
     NSString* remote;
     NSString* referer;
     NSString* local;
-    NSNumber* status;
-    NSNumber* progression;
-    NSNumber* totalsize;
+    int status;
+    float progression;
+    float totalsize;
 }
 @end
 
 @interface MyBacking : NSObject {
     TYPED_CONTAINER(NSMutableArray, MyBackingBridge*)* _backing;
 }
+-(int)updateOneBacking:(lien_back*)lien;
 -(void)updateBacking:(lien_back*)backing total:(int)tot;
 -(NSUInteger)count;
-//-(TYPED_CONTAINER(NSArray, MyBackingBridge*)*)backing;
 -(MyBackingBridge*)backAt:(NSUInteger)idx;
 @end
 

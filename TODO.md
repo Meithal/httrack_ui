@@ -36,7 +36,7 @@ Bugs
 - [x] Corruption de données dans les statistiques de téléchargement
 - [ ] Plein de warnings quand on ouvre une webview
 - [ ] Redémarrer le télechargement laisse un fichier dans le backing
-
+- [ ] Certains fichiers peuvent apparaitre deux fois dans l'outline, surement si ils existaient deja sur le disque dur et qu'ils ont été trouvés a nouveau par le parsing. Arrive pour un .zip qui se trouve transformé en dossier et qu'il n'esgt pas possible de facilement supprimmer. Chercher "Unable to save file"
 Taches
 ---
 
@@ -59,8 +59,12 @@ Taches
 - [x] Autocompletion avec sites deja existants <https://developer.apple.com/library/archive/samplecode/SearchField/Introduction/Intro.html#//apple_ref/doc/uid/DTS10004112-Intro-DontLinkElementID_2>
 - [x] ... Quitter l'application proprement avec des handlers de sortie
 - [ ] Avoir un feedback des pages copiées
-- [ ] ... Chercher le listing des pages dans httrack plutot que lister l'arborescence
+- [ ] ... Chercher le listing des pages dans httrack plutot que lister l'arborescence, dans hts-cache/old.zip a priori
 - [x] ... Afficher une barre d'avancement de telechargement
+- [x] ...... Sur les fichiers
+- [x] ...... Sur les dossiers
+- [x] ......... Qui se mette a jour en meme temps que les fichiers sous jacents progressent
+- [ ] ............ En tenant en compte de la taille totale pour mesurer la contribution de chaque fichier a l'avancement
 - [x] ... Afficher immediatement un site dans l'arbo quand on commence un téléchargement
 - [ ] ... Afficher en rouge les 404, 50x
 - [ ] ...... Afficher un tooltip et un texte pour l'erreur en question.
@@ -69,19 +73,22 @@ Taches
 - [x] ...... N'afficher ce bouton que lorsque les statistiques sont visibles
 - [x] ... Pouvoir changer l'orientation du splitview
 - [ ] Tester Crackman.TTF si Crackman.ttf n'est pas trouvé
-- [ ] Avoir un bouton pour cacher sidebar <https://developer.apple.com/videos/play/wwdc2020/10104/?time=835> <https://stackoverflow.com/questions/54870957/nssplitviewcontroller-nssplitviewitem-support-in-xibs> On Utilisera un NSDrawer pour < big sur, et un NSSplitViewController pour apres
+- [x] Avoir un bouton pour cacher sidebar <https://developer.apple.com/videos/play/wwdc2020/10104/?time=835> <https://stackoverflow.com/questions/54870957/nssplitviewcontroller-nssplitviewitem-support-in-xibs> On Utilisera un NSDrawer pour < big sur, et un NSSplitViewController pour apres
 - [x] ... résoudre le bug de double declaration d'enum HTTP_STATUS_OK
 - [x] Sauvegarder le listing dans le dossier user plutot que l'endroit de l'executable.
 - [x] Avoir un listing de sites copiés
 - [x] ... Afficher l'avancement de chaque recopie
-- [ ] ...... Afficher la progression sur le dossier en fonction de ss enfants
+- [~] ...... Afficher la progression sur le dossier en fonction de ss enfants
 - [x] ... Faire en sorte que ce listing se mette a jour en temps reel
 - [x] ... Le listing doit se faire sur un thread different
 - [~] Avoir une icone a coté de chaque nom de site (favicon)
 - [ ] ... Mettre une option pour desactiver cette option
 - [ ] Avoir un apercu de chaque item
 - [x] ... image pour image
-- [x] ...... ouvrir l'image dans apercu
+- [x] ...... ouvrir l'image dans la zone d'apercu
+- [ ] ...... pouvoir zoomer et dezomer sur l'image
+- [ ] ......... Avec un controle idoine
+- [ ] ......... Avec pinch gesture
 - [ ] ... video pour video
 - [ ] ...... pouvoir lancer la video
 - [ ] ...... ouvrir la video dans un programme externe (quicktime, vlc...)

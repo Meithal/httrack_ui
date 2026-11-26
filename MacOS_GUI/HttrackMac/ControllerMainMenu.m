@@ -21,6 +21,12 @@ static NSToolbarItem* g_sep;
     [_logic setDelegate:self];
     [_logic setLoopCallback:@selector(updateGlobalStats:) withObject:self];
     
+    if(0) { // todo, appli miniature
+        [[_myParentWindow contentView] setFrame:NSMakeRect(0, 0, 0, 0)];
+        return;
+    }
+    //[_myParentWindow validateFi]
+    
     [self changeMainAppearance];
     
     /// On crée le NSDrawer programmatiquement vu qu'on ne peut pas le créer via interface builder
@@ -339,7 +345,8 @@ static NSToolbarItem* g_sep;
     
     [self->_tableBacking reloadData];
     [self->_tableLiens reloadData];
-    [self->_stepperSockets setMaxValue:tot];
+    if(tot>-1)
+        [self->_stepperSockets setMaxValue:tot];
 }
 -(IBAction)generalStatsClick:(MyToolbarStatsButton*)sender {
     if(_httrackStatsPanel.isVisible) {
@@ -649,13 +656,13 @@ static NSToolbarItem* g_sep;
     } else if ([[tableColumn identifier] isEqualTo:@"TCIlocal"]) {
         return [self->core_logic.myBacking backAt:urow]->local;
     } else if ([[tableColumn identifier] isEqualTo:@"Total size"]) {
-        return [self->core_logic.myBacking backAt:urow]->totalsize;
+        return [NSNumber numberWithFloat:[self->core_logic.myBacking backAt:urow]->totalsize];
     } else if ([[tableColumn identifier] isEqualTo:@"TCIreferer"]) {
         return [self->core_logic.myBacking backAt:urow]->referer;
     } else if ([[tableColumn identifier] isEqualTo:@"TCIstatus"]) {
-        return [self->core_logic.myBacking backAt:urow]->status;
+        return [NSNumber numberWithInt:[self->core_logic.myBacking backAt:urow]->status];
     } else if ([[tableColumn identifier] isEqualTo:@"Progression"]) {
-        return [self->core_logic.myBacking backAt:urow]->progression;
+        return [NSNumber numberWithFloat:[self->core_logic.myBacking backAt:urow]->progression];
     }
     return @"toto";
 }
